@@ -25,12 +25,13 @@
   <div class="wrap">
     <span class="kicker">Skill walkthrough</span>
     <h1 style="font-size:clamp(30px,4.6vw,48px)">how-to-<span class="tealline">EDA</span>-using-claude-python</h1>
-    <p class="lede">One decision question, one complex retail platform, six steps. Every chart below came from a real run - seed 42, learn-python env.</p>
+    <p class="lede">One decision question, one complex retail platform, six steps. Every chart below came from a real run - seed 42, learn-python env, 233,835 rows generated and analyzed.</p>
     <div class="chiprow" style="margin-top:20px">
       <span class="chip">Case: Everrest · B2B2C retail platform</span>
       <span class="chip">seed = 42</span>
-      <span class="chip">pandas · matplotlib · seaborn · ydata-profiling</span>
+      <span class="chip">pandas · matplotlib · seaborn · statsmodels</span>
       <span class="chip">12 chart types</span>
+      <span class="chip">6 findings, $-ranked</span>
     </div>
 
     <div class="rail">
@@ -50,12 +51,16 @@
     <div class="step-ghost">01</div>
     <span class="step-tag">Step 1</span>
     <h2 class="step-title">Input - schema + business context</h2>
-    <p class="step-body">[SKELETON] Everrest is a B2B2C retail platform: brands and merchants sell to consumers through one marketplace. The category team hands over 8 tables and one line of context. That is all EDA needs to start.</p>
+    <p class="step-body">Everrest is a B2B2C retail platform: 400 merchants and brands sell to 20,000 consumers through one Southeast Asian marketplace. The category team hands over 8 tables and one line of context: <em>"tell us what to act on this quarter."</em> That is all EDA needs to start - the discipline is refusing to write code before understanding what the business would pay to know.</p>
     <div class="tbl-grid">
-      <div class="tbl-card reveal"><div class="tbl-name">orders <span class="cnt">60k rows</span></div><ul><li><b>order_id</b> · pk</li><li><b>customer_id</b> · fk</li><li><b>merchant_id</b> · fk</li><li><b>order_ts</b> · timestamp</li><li><b>status</b> · enum</li></ul></div>
-      <div class="tbl-card reveal"><div class="tbl-name">order_items <span class="cnt">180k rows</span></div><ul><li><b>order_id</b> · fk</li><li><b>product_id</b> · fk</li><li><b>qty</b> · int</li><li><b>unit_price</b> · numeric</li><li><b>discount</b> · numeric</li></ul></div>
-      <div class="tbl-card reveal"><div class="tbl-name">merchants <span class="cnt">400 rows</span></div><ul><li><b>merchant_id</b> · pk</li><li><b>category</b> · enum</li><li><b>tier</b> · enum</li><li><b>joined_at</b> · date</li></ul></div>
-      <div class="tbl-card reveal"><div class="tbl-name">+ 5 more tables <span class="cnt">…</span></div><ul><li>customers · products · payments</li><li>returns · channels</li><li>[full schema in final build]</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">orders <span class="cnt">50,600 rows</span></div><ul><li><b>order_id</b> · pk</li><li><b>customer_id</b> · fk</li><li><b>merchant_id</b> · fk</li><li><b>order_ts</b> · timestamp</li><li><b>status</b> · delivered/shipped/paid/cancelled</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">order_items <span class="cnt">109,154 rows</span></div><ul><li><b>order_id</b> · fk</li><li><b>product_id</b> · fk</li><li><b>qty</b> · int</li><li><b>unit_price</b> · numeric</li><li><b>discount</b> · 0 to 0.20</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">payments <span class="cnt">46,003 rows</span></div><ul><li><b>payment_id</b> · pk</li><li><b>order_id</b> · fk</li><li><b>method</b> · card/wallet/bnpl/cod/bank</li><li><b>amount</b> · numeric</li><li><b>paid_ts</b> · timestamp</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">merchants <span class="cnt">400 rows</span></div><ul><li><b>merchant_id</b> · pk</li><li><b>category</b> · 8 retail categories</li><li><b>tier</b> · standard/premium/enterprise</li><li><b>joined_at</b> · date</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">customers <span class="cnt">20,000 rows</span></div><ul><li><b>customer_id</b> · pk</li><li><b>signup_date</b> · date</li><li><b>channel_id</b> · fk, 6 channels</li><li><b>region</b> · SG/MY/ID/TH/VN/PH</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">products <span class="cnt">5,000 rows</span></div><ul><li><b>product_id</b> · pk</li><li><b>merchant_id</b> · fk</li><li><b>category</b> · enum</li><li><b>price</b> · numeric</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">returns <span class="cnt">2,672 rows</span></div><ul><li><b>return_id</b> · pk</li><li><b>order_id</b> · fk</li><li><b>reason</b> · 5 reasons</li><li><b>return_ts</b> · timestamp</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">channels <span class="cnt">6 rows</span></div><ul><li><b>channel_id</b> · pk</li><li><b>name</b> · organic, paid search, social, email, referral, affiliate</li></ul></div>
     </div>
   </div>
 </section>
@@ -66,22 +71,33 @@
     <div class="step-ghost" style="color:#fff">02</div>
     <span class="step-tag">Step 2</span>
     <h2 class="step-title">Generate sample data - with planted quirks</h2>
-    <p class="step-body">[SKELETON] A seeded generator builds all 8 tables. Five problems are planted on purpose - EDA that finds nothing teaches nothing. Step 5 shows which charts caught them.</p>
+    <p class="step-body">A seeded generator builds all 8 tables - 233,835 rows, identical on every run. Five problems are planted on purpose, because EDA that finds nothing teaches nothing. Each quirk is documented in the generator's docstring, which turns Step 5 into a recall test: did the analysis catch everything we hid?</p>
     <div class="code-card">
-      <div class="code-head"><span>generate_everrest.py</span><button class="copy-btn">Copy</button></div>
+      <div class="code-head"><span>generate_everrest.py · excerpt (full script in repo)</span><button class="copy-btn">Copy</button></div>
       <pre><span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
 <span class="c-kw">import</span> pandas <span class="c-kw">as</span> pd
 
-rng = np.random.default_rng(<span class="c-str">42</span>)
-<span class="c-comment"># [SKELETON] full generator in final build - 8 tables, ~80k rows,</span>
-<span class="c-comment"># 5 planted quirks documented in this docstring</span></pre>
+SEED = <span class="c-str">42</span>
+rng = np.random.default_rng(SEED)
+
+<span class="c-comment"># Quirk 1: affiliate-channel tracker drops `method` -> nulls concentrate there.</span>
+p_null = np.where(order_channel == <span class="c-str">"affiliate"</span>, <span class="c-str">0.55</span>, <span class="c-str">0.035</span>)
+df.loc[rng.random(len(df)) &lt; p_null, <span class="c-str">"method"</span>] = np.nan
+
+<span class="c-comment"># Quirk 3: retry bug double-fires ~600 March-2026 orders (exact dup rows).</span>
+march = df[df.order_ts.dt.to_period(<span class="c-str">"M"</span>) == <span class="c-str">"2026-03"</span>]
+df = pd.concat([df, march.sample(<span class="c-str">600</span>, random_state=SEED)])
+
+<span class="c-comment"># Quirk 4: weekly cycle (weekend lift) + November promo spike (~2.2x).</span>
+dow_weight = np.where(days.dayofweek >= <span class="c-str">5</span>, <span class="c-str">1.45</span>, <span class="c-str">1.0</span>)
+nov_weight = np.where(days.month == <span class="c-str">11</span>, <span class="c-str">2.2</span>, <span class="c-str">1.0</span>)</pre>
     </div>
     <div class="quirk-grid">
-      <div class="quirk reveal"><b>🕳 Missing values</b><span>8% of payment methods null, not at random</span></div>
-      <div class="quirk reveal"><b>📈 Outliers</b><span>One merchant with 40x median order value</span></div>
-      <div class="quirk reveal"><b>👯 Duplicates</b><span>~600 double-fired order rows</span></div>
-      <div class="quirk reveal"><b>🌊 Seasonality</b><span>Weekly cycle + November spike</span></div>
-      <div class="quirk reveal"><b>🚩 Suspicious segment</b><span>Returns cluster on one merchant tier</span></div>
+      <div class="quirk reveal"><b>🕳 Missing not-at-random</b><span>payments.method null 55% on affiliate channel vs 3.5% elsewhere</span></div>
+      <div class="quirk reveal"><b>📈 Outlier merchant</b><span>M0007 "Summit Wholesale Co" - bulk pallets at ~59x median order value</span></div>
+      <div class="quirk reveal"><b>👯 Duplicates</b><span>600 orders double-fired by a March 2026 retry bug</span></div>
+      <div class="quirk reveal"><b>🌊 Seasonality</b><span>Weekend lift ~40% + November promo spike 2.1x</span></div>
+      <div class="quirk reveal"><b>🚩 Suspicious segment</b><span>Premium-tier merchants return ~4x more than any other tier</span></div>
     </div>
   </div>
 </section>
@@ -92,13 +108,13 @@ rng = np.random.default_rng(<span class="c-str">42</span>)
     <div class="step-ghost">03</div>
     <span class="step-tag">Step 3</span>
     <h2 class="step-title">Objective - a decision question, not a technique</h2>
-    <p class="step-body">[SKELETON] Framing before code. Not "run describe()" - a question a category lead would actually pay to answer.</p>
+    <p class="step-body">Framing before code. Not "run describe()" - a question a category lead would actually pay to answer. Every chart in Step 5 must serve one of the five sub-questions; anything else is decoration and gets cut.</p>
     <div class="objective-banner reveal">
       <div class="q">What should Everrest's category team <em>act on this quarter</em> - and what in this data can't be trusted yet?</div>
       <ul class="subq">
         <li>Where is revenue concentrated - and is that concentration healthy?</li>
         <li>Which data quality issues would silently corrupt any dashboard built on this?</li>
-        <li>What does the weekly/seasonal demand rhythm mean for inventory?</li>
+        <li>What does the weekly/seasonal demand rhythm mean for inventory and staffing?</li>
         <li>Which merchant segment behaves abnormally, and is it fraud or a data artifact?</li>
         <li>Which customer segments deserve a retention play?</li>
       </ul>
@@ -112,11 +128,11 @@ rng = np.random.default_rng(<span class="c-str">42</span>)
     <div class="step-ghost" style="color:#fff">04</div>
     <span class="step-tag">Step 4</span>
     <h2 class="step-title">Find-skills - Claude assembles its toolbox</h2>
-    <p class="step-body">[SKELETON] Before writing code, Claude scans its installed skills and picks the ones that serve this objective.</p>
+    <p class="step-body">Before writing code, Claude scans its installed skills and tools and picks the ones that serve this objective. Reuse beats rebuilding - the point of a skill shelf is that the next analysis starts from here, not from zero.</p>
     <div class="tool-grid">
-      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4>ydata-profiling</h4><p>One-shot profile report: types, missingness, correlations - the 10-minute head start.</p></div>
-      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4>Great Expectations</h4><p>Turns the quirks EDA finds into permanent data quality gates.</p></div>
-      <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>dataviz discipline</h4><p>Chart form chosen by relationship: trend=line, comparison=bar, distribution=histogram.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/ydataai/ydata-profiling">ydata-profiling</a></h4><p>One-shot profile report: types, missingness, correlations - the 10-minute head start before custom analysis.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/great-expectations/great_expectations">Great Expectations</a></h4><p>Turns the quirks EDA finds into permanent data quality gates - the duplicate bug never ships twice.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>dataviz discipline</h4><p>Chart form chosen by relationship: trend=line, comparison=bar, distribution=histogram; max 2-3 series colors.</p></div>
       <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>schema-to-insights playbook</h4><p>Decision-first scan pattern: rank findings by dollar impact, not by p-value.</p></div>
     </div>
   </div>
@@ -128,20 +144,46 @@ rng = np.random.default_rng(<span class="c-str">42</span>)
     <div class="step-ghost">05</div>
     <span class="step-tag">Step 5</span>
     <h2 class="step-title">Code + charts - the real run</h2>
-    <p class="step-body">[SKELETON] Sectioned analysis script mirrors the sub-questions. 12 chart types in the final build; every PNG rendered at 300 DPI from the actual run. Placeholders below show layout only.</p>
-    <div class="chart-grid">
-      <div class="chart-card reveal"><div class="ph">chart placeholder · revenue pareto</div><div class="cap"><b>Revenue pareto.</b> [final: real PNG + one-line finding]</div></div>
-      <div class="chart-card reveal"><div class="ph">chart placeholder · missingness matrix</div><div class="cap"><b>Missingness.</b> [final: real PNG + finding]</div></div>
-      <div class="chart-card reveal"><div class="ph">chart placeholder · seasonality decomposition</div><div class="cap"><b>Seasonality.</b> [final: real PNG + finding]</div></div>
-      <div class="chart-card reveal"><div class="ph">chart placeholder · segment heatmap</div><div class="cap"><b>Segments.</b> [final: real PNG + finding]</div></div>
+    <p class="step-body">One sectioned script, data-quality gate first, business questions on the clean data second. 12 chart types, every PNG rendered at 300 DPI from the actual run, every title a finding rather than a technique. The full script is <code>materials/how-to-eda/eda_everrest_v2.py</code> in the repo.</p>
+    <div class="code-card">
+      <div class="code-head"><span>eda_everrest_v2.py · the DQ gate (excerpt)</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># Gate 1: exact duplicate order rows (retry bug).</span>
+dupes = orders_raw[orders_raw.duplicated()]
+dup_inflation = order_value.reindex(dupes.order_id).sum()
+orders = orders_raw.drop_duplicates().copy()
+
+<span class="c-comment"># Gate 2: cancelled orders carry no revenue.</span>
+rev_orders = orders[orders.status != <span class="c-str">"cancelled"</span>]
+
+<span class="c-comment"># Missingness BY SEGMENT - this is how missing-not-at-random shows up.</span>
+null_by_ch = pay.groupby(<span class="c-str">"channel_id"</span>).method.apply(<span class="c-kw">lambda</span> s: s.isna().mean() * <span class="c-str">100</span>)</pre>
     </div>
+
+    <div class="chart-grid">
+      <div class="chart-card reveal"><img src="charts/revenue_pareto.png" alt="Pareto chart: top 20 of 400 merchants account for the majority of revenue, rank 1 highlighted as anomaly"><div class="cap"><b>Concentration.</b> Top 20 of 400 merchants carry most of the revenue - and rank #1 is an anomaly, not a hero.</div></div>
+      <div class="chart-card reveal"><img src="charts/missingness_matrix.png" alt="Heatmap of missing values by table and column, payments.method at 7.8 percent"><div class="cap"><b>Trust check.</b> Exactly one column has a missing-data problem: payments.method at 7.8%.</div></div>
+      <div class="chart-card reveal"><img src="charts/missing_by_channel.png" alt="Bar chart: affiliate channel has 55 percent null payment methods vs about 3.5 percent elsewhere"><div class="cap"><b>Not random.</b> The nulls concentrate on the affiliate channel - a broken tracker, not user behaviour. $578k of GMV unattributable.</div></div>
+      <div class="chart-card reveal"><img src="charts/duplicates_timeline.png" alt="Line chart: all 600 duplicate orders occur in March 2026"><div class="cap"><b>Retry bug.</b> All 600 duplicate rows land in March 2026 - $155k of phantom revenue in any naive aggregate.</div></div>
+      <div class="chart-card reveal"><img src="charts/order_value_by_tier.png" alt="Box plot of order value by tier on log scale, one merchant's orders form a separate cloud"><div class="cap"><b>The blue cloud is ONE merchant.</b> M0007 "Summit Wholesale Co" - median order $4,790 vs $82 platform-wide.</div></div>
+      <div class="chart-card reveal"><img src="charts/order_value_dist.png" alt="Histogram of order values on log scale with median marker at 82 dollars"><div class="cap"><b>Skew.</b> Order values span 4 orders of magnitude - means will lie, use medians.</div></div>
+      <div class="chart-card reveal"><img src="charts/demand_decomposition.png" alt="Three-panel seasonal decomposition: daily orders, 7-day trend, weekly cycle"><div class="cap"><b>Rhythm.</b> November runs 2.1x baseline; weekends lift ~40%. Stock up in October, staff for weekends.</div></div>
+      <div class="chart-card reveal"><img src="charts/dow_hour_heatmap.png" alt="Heatmap of orders by day of week and hour, weekend evenings busiest"><div class="cap"><b>Prime time.</b> Weekend evenings are the platform's busiest window.</div></div>
+      <div class="chart-card reveal"><img src="charts/category_small_multiples.png" alt="Small multiple line charts of monthly revenue for 8 categories"><div class="cap"><b>Category health.</b> Every category shows the November wave - Grocery's scale is M0007, not real demand.</div></div>
+      <div class="chart-card reveal"><img src="charts/cohort_retention.png" alt="Cohort retention heatmap by signup month"><div class="cap"><b>Retention.</b> Month-1 retention is where customers are lost - the retention play starts in week 2, not month 3.</div></div>
+      <div class="chart-card reveal"><img src="charts/returns_by_tier.png" alt="Bar chart: premium tier return rate 15.9 percent vs about 4 percent for other tiers"><div class="cap"><b>Hidden quality problem.</b> Premium tier returns 15.9% of delivered orders - 4x any other tier. $212k comes back.</div></div>
+      <div class="chart-card reveal"><img src="charts/returns_reasons.png" alt="Grouped bar chart of return reasons by tier, quality dominates premium"><div class="cap"><b>Root cause.</b> "Quality" dominates premium returns - it is the product, not the courier.</div></div>
+    </div>
+
     <div class="caught reveal">
       <table>
-        <thead><tr><th>Planted quirk</th><th>Caught by</th><th>Status</th></tr></thead>
+        <thead><tr><th>Planted quirk</th><th>Caught by</th><th>$ impact</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td>Missing payment methods (8%, not random)</td><td>Missingness matrix</td><td class="ok">✓ caught</td></tr>
-          <tr><td>40x outlier merchant</td><td>Box plot by tier</td><td class="ok">✓ caught</td></tr>
-          <tr><td>[3 more rows in final build]</td><td>…</td><td class="ok">…</td></tr>
+          <tr><td>Missing payment methods (MNAR, affiliate)</td><td>Missingness by channel</td><td class="num">$577,790 unattributable</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Outlier merchant M0007 (59x median)</td><td>Box plot by tier + pareto</td><td class="num">12.7% of revenue</td><td class="ok">✓ caught</td></tr>
+          <tr><td>600 duplicate order rows</td><td>DQ gate + duplicates timeline</td><td class="num">$154,559 inflation</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Weekend + November seasonality</td><td>Seasonal decomposition</td><td class="num">$1,016,712 Nov revenue</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Premium-tier return cluster</td><td>Return rate + reasons by tier</td><td class="num">$212,191 returned value</td><td class="ok">✓ caught</td></tr>
+          <tr><td><em>Bonus (not planted):</em> cancelled orders in revenue</td><td>DQ gate</td><td class="num">$527,072 phantom value</td><td class="ok">✓ caught</td></tr>
         </tbody>
       </table>
     </div>
@@ -154,12 +196,22 @@ rng = np.random.default_rng(<span class="c-str">42</span>)
     <div class="step-ghost" style="color:#fff">06</div>
     <span class="step-tag">Step 6</span>
     <h2 class="step-title">Mentor-verify - review that changes the code</h2>
-    <p class="step-body">[SKELETON] Four mentor voices review the actual code and outputs. Their fixes are applied and the pipeline re-runs - before/after shown, not generic praise.</p>
+    <p class="step-body">Four mentor lenses reviewed the first version of the analysis (<code>eda_everrest_v1.py</code>, kept in the repo). Every fix below was applied and the pipeline re-ran - the charts above are the post-review v2. Review that changes nothing is theater.</p>
     <div class="mentor-grid">
-      <div class="mentor-card reveal"><div class="m-name">Andrej Karpathy</div><div class="m-lens">Code level</div><p>[final: verdict on the actual script]</p><div class="m-fix">Fix applied: [example]</div></div>
-      <div class="mentor-card reveal"><div class="m-name">Andrew Ng</div><div class="m-lens">Methodology</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
-      <div class="mentor-card reveal"><div class="m-name">Cassie Kozyrkov</div><div class="m-lens">Decision framing</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
-      <div class="mentor-card reveal"><div class="m-name">Monica Rogati</div><div class="m-lens">Practicality</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Andrej Karpathy</div><div class="m-lens">Code level</div><p>"v1 never deduped - 600 duplicate rows are inside every aggregate, and cancelled orders leak $527k into revenue. Gate the data before you touch it."</p><div class="m-fix">Fix applied: data-quality gate now runs before any aggregate; dupes and cancelled orders quantified, then excluded.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Andrew Ng</div><div class="m-lens">Methodology</div><p>"Overall missingness (7.8%) looks benign and hides the story. Break missingness down by segment or you will never see missing-not-at-random."</p><div class="m-fix">Fix applied: added missingness-by-channel chart - exposed the 55% affiliate null rate.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Cassie Kozyrkov</div><div class="m-lens">Decision framing</div><p>"Half of v1's titles were techniques: 'Correlations', 'Order value distribution'. A chart that doesn't change a decision is decoration."</p><div class="m-fix">Fix applied: every title rewritten as a finding; corr heatmap (no action) replaced with return-reasons chart; log scale added; M0007 named on the chart.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Monica Rogati</div><div class="m-lens">Practicality</div><p>"Nothing in v1 was quantified. Executives don't rank findings by p-value, they rank by money."</p><div class="m-fix">Fix applied: every finding carries a $ figure; findings.md ranks all six by impact.</div></div>
+    </div>
+    <div class="code-card">
+      <div class="code-head"><span>before → after · the aggregate that lied</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># v1 (before): revenue computed on raw orders - dupes + cancelled included</span>
+rev = orders.groupby(<span class="c-str">"merchant_id"</span>).order_value.sum()
+
+<span class="c-comment"># v2 (after): DQ gate first - $681k of phantom value removed</span>
+orders = orders_raw.drop_duplicates()                  <span class="c-comment"># -$154,559</span>
+rev_orders = orders[orders.status != <span class="c-str">"cancelled"</span>]     <span class="c-comment"># -$527,072</span>
+rev = rev_orders.groupby(<span class="c-str">"merchant_id"</span>).order_value.sum()</pre>
     </div>
   </div>
 </section>
@@ -168,7 +220,7 @@ rng = np.random.default_rng(<span class="c-str">42</span>)
   <div class="wrap">
     <div class="install">
       <h3>Run this skill on your own schema</h3>
-      <p>Install once, then hand Claude your tables and business context - the same 6 steps run on your data.</p>
+      <p>Install once, then hand Claude your tables and business context - the same 6 steps run on your data (step 2 is skipped when real data exists).</p>
       <div class="code-card">
         <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
         <pre>git clone https://github.com/phoebefu6/phoebe-data-skills.git
