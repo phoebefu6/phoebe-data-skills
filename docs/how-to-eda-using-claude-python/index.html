@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>how-to-EDA-using-claude-python · Phoebe's Data Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="progress"></div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><a href="../" style="color:inherit">phoebe<b>·data·skills</b></a></div>
+    <nav>
+      <a href="../#skills">All skills</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:20px">
+  <div class="wrap">
+    <span class="kicker">Skill walkthrough</span>
+    <h1 style="font-size:clamp(30px,4.6vw,48px)">how-to-<span class="tealline">EDA</span>-using-claude-python</h1>
+    <p class="lede">One decision question, one complex retail platform, six steps. Every chart below came from a real run - seed 42, learn-python env.</p>
+    <div class="chiprow" style="margin-top:20px">
+      <span class="chip">Case: Everrest · B2B2C retail platform</span>
+      <span class="chip">seed = 42</span>
+      <span class="chip">pandas · matplotlib · seaborn · ydata-profiling</span>
+      <span class="chip">12 chart types</span>
+    </div>
+
+    <div class="rail">
+      <div class="rail-step"><div class="rail-node" data-step="1"><a href="#step-1"><div class="rail-circle">1</div><div class="rail-label">Input</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="2"><a href="#step-2"><div class="rail-circle">2</div><div class="rail-label">Sample data</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="3"><a href="#step-3"><div class="rail-circle">3</div><div class="rail-label">Objective</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="4"><a href="#step-4"><div class="rail-circle">4</div><div class="rail-label">Find-skills</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="5"><a href="#step-5"><div class="rail-circle">5</div><div class="rail-label">Code + charts</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="6"><a href="#step-6"><div class="rail-circle">6</div><div class="rail-label">Mentor-verify</div></a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 1 -->
+<section class="step-section" id="step-1">
+  <div class="wrap">
+    <div class="step-ghost">01</div>
+    <span class="step-tag">Step 1</span>
+    <h2 class="step-title">Input - schema + business context</h2>
+    <p class="step-body">[SKELETON] Everrest is a B2B2C retail platform: brands and merchants sell to consumers through one marketplace. The category team hands over 8 tables and one line of context. That is all EDA needs to start.</p>
+    <div class="tbl-grid">
+      <div class="tbl-card reveal"><div class="tbl-name">orders <span class="cnt">60k rows</span></div><ul><li><b>order_id</b> · pk</li><li><b>customer_id</b> · fk</li><li><b>merchant_id</b> · fk</li><li><b>order_ts</b> · timestamp</li><li><b>status</b> · enum</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">order_items <span class="cnt">180k rows</span></div><ul><li><b>order_id</b> · fk</li><li><b>product_id</b> · fk</li><li><b>qty</b> · int</li><li><b>unit_price</b> · numeric</li><li><b>discount</b> · numeric</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">merchants <span class="cnt">400 rows</span></div><ul><li><b>merchant_id</b> · pk</li><li><b>category</b> · enum</li><li><b>tier</b> · enum</li><li><b>joined_at</b> · date</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">+ 5 more tables <span class="cnt">…</span></div><ul><li>customers · products · payments</li><li>returns · channels</li><li>[full schema in final build]</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step-section" id="step-2" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">02</div>
+    <span class="step-tag">Step 2</span>
+    <h2 class="step-title">Generate sample data - with planted quirks</h2>
+    <p class="step-body">[SKELETON] A seeded generator builds all 8 tables. Five problems are planted on purpose - EDA that finds nothing teaches nothing. Step 5 shows which charts caught them.</p>
+    <div class="code-card">
+      <div class="code-head"><span>generate_everrest.py</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
+<span class="c-kw">import</span> pandas <span class="c-kw">as</span> pd
+
+rng = np.random.default_rng(<span class="c-str">42</span>)
+<span class="c-comment"># [SKELETON] full generator in final build - 8 tables, ~80k rows,</span>
+<span class="c-comment"># 5 planted quirks documented in this docstring</span></pre>
+    </div>
+    <div class="quirk-grid">
+      <div class="quirk reveal"><b>🕳 Missing values</b><span>8% of payment methods null, not at random</span></div>
+      <div class="quirk reveal"><b>📈 Outliers</b><span>One merchant with 40x median order value</span></div>
+      <div class="quirk reveal"><b>👯 Duplicates</b><span>~600 double-fired order rows</span></div>
+      <div class="quirk reveal"><b>🌊 Seasonality</b><span>Weekly cycle + November spike</span></div>
+      <div class="quirk reveal"><b>🚩 Suspicious segment</b><span>Returns cluster on one merchant tier</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step-section" id="step-3">
+  <div class="wrap">
+    <div class="step-ghost">03</div>
+    <span class="step-tag">Step 3</span>
+    <h2 class="step-title">Objective - a decision question, not a technique</h2>
+    <p class="step-body">[SKELETON] Framing before code. Not "run describe()" - a question a category lead would actually pay to answer.</p>
+    <div class="objective-banner reveal">
+      <div class="q">What should Everrest's category team <em>act on this quarter</em> - and what in this data can't be trusted yet?</div>
+      <ul class="subq">
+        <li>Where is revenue concentrated - and is that concentration healthy?</li>
+        <li>Which data quality issues would silently corrupt any dashboard built on this?</li>
+        <li>What does the weekly/seasonal demand rhythm mean for inventory?</li>
+        <li>Which merchant segment behaves abnormally, and is it fraud or a data artifact?</li>
+        <li>Which customer segments deserve a retention play?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4 -->
+<section class="step-section" id="step-4" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">04</div>
+    <span class="step-tag">Step 4</span>
+    <h2 class="step-title">Find-skills - Claude assembles its toolbox</h2>
+    <p class="step-body">[SKELETON] Before writing code, Claude scans its installed skills and picks the ones that serve this objective.</p>
+    <div class="tool-grid">
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4>ydata-profiling</h4><p>One-shot profile report: types, missingness, correlations - the 10-minute head start.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4>Great Expectations</h4><p>Turns the quirks EDA finds into permanent data quality gates.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>dataviz discipline</h4><p>Chart form chosen by relationship: trend=line, comparison=bar, distribution=histogram.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>schema-to-insights playbook</h4><p>Decision-first scan pattern: rank findings by dollar impact, not by p-value.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section class="step-section" id="step-5">
+  <div class="wrap">
+    <div class="step-ghost">05</div>
+    <span class="step-tag">Step 5</span>
+    <h2 class="step-title">Code + charts - the real run</h2>
+    <p class="step-body">[SKELETON] Sectioned analysis script mirrors the sub-questions. 12 chart types in the final build; every PNG rendered at 300 DPI from the actual run. Placeholders below show layout only.</p>
+    <div class="chart-grid">
+      <div class="chart-card reveal"><div class="ph">chart placeholder · revenue pareto</div><div class="cap"><b>Revenue pareto.</b> [final: real PNG + one-line finding]</div></div>
+      <div class="chart-card reveal"><div class="ph">chart placeholder · missingness matrix</div><div class="cap"><b>Missingness.</b> [final: real PNG + finding]</div></div>
+      <div class="chart-card reveal"><div class="ph">chart placeholder · seasonality decomposition</div><div class="cap"><b>Seasonality.</b> [final: real PNG + finding]</div></div>
+      <div class="chart-card reveal"><div class="ph">chart placeholder · segment heatmap</div><div class="cap"><b>Segments.</b> [final: real PNG + finding]</div></div>
+    </div>
+    <div class="caught reveal">
+      <table>
+        <thead><tr><th>Planted quirk</th><th>Caught by</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Missing payment methods (8%, not random)</td><td>Missingness matrix</td><td class="ok">✓ caught</td></tr>
+          <tr><td>40x outlier merchant</td><td>Box plot by tier</td><td class="ok">✓ caught</td></tr>
+          <tr><td>[3 more rows in final build]</td><td>…</td><td class="ok">…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 6 -->
+<section class="step-section" id="step-6" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">06</div>
+    <span class="step-tag">Step 6</span>
+    <h2 class="step-title">Mentor-verify - review that changes the code</h2>
+    <p class="step-body">[SKELETON] Four mentor voices review the actual code and outputs. Their fixes are applied and the pipeline re-runs - before/after shown, not generic praise.</p>
+    <div class="mentor-grid">
+      <div class="mentor-card reveal"><div class="m-name">Andrej Karpathy</div><div class="m-lens">Code level</div><p>[final: verdict on the actual script]</p><div class="m-fix">Fix applied: [example]</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Andrew Ng</div><div class="m-lens">Methodology</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Cassie Kozyrkov</div><div class="m-lens">Decision framing</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Monica Rogati</div><div class="m-lens">Practicality</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="install">
+      <h3>Run this skill on your own schema</h3>
+      <p>Install once, then hand Claude your tables and business context - the same 6 steps run on your data.</p>
+      <div class="code-card">
+        <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
+        <pre>git clone https://github.com/phoebefu6/phoebe-data-skills.git
+ln -s "$PWD/phoebe-data-skills/skills/how-to-eda" ~/.claude/skills/</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Phoebe Fu</span>
+    <span><a href="../">← All skills</a></span>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

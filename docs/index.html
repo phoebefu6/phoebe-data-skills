@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Phoebe's Data Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="progress"></div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">phoebe<b>·data·skills</b></div>
+    <nav>
+      <a href="#skills">Skills</a>
+      <a href="#pipeline">The pipeline</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="kicker">Claude + Python, end to end</span>
+    <h1>Data skills you can<br><span class="tealline">install, not just read.</span></h1>
+    <p class="lede">Each skill walks one complex industry case through a 6-step pipeline - schema in, real executed charts and mentor-verified code out. Clone the repo, install the skill, run it on your own data.</p>
+    <div class="stats">
+      <div class="stat"><div class="n num" data-count="1">0</div><div class="l">Skills live</div></div>
+      <div class="stat"><div class="n num" data-count="6">0</div><div class="l">Pipeline steps</div></div>
+      <div class="stat"><div class="n num" data-count="12">0</div><div class="l">Chart types</div></div>
+      <div class="stat"><div class="n num" data-count="80000">0</div><div class="l">Rows of sample data</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section tinted" id="skills">
+  <div class="wrap">
+    <span class="sec-kicker">The shelf</span>
+    <h2 class="sec-title">How-to skills</h2>
+    <p class="sec-sub">One card per skill. Click anywhere on a card to open its full visual walkthrough.</p>
+    <div class="card-grid">
+
+      <a class="skill-card reveal" href="how-to-eda-using-claude-python/">
+        <span class="status live">Live</span>
+        <div class="emoji">🔍</div>
+        <h3>how-to-EDA-using-claude-python</h3>
+        <p class="obj">What should Everrest's category team act on this quarter? Full exploratory data analysis on a B2B2C retail platform.</p>
+        <div class="chiprow">
+          <span class="chip">Everrest · retail B2B2C</span>
+          <span class="chip">12 chart types</span>
+          <span class="chip">6 steps</span>
+        </div>
+        <div class="go">Open walkthrough →</div>
+      </a>
+
+      <div class="skill-card soon reveal">
+        <span class="status soon">Coming soon</span>
+        <div class="emoji">🧬</div>
+        <h3>how-to-feature-engineering</h3>
+        <p class="obj">Turn raw Everrest tables into a model-ready feature matrix with leakage checks.</p>
+        <div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div>
+      </div>
+
+      <div class="skill-card soon reveal">
+        <span class="status soon">Coming soon</span>
+        <div class="emoji">✅</div>
+        <h3>how-to-data-quality</h3>
+        <p class="obj">Great Expectations suite from schema to CI gate, quirks caught automatically.</p>
+        <div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div>
+      </div>
+
+      <div class="skill-card soon reveal">
+        <span class="status soon">Coming soon</span>
+        <div class="emoji">📈</div>
+        <h3>how-to-forecasting</h3>
+        <p class="obj">Demand forecast per category with seasonality, holdout honesty, and error bands.</p>
+        <div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pipeline">
+  <div class="wrap">
+    <span class="sec-kicker">How every skill works</span>
+    <h2 class="sec-title">The 6-step pipeline</h2>
+    <p class="sec-sub">Same spine every time: input → sample data → objective → find-skills → code → mentor-verify. Real executed outputs only - every chart on every page came from a real run with a fixed seed.</p>
+    <div class="rail" style="margin-top:36px">
+      <div class="rail-step"><div class="rail-node"><div class="rail-circle">1</div><div class="rail-label">Input</div></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node"><div class="rail-circle">2</div><div class="rail-label">Sample data</div></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node"><div class="rail-circle">3</div><div class="rail-label">Objective</div></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node"><div class="rail-circle">4</div><div class="rail-label">Find-skills</div></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node"><div class="rail-circle">5</div><div class="rail-label">Code + charts</div></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node"><div class="rail-circle">6</div><div class="rail-label">Mentor-verify</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="install">
+      <h3>Use a skill on your own data</h3>
+      <p>Clone the repo, point Claude at the skill folder, hand it your schema.</p>
+      <div class="code-card">
+        <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
+        <pre>git clone https://github.com/phoebefu6/phoebe-data-skills.git
+ln -s "$PWD/phoebe-data-skills/skills/how-to-eda" ~/.claude/skills/</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Phoebe Fu</span>
+    <span><a href="https://github.com/phoebefu6/phoebe-data-skills">github.com/phoebefu6/phoebe-data-skills</a></span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>
