@@ -1,0 +1,64 @@
+# Everrest warehouse - data contract for fact_orders
+# Enforced in build_warehouse.py via pandera; promote to a CI gate with
+# Great Expectations so these guarantees never regress.
+dataset: fact_orders
+grain: one order line item (one row per source transaction)
+owner: data-platform
+source_lineage: raw dump -> lake -> warehouse (star schema)
+
+columns:
+  txn_id:
+    dtype: string
+    unique: true
+    nullable: false
+    description: line-item surrogate from the raw transactions export
+  order_id:
+    dtype: string
+    nullable: false
+  order_ts:
+    dtype: timestamp
+    nullable: false
+    description: UTC; PH timezone bug corrected upstream in clean_payments
+  status:
+    dtype: string
+    nullable: false
+    allowed: [delivered, shipped, paid, cancelled]   # mixed casing normalized
+  customer_id:
+    dtype: string
+    nullable: true            # null == orphan customer (flagged, not dropped)
+    note: canonical id after duplicate-identity collapse
+  merchant_id:
+    dtype: string
+    nullable: false
+    foreign_key: dim_merchant.merchant_id
+  product_id:
+    dtype: string
+    nullable: true            # null == orphan product (flagged, not dropped)
+    foreign_key: dim_product.product_id   # enforced for non-orphan rows
+  qty:
+    dtype: int
+    min: 1
+  net_amount:
+    dtype: float
+    min: 0
+  price_gap:
+    dtype: float
+    description: unit_price - catalog_price; non-zero reveals the stale snapshot
+  is_orphan_product:
+    dtype: bool
+  is_orphan_customer:
+    dtype: bool
+
+checks:
+  - name: referential_integrity_product
+    rule: "every row where NOT is_orphan_product has product_id in dim_product"
+    severity: error
+  - name: no_negative_payment_latency
+    rule: "clean_payments.paid_ts_utc >= order_ts for all rows"
+    severity: error
+  - name: category_domain
+    rule: "dim_merchant.category in the 8 canonical categories"
+    severity: error
+  - name: unique_customer_identity
+    rule: "dim_customer has one row per (signup_ts, channel, region) fingerprint"
+    severity: warn

@@ -8,6 +8,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
+<style>
+  .layer-band{margin-top:44px}
+  .layer-band:first-of-type{margin-top:8px}
+  .layer-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;
+    padding-bottom:10px;border-bottom:2px solid var(--accent)}
+  .layer-num{font-family:'Poppins';font-weight:600;font-size:13px;color:var(--accent);
+    letter-spacing:.1em}
+  .layer-name{font-family:'Poppins';font-weight:600;font-size:21px;color:var(--ink)}
+  .layer-tag{font-size:12.5px;color:var(--muted);font-weight:500;margin-left:auto}
+  .lineage-ribbon{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:22px 0 0;
+    font-family:'Inter';font-size:13px;font-weight:600;color:var(--muted)}
+  .lineage-ribbon span{background:#fff;border:1px solid var(--hairline);
+    border-radius:8px;padding:5px 11px;color:var(--ink)}
+</style>
 </head>
 <body>
 <div class="progress"></div>
@@ -24,14 +38,17 @@
 
 <section class="hero">
   <div class="wrap">
-    <span class="kicker">Claude + Python, end to end</span>
+    <span class="kicker">Infrastructure to Gen AI, one platform</span>
     <h1>Data skills you can<br><span class="tealline">install, not just read.</span></h1>
-    <p class="lede">Each skill walks one complex industry case through a 6-step pipeline - schema in, real executed charts and expert-reviewed code out. Clone the repo, install the skill, run it on your own data.</p>
+    <p class="lede">One retail platform - Everrest - carried across the full data stack: raw dump to warehouse to analytics to AI agent. Each skill walks one complex case through a 6-step pipeline with real executed artifacts and an expert-review panel. Clone the repo, install the skill, run it on your own data.</p>
     <div class="stats">
-      <div class="stat"><div class="n num" data-count="3">0</div><div class="l">Skills live</div></div>
-      <div class="stat"><div class="n num" data-count="6">0</div><div class="l">Pipeline steps</div></div>
-      <div class="stat"><div class="n num" data-count="31">0</div><div class="l">Charts &amp; visuals</div></div>
-      <div class="stat"><div class="n num" data-count="465990">0</div><div class="l">Rows of sample data</div></div>
+      <div class="stat"><div class="n num" data-count="4">0</div><div class="l">Skills live</div></div>
+      <div class="stat"><div class="n num" data-count="4">0</div><div class="l">Roadmap layers</div></div>
+      <div class="stat"><div class="n num" data-count="41">0</div><div class="l">Executed visuals</div></div>
+      <div class="stat"><div class="n num" data-count="625238">0</div><div class="l">Rows of sample data</div></div>
+    </div>
+    <div class="lineage-ribbon">
+      <span>raw dump</span>→<span>lake</span>→<span>warehouse</span>→<span>marts</span>→<span>scorecard</span>→<span>agent</span>
     </div>
   </div>
 </section>
@@ -39,74 +56,89 @@
 <section class="section tinted" id="skills">
   <div class="wrap">
     <span class="sec-kicker">The shelf</span>
-    <h2 class="sec-title">How-to skills</h2>
-    <p class="sec-sub">One card per skill. Click anywhere on a card to open its full visual walkthrough.</p>
-    <div class="card-grid">
+    <h2 class="sec-title">One platform, four layers</h2>
+    <p class="sec-sub">The full CDAIO stack on one Everrest dataset - Infrastructure at the base, Gen AI at the top. Click any live card for its visual walkthrough.</p>
 
-      <a class="skill-card reveal" href="how-to-eda-using-codex-python/">
-        <span class="status live">Live</span>
-        <div class="emoji">◇</div>
-        <h3>how-to-EDA-using-codex-python</h3>
-        <p class="obj">Can Everrest's new data platform be trusted? Codex assembles a profiling + integrity + forensic toolbox and digs out six data-trust defects.</p>
-        <div class="chiprow">
-          <span class="chip">Everrest · retail B2B2C</span>
-          <span class="chip">19 visuals</span>
-          <span class="chip">6 steps</span>
-        </div>
-        <div class="go">Open walkthrough →</div>
-      </a>
-
-      <a class="skill-card reveal" href="how-to-eda-using-claude-python/">
-        <span class="status live">Live</span>
-        <div class="emoji">🔍</div>
-        <h3>how-to-EDA-using-claude-python</h3>
-        <p class="obj">What should Everrest's category team act on this quarter? Full exploratory data analysis on a B2B2C retail platform.</p>
-        <div class="chiprow">
-          <span class="chip">Everrest · retail B2B2C</span>
-          <span class="chip">12 chart types</span>
-          <span class="chip">6 steps</span>
-        </div>
-        <div class="go">Open walkthrough →</div>
-      </a>
-
-      <a class="skill-card reveal" href="how-to-rfm-using-claude-python/">
-        <span class="status live">Live</span>
-        <div class="emoji">🎯</div>
-        <h3>how-to-RFM-using-claude-python</h3>
-        <p class="obj">Where should Everrest's CRM team spend its Q3 retention budget? Customer segmentation by Recency, Frequency, Monetary.</p>
-        <div class="chiprow">
-          <span class="chip">Everrest · retail B2B2C</span>
-          <span class="chip">11 segments</span>
-          <span class="chip">6 steps</span>
-        </div>
-        <div class="go">Open walkthrough →</div>
-      </a>
-
-      <div class="skill-card soon reveal">
-        <span class="status soon">Coming soon</span>
-        <div class="emoji">🧬</div>
-        <h3>how-to-feature-engineering</h3>
-        <p class="obj">Turn raw Everrest tables into a model-ready feature matrix with leakage checks.</p>
-        <div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div>
+    <!-- LAYER 1: INFRASTRUCTURE -->
+    <div class="layer-band">
+      <div class="layer-head" style="--accent:#4F46E5">
+        <span class="layer-num">LAYER 1</span><span class="layer-name">Infrastructure</span>
+        <span class="layer-tag">raw sources → lake → warehouse</span>
       </div>
-
-      <div class="skill-card soon reveal">
-        <span class="status soon">Coming soon</span>
-        <div class="emoji">✅</div>
-        <h3>how-to-data-quality</h3>
-        <p class="obj">Great Expectations suite from schema to CI gate, quirks caught automatically.</p>
-        <div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div>
+      <div class="card-grid" style="--accent:#4F46E5">
+        <a class="skill-card reveal" href="how-to-schema-and-warehouse/">
+          <span class="status live">Live</span>
+          <div class="emoji">◆</div>
+          <h3>how-to-schema-and-warehouse</h3>
+          <p class="obj">Turn a raw operational dump into a queryable DuckDB star schema with a data contract - the layer everyone fakes, done honestly.</p>
+          <div class="chiprow"><span class="chip">Everrest · retail B2B2C</span><span class="chip">1 fact + 4 dims</span><span class="chip">6 steps</span></div>
+          <div class="go">Open walkthrough →</div>
+        </a>
+        <div class="skill-card soon reveal"><span class="status soon">Coming soon</span><div class="emoji">📇</div><h3>how-to-data-dictionary</h3><p class="obj">Auto-document every column and register lineage in a catalog.</p><div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div></div>
+        <div class="skill-card soon reveal"><span class="status soon">Coming soon</span><div class="emoji">📡</div><h3>how-to-observability</h3><p class="obj">Pipeline SLOs: freshness, latency and error monitoring.</p><div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div></div>
       </div>
-
-      <div class="skill-card soon reveal">
-        <span class="status soon">Coming soon</span>
-        <div class="emoji">📈</div>
-        <h3>how-to-forecasting</h3>
-        <p class="obj">Demand forecast per category with seasonality, holdout honesty, and error bands.</p>
-        <div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div>
-      </div>
-
     </div>
+
+    <!-- LAYER 2: DATA ANALYTICS -->
+    <div class="layer-band">
+      <div class="layer-head" style="--accent:#0D9488">
+        <span class="layer-num">LAYER 2</span><span class="layer-name">Data Analytics</span>
+        <span class="layer-tag">metrics, scorecards, EDA</span>
+      </div>
+      <div class="card-grid" style="--accent:#0D9488">
+        <a class="skill-card reveal" href="how-to-eda-using-claude-python/">
+          <span class="status live">Live</span>
+          <div class="emoji">🔍</div>
+          <h3>how-to-EDA-using-claude-python</h3>
+          <p class="obj">What should Everrest's category team act on this quarter? Decision-first exploratory data analysis.</p>
+          <div class="chiprow"><span class="chip">Everrest · retail B2B2C</span><span class="chip">12 charts</span><span class="chip">6 steps</span></div>
+          <div class="go">Open walkthrough →</div>
+        </a>
+        <div class="skill-card soon reveal"><span class="status soon">Flagship next</span><div class="emoji">📊</div><h3>how-to-metric-to-scorecard</h3><p class="obj">Metric → validated → an executive scorecard the board screenshots.</p><div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div></div>
+        <div class="skill-card soon reveal"><span class="status soon">Coming soon</span><div class="emoji">✅</div><h3>how-to-data-quality</h3><p class="obj">Great Expectations gates from schema to CI, defects caught automatically.</p><div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div></div>
+      </div>
+    </div>
+
+    <!-- LAYER 3: DATA SCIENCE -->
+    <div class="layer-band">
+      <div class="layer-head" style="--accent:#0891B2">
+        <span class="layer-num">LAYER 3</span><span class="layer-name">Data Science</span>
+        <span class="layer-tag">segmentation, forecasting, ML</span>
+      </div>
+      <div class="card-grid" style="--accent:#0891B2">
+        <a class="skill-card reveal" href="how-to-eda-using-codex-python/">
+          <span class="status live">Live</span>
+          <div class="emoji">◇</div>
+          <h3>how-to-EDA-using-codex-python</h3>
+          <p class="obj">Can the data be trusted? Codex assembles a profiling + integrity + forensic toolbox and digs out six defects.</p>
+          <div class="chiprow"><span class="chip">Everrest · retail B2B2C</span><span class="chip">19 visuals</span><span class="chip">6 steps</span></div>
+          <div class="go">Open walkthrough →</div>
+        </a>
+        <a class="skill-card reveal" href="how-to-rfm-using-claude-python/">
+          <span class="status live">Live</span>
+          <div class="emoji">🎯</div>
+          <h3>how-to-RFM-using-claude-python</h3>
+          <p class="obj">Where should the CRM team spend its Q3 retention budget? RFM customer segmentation.</p>
+          <div class="chiprow"><span class="chip">Everrest · retail B2B2C</span><span class="chip">11 segments</span><span class="chip">6 steps</span></div>
+          <div class="go">Open walkthrough →</div>
+        </a>
+        <div class="skill-card soon reveal"><span class="status soon">Flagship next</span><div class="emoji">📈</div><h3>how-to-sales-forecasting</h3><p class="obj">How much inventory for November? Seasonality with an honest holdout.</p><div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div></div>
+      </div>
+    </div>
+
+    <!-- LAYER 4: GEN AI -->
+    <div class="layer-band">
+      <div class="layer-head" style="--accent:#7C3AED">
+        <span class="layer-num">LAYER 4</span><span class="layer-name">Gen AI</span>
+        <span class="layer-tag">agents on the warehouse</span>
+      </div>
+      <div class="card-grid" style="--accent:#7C3AED">
+        <div class="skill-card soon reveal"><span class="status soon">Flagship next</span><div class="emoji">🤖</div><h3>how-to-agentic-on-your-warehouse</h3><p class="obj">A grounded agent that queries the warehouse - shown getting it wrong, then self-correcting.</p><div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div></div>
+        <div class="skill-card soon reveal"><span class="status soon">Coming soon</span><div class="emoji">⚙️</div><h3>how-to-workflow-automation</h3><p class="obj">Automate a real pipeline task end to end.</p><div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div></div>
+        <div class="skill-card soon reveal"><span class="status soon">Coming soon</span><div class="emoji">🧭</div><h3>how-to-ai-use-case-discovery</h3><p class="obj">A scored AI use-case backlog from a discovery workshop.</p><div class="chiprow"><span class="chip">Everrest</span><span class="chip">6 steps</span></div></div>
+      </div>
+    </div>
+
   </div>
 </section>
 

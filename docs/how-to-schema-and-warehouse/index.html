@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>how-to-schema-and-warehouse · Phoebe's Data Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Infrastructure layer - indigo. Amber = anomaly/defect flag (shared). */
+  :root{
+    --accent:#4F46E5; --accent-dark:#4338CA;
+    --tint:#EEF2FF; --highlight:#F59E0B;
+  }
+  .layer-badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent-dark);background:var(--tint);
+    border:1px solid rgba(79,70,229,.25);border-radius:999px;padding:4px 12px;margin-bottom:14px;}
+  .frame{border:1px solid var(--hairline);border-radius:12px;overflow:hidden;margin:8px 0 6px;
+    box-shadow:0 10px 30px rgba(15,23,42,.06);background:#fff;}
+  .frame img{width:100%;display:block;cursor:zoom-in;}
+  .frame.pad{padding:10px;}
+  .cap-sub{font-size:13.5px;color:var(--muted);margin:0 0 26px;}
+  .ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:8px 0 6px;}
+  @media(max-width:760px){.ba-grid{grid-template-columns:1fr;}}
+  .lineage-ribbon{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 26px;
+    font-family:'Inter';font-size:13.5px;font-weight:600;color:var(--accent-dark);}
+  .lineage-ribbon span{background:var(--tint);border:1px solid rgba(79,70,229,.2);
+    border-radius:8px;padding:6px 12px;}
+  .lineage-ribbon b{color:var(--muted);font-weight:400;}
+</style>
+</head>
+<body>
+<div class="progress"></div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><a href="../" style="color:inherit">phoebe<b>·data·skills</b></a></div>
+    <nav>
+      <a href="../#skills">All skills</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:20px">
+  <div class="wrap">
+    <span class="layer-badge">◆ Infrastructure layer · flagship</span>
+    <h1 style="font-size:clamp(28px,4.4vw,46px)">how-to-<span class="tealline">schema-and-warehouse</span></h1>
+    <p class="lede">The layer everyone fakes with a tidy ERD of already-clean data. This one starts from a real operational mess - four source systems, mismatched keys, dirty labels - and ends at a DuckDB star schema you can actually query. Every number below came from a real build: seed 42, learn-python env, 107,841 raw transactions modeled.</p>
+    <div class="lineage-ribbon">
+      <span>raw dump</span><b>→</b><span>lake</span><b>→</b><span>warehouse</span><b>→</b><span>marts</span><b>→</b><span style="opacity:.5">agent (layer 4)</span>
+    </div>
+    <div class="chiprow" style="margin-top:6px">
+      <span class="chip">Case: Everrest · B2B2C retail platform</span>
+      <span class="chip">seed = 42</span>
+      <span class="chip">DuckDB · pandera · matplotlib</span>
+      <span class="chip">star schema: 1 fact + 4 dims</span>
+      <span class="chip">contract: PASS</span>
+    </div>
+
+    <div class="rail">
+      <div class="rail-step"><div class="rail-node" data-step="1"><a href="#step-1"><div class="rail-circle">1</div><div class="rail-label">Input</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="2"><a href="#step-2"><div class="rail-circle">2</div><div class="rail-label">Sample data</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="3"><a href="#step-3"><div class="rail-circle">3</div><div class="rail-label">Objective</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="4"><a href="#step-4"><div class="rail-circle">4</div><div class="rail-label">Find-skills</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="5"><a href="#step-5"><div class="rail-circle">5</div><div class="rail-label">Build</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="6"><a href="#step-6"><div class="rail-circle">6</div><div class="rail-label">Expert review</div></a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 1 -->
+<section class="step-section" id="step-1">
+  <div class="wrap">
+    <div class="step-ghost">01</div>
+    <span class="step-tag">Step 1</span>
+    <h2 class="step-title">Input - four source systems, none of them tidy</h2>
+    <p class="step-body">A real data platform is not handed clean tables - it is handed exports from whatever systems happened to produce them. Everrest arrives as four raw dumps with their own key formats, their own casing, and their own defects. The job: turn this into one warehouse the whole company can trust and query.</p>
+    <div class="tbl-grid">
+      <div class="tbl-card reveal"><div class="tbl-name">raw_transactions.csv <span class="cnt">107,841 rows</span></div><ul><li><b>txn_id</b> · one row per order line</li><li><b>order_ts_utc</b> · timestamp</li><li><b>status</b> · mixed casing (Delivered/delivered)</li><li><b>customer_id</b> · <em>some orphaned</em></li><li><b>merchant_id</b> · "M0001" format</li><li><b>category_raw</b> · <em>dirty labels</em></li><li><b>product_id</b> · <em>some orphaned</em></li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">raw_products_export.csv <span class="cnt">5,000 rows</span></div><ul><li><b>product_id</b> · catalog master</li><li><b>merchant_id</b> · fk</li><li><b>catalog_price</b> · current price</li><li><em>unit_price on txns drifts from this</em></li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">raw_merchants_extract.json <span class="cnt">400 records</span></div><ul><li><b>merchant_key</b> · "MER-0001" format</li><li><b>legacy_id</b> · "M0001" (the bridge)</li><li><b>category</b> · <em>dirty labels too</em></li><li><b>tier</b> · standard/premium/enterprise</li><li><b>onboarded</b> · date string</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">raw_payments_export.csv <span class="cnt">46,007 rows</span></div><ul><li><b>pmt_ref</b> · processor ref</li><li><b>order_id</b> · fk</li><li><b>method</b> · card/wallet/bnpl/cod</li><li><b>amount_reported</b> · <em>fabricated for M0333</em></li><li><b>paid_at</b> · <em>PH logged in local time</em></li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step-section" id="step-2" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">02</div>
+    <span class="step-tag">Step 2</span>
+    <h2 class="step-title">Generate sample data - defects planted in the RAW layer</h2>
+    <p class="step-body">The quirks are ingestion problems, so they live in the raw dump - which is exactly why the warehouse build has real work to do. A seeded generator produces the four sources; each defect is documented in its docstring, turning Step 5 into a recall test: did the model resolve everything the raw layer broke?</p>
+    <div class="code-card">
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-and-warehouse/generate_raw.py">generate_raw.py ↗</a> · excerpt</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># Quirk 3: the merchant master uses a different key format than transactions.</span>
+ext[<span class="c-str">"merchant_key"</span>] = ext.merchant_id.str.replace(<span class="c-str">"M"</span>, <span class="c-str">"MER-"</span>)   <span class="c-comment"># M0001 -> MER-0001</span>
+
+<span class="c-comment"># Quirk 4: PH payments logged in local time -> paid_at lands 8h BEFORE the order.</span>
+pay.loc[ph, <span class="c-str">"paid_at"</span>] = pay.loc[ph, <span class="c-str">"paid_at"</span>] - pd.Timedelta(hours=<span class="c-str">8</span>)
+
+<span class="c-comment"># Quirk 6: 800 customers cloned under a new id, identical signup/channel/region.</span>
+clones = customers.sample(<span class="c-str">800</span>, random_state=SEED).copy()
+clones[<span class="c-str">"customer_id"</span>] = [<span class="c-str">f"C9{i:05d}"</span> <span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-kw">range</span>(<span class="c-str">1</span>, <span class="c-kw">len</span>(clones) + <span class="c-str">1</span>)]</pre>
+    </div>
+    <div class="quirk-grid">
+      <div class="quirk reveal"><b>🔗 Orphan foreign keys</b><span>2.5% of line items and 1% of orders point to ids in no master</span></div>
+      <div class="quirk reveal"><b>🔤 Dirty categoricals</b><span>8 real categories arrive as 14 label variants</span></div>
+      <div class="quirk reveal"><b>🗝 Heterogeneous keys</b><span>merchant master uses MER-0001, transactions use M0001</span></div>
+      <div class="quirk reveal"><b>🕗 Timezone bug</b><span>PH payments logged 8h before their order</span></div>
+      <div class="quirk reveal"><b>🔢 Round-number fabrication</b><span>M0333 reports only round-hundred amounts</span></div>
+      <div class="quirk reveal"><b>👥 Duplicate identities</b><span>800 customers cloned under a second id</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step-section" id="step-3">
+  <div class="wrap">
+    <div class="step-ghost">03</div>
+    <span class="step-tag">Step 3</span>
+    <h2 class="step-title">Objective - a trust question, not a diagram</h2>
+    <p class="step-body">Anyone can draw an ERD. The real question an infrastructure lead has to answer is whether the platform can be built on at all.</p>
+    <div class="objective-banner reveal">
+      <div class="q">Can we turn this raw operational dump into a warehouse the whole company can <em>query and trust</em> - and what silently breaks if we skip the modeling?</div>
+      <ul class="subq">
+        <li>Do the foreign keys resolve, or are we joining onto ghosts?</li>
+        <li>Can the four source systems even be joined - do the keys reconcile?</li>
+        <li>Are the entities clean - categories, customers - or silently split and duplicated?</li>
+        <li>Once modeled, does one clean query return the right answer the raw dump could not?</li>
+        <li>Can we enforce all of this with a contract so it never regresses?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4 -->
+<section class="step-section" id="step-4" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">04</div>
+    <span class="step-tag">Step 4</span>
+    <h2 class="step-title">Find-skills - the modeling toolbox</h2>
+    <p class="step-body">Before writing DDL, assemble the tools that serve this objective: an engine that queries files directly, a contract library that turns integrity rules into code, and a promotion path to permanent CI gates.</p>
+    <div class="tool-grid">
+      <div class="tool-card reveal"><span class="t-kind">OSS engine</span><h4><a href="https://github.com/duckdb/duckdb">DuckDB</a></h4><p>Query CSV/JSON/Parquet directly and build the star schema in-process - the whole warehouse is one SQL file, zero infrastructure.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/unionai-oss/pandera">pandera</a></h4><p>Schema + referential-integrity assertions as code - "product_id must exist in dim_product" becomes a test the build enforces.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/great-expectations/great_expectations">Great Expectations</a></h4><p>Promotes the data contract to a permanent CI gate - the orphan keys and dirty labels never ship twice.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/datahub-project/datahub">DataHub / OpenMetadata</a></h4><p>Catalog + lineage: register the dims and fact so downstream teams discover the modeled tables, not the raw dump.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Pattern</span><h4>Kimball star schema</h4><p>One fact at a clear grain + conformed dimensions - the model that makes every downstream query a simple join.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Skill</span><h4>dataviz discipline</h4><p>One anomaly color (amber) across every reconciliation chart; row counts always shown so nothing hides.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section class="step-section" id="step-5">
+  <div class="wrap">
+    <div class="step-ghost">05</div>
+    <span class="step-tag">Step 5</span>
+    <h2 class="step-title">Build - raw dump to queryable star schema</h2>
+    <p class="step-body">One SQL file does the whole transform: stage the four sources, reconcile the keys, normalize the labels, dedupe identities, fix the timezone, then assemble one fact and four conformed dimensions. Grab the real code below.</p>
+    <div class="codelinks reveal">
+      <span class="cl-label">Get the code:</span>
+      <a class="cl-btn" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-and-warehouse/warehouse.sql"><span class="gh">▶</span> warehouse.sql</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-and-warehouse/generate_raw.py"><span class="gh">◆</span> Raw generator</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-and-warehouse/build_warehouse.py"><span class="gh">◈</span> Build + validate</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-and-warehouse/data_contract.yaml"><span class="gh">✓</span> data_contract.yaml</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/tree/main/materials/how-to-schema-and-warehouse"><span class="gh">↗</span> All files</a>
+    </div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:30px 0 4px;color:var(--ink)">The star schema</h3>
+    <div class="frame pad reveal"><img src="charts/schema_erd.png" alt="Star schema ERD: fact_orders at the center connected to dim_merchant, dim_customer, dim_product and dim_date"></div>
+    <p class="cap-sub">One fact at a clear grain (one order line) surrounded by four conformed dimensions. Every downstream question is now a simple join instead of a wrangling exercise.</p>
+
+    <div class="code-card">
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-and-warehouse/warehouse.sql">warehouse.sql ↗</a> · the cleaning happens in the transform</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment">-- Quirk 3: reconcile 'MER-0001' -&gt; 'M0001' via legacy_id.</span>
+<span class="c-comment">-- Quirk 2: normalize 14 dirty labels -&gt; 8 canonical categories.</span>
+<span class="c-kw">CREATE OR REPLACE TABLE</span> dim_merchant <span class="c-kw">AS</span>
+<span class="c-kw">SELECT</span> legacy_id <span class="c-kw">AS</span> merchant_id, clean_category(category) <span class="c-kw">AS</span> category, tier
+<span class="c-kw">FROM</span> stg_merchants;
+
+<span class="c-comment">-- Quirk 6: collapse duplicate identities on a (signup, channel, region) fingerprint.</span>
+<span class="c-kw">SELECT</span> <span class="c-kw">min</span>(customer_id) <span class="c-kw">OVER</span> (<span class="c-kw">PARTITION BY</span> signup_ts, channel, region) <span class="c-kw">AS</span> customer_id
+
+<span class="c-comment">-- Fact: orphan keys are FLAGGED, not silently dropped.</span>
+(dp.product_id <span class="c-kw">IS NULL</span>) <span class="c-kw">AS</span> is_orphan_product</pre>
+    </div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">Prove it's queryable: the same question, before and after</h3>
+    <p class="cap-sub">The whole point of modeling. On the raw dump, "revenue by category" splits into 14 mislabeled buckets. On the star schema, one clean join returns 8 whole categories.</p>
+    <div class="ba-grid">
+      <div class="frame reveal"><img src="charts/query_raw_category.png" alt="Query result on raw labels: 14 category buckets including Grocary and two Beauty rows"></div>
+      <div class="frame reveal"><img src="charts/query_clean_category.png" alt="Query result on the star schema: 8 clean category buckets"></div>
+    </div>
+    <div class="frame reveal"><img src="charts/query_top_merchants.png" alt="Star schema join result: top merchants by revenue with M0007 highlighted"></div>
+    <p class="cap-sub">A real star-schema join (fact_orders x dim_merchant): top merchants by revenue - and the M0007 bulk-wholesale outlier surfaces immediately, correctly attributed.</p>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">What the model fixed</h3>
+    <div class="chart-grid">
+      <div class="chart-card reveal"><img src="charts/lineage_funnel.png" alt="Row-count funnel from raw dump to modeled clean fact"><div class="cap"><b>Nothing lost.</b> Every one of 107,841 transactions is accounted for through the lineage; orphans are flagged, not silently dropped.</div></div>
+      <div class="chart-card reveal"><img src="charts/category_cardinality.png" alt="Category cardinality 14 to 8"><div class="cap"><b>14 → 8.</b> Dirty label variants normalized in dim_merchant, so every category rollup is whole.</div></div>
+      <div class="chart-card reveal"><img src="charts/orphan_quarantine.png" alt="Orphan foreign key rates flagged"><div class="cap"><b>Keys checked.</b> 2.5% of line items and 1% of orders are orphaned - quarantined with a flag the contract can enforce.</div></div>
+      <div class="chart-card reveal"><img src="charts/dup_collapse.png" alt="Duplicate customer identities collapsed"><div class="cap"><b>People, not rows.</b> Duplicate identities collapsed on a signup/channel/region fingerprint so acquisition counts are honest.</div></div>
+      <div class="chart-card reveal"><img src="charts/timezone_fix.png" alt="Payment latency before and after timezone fix"><div class="cap"><b>Time made sane.</b> PH payments no longer land 8 hours before their order once paid_at is shifted back to UTC.</div></div>
+      <div class="chart-card reveal"><img src="charts/fabrication_gap.png" alt="Reported versus modeled payment gap by merchant, M0333 highlighted"><div class="cap"><b>Reconciliation catches fraud.</b> M0333's reported payments diverge sharply from its modeled order value - a fabrication the warehouse surfaces.</div></div>
+    </div>
+
+    <div class="code-card">
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-and-warehouse/data_contract.yaml">data_contract.yaml ↗</a> · enforced by pandera, promotable to a CI gate</span><button class="copy-btn">Copy</button></div>
+      <pre>product_id:
+  foreign_key: dim_product.product_id   <span class="c-comment"># enforced for non-orphan rows</span>
+checks:
+  - name: referential_integrity_product
+    rule: <span class="c-str">"every non-orphan row has product_id in dim_product"</span>
+  - name: no_negative_payment_latency
+    rule: <span class="c-str">"paid_ts_utc &gt;= order_ts for all rows"</span>
+  - name: category_domain
+    rule: <span class="c-str">"dim_merchant.category in the 8 canonical categories"</span>
+<span class="c-comment"># build result: contract PASS - 0 referential-integrity violations</span></pre>
+    </div>
+
+    <div class="caught reveal">
+      <table>
+        <thead><tr><th>Planted defect (in raw)</th><th>Resolved by</th><th>Result</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Orphan foreign keys</td><td>fact flags + contract</td><td class="num">2,696 + 1,074 rows quarantined</td><td class="ok">✓ resolved</td></tr>
+          <tr><td>Dirty category labels</td><td>clean_category() in dim_merchant</td><td class="num">14 → 8 categories</td><td class="ok">✓ resolved</td></tr>
+          <tr><td>Heterogeneous merchant keys</td><td>legacy_id reconciliation</td><td class="num">MER-#### → M####</td><td class="ok">✓ resolved</td></tr>
+          <tr><td>Timezone bug (PH)</td><td>+8h shift in clean_payments</td><td class="num">0 negative latencies</td><td class="ok">✓ resolved</td></tr>
+          <tr><td>Round-number fabrication</td><td>reported vs modeled reconciliation</td><td class="num">M0333 flagged</td><td class="ok">✓ resolved</td></tr>
+          <tr><td>Duplicate identities</td><td>fingerprint dedup in dim_customer</td><td class="num">662 collapsed</td><td class="ok">✓ resolved</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 6 -->
+<section class="step-section" id="step-6" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">06</div>
+    <span class="step-tag">Step 6</span>
+    <h2 class="step-title">Expert review - a check that changes the model</h2>
+    <p class="step-body">A panel of five senior reviewer agents - each with 10+ years in data engineering, architecture, and business - tore into the naive first pass (<code>naive_query.py</code>, kept in the repo) that just queried the raw dump. It ran clean and returned plausible numbers, which is what made it dangerous. Every fix below is in the warehouse above.</p>
+    <div class="mentor-grid">
+      <div class="mentor-card reveal"><div class="m-name">Principal Data Architect</div><div class="m-lens">15 yrs · warehouse modeling</div><p>"You queried the raw dump directly and joined merchant on merchant_id. The master uses MER-0001 keys - your join matched zero rows and you never noticed. Model conformed dimensions with a reconciled key."</p><div class="m-fix">Fix applied: dim_merchant reconciles legacy_id; the star join now resolves every merchant.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Senior Data Engineer</div><div class="m-lens">13 yrs · pipeline integrity</div><p>"No referential-integrity check at all. 2.5% of line items point at products that do not exist - they vanish into a join and skew every total."</p><div class="m-fix">Fix applied: orphan keys flagged on the fact (not dropped) and enforced by the pandera contract.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Analytics Methodology Lead</div><div class="m-lens">11 yrs · data quality</div><p>"Revenue-by-category on the raw label gives you 'Beauty' twice and a 'Grocary'. Every rollup is silently split until you normalize on ingest."</p><div class="m-fix">Fix applied: clean_category() collapses 14 labels to 8 inside dim_merchant, before any query.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data Governance / Contract Lead</div><div class="m-lens">12 yrs · trust &amp; lineage</div><p>"Even if you fix it once, nothing stops it regressing. Where is the contract? And PH payments dated before their order should have failed a check immediately."</p><div class="m-fix">Fix applied: data_contract.yaml with FK, category-domain and no-negative-latency checks; timezone corrected in clean_payments.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Commercial / Business Lead</div><div class="m-lens">14 yrs · impact</div><p>"Your naive total counts a fabricated merchant and duplicate customers. That number goes to the board and it is wrong."</p><div class="m-fix">Fix applied: reported-vs-modeled reconciliation flags M0333; duplicate identities collapsed so counts are honest.</div></div>
+    </div>
+    <div class="code-card">
+      <div class="code-head"><span>before → after · the join that silently returned nothing</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment">-- v1 (before): query the raw dump, join on merchant_id</span>
+<span class="c-kw">SELECT</span> <span class="c-kw">count</span>(*) <span class="c-kw">FROM</span> t <span class="c-kw">JOIN</span> m <span class="c-kw">ON</span> t.merchant_id = m.merchant_key;
+<span class="c-comment">--   -&gt; 0 rows. MER-0001 never equals M0001. Silent, catastrophic.</span>
+
+<span class="c-comment">-- v2 (after): reconcile the key in dim_merchant, then join the star</span>
+<span class="c-kw">SELECT</span> dm.category, <span class="c-kw">sum</span>(f.net_amount)
+<span class="c-kw">FROM</span> fact_orders f <span class="c-kw">JOIN</span> dim_merchant dm <span class="c-kw">USING</span> (merchant_id);   <span class="c-comment">-- every row resolves</span></pre>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="install">
+      <h3>Run this skill on your own sources</h3>
+      <p>Install once, then point it at your raw exports - the same 6 steps build a star schema and a contract on your data (step 2 is skipped when real data exists).</p>
+      <div class="code-card">
+        <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
+        <pre>git clone https://github.com/phoebefu6/phoebe-data-skills.git
+ln -s "$PWD/phoebe-data-skills/skills/how-to-schema-and-warehouse" ~/.claude/skills/</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Phoebe Fu</span>
+    <span><a href="../">← All skills</a></span>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

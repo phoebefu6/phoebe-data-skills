@@ -3,3 +3,7 @@ materials/how-to-eda/data/
 materials/how-to-eda/output_v1/
 materials/how-to-rfm/data/
 materials/how-to-rfm/output_v1/
+materials/how-to-schema-and-warehouse/raw/
+materials/how-to-schema-and-warehouse/lake/
+materials/how-to-schema-and-warehouse/everrest.duckdb
+materials/how-to-schema-and-warehouse/output/
