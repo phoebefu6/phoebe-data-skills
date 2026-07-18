@@ -25,13 +25,14 @@
   <div class="wrap">
     <span class="kicker">Skill walkthrough</span>
     <h1 style="font-size:clamp(30px,4.6vw,48px)">how-to-<span class="tealline">RFM</span>-using-claude-python</h1>
-    <p class="lede">[SKELETON] One CRM budget decision, one retail platform, six steps. Segment every Everrest customer by Recency, Frequency, Monetary - then rank where the retention money should go. Every chart from a real run, seed 42.</p>
+    <p class="lede">One CRM budget decision, one retail platform, six steps. Segment all 20,000 Everrest customers by Recency, Frequency, Monetary - then rank where the retention money should go. Every chart from a real run, seed 42.</p>
     <div class="chiprow" style="margin-top:20px">
       <span class="chip">Case: Everrest · B2B2C retail platform</span>
       <span class="chip">seed = 42</span>
-      <span class="chip">pandas · matplotlib · seaborn</span>
+      <span class="chip">pandas · matplotlib</span>
       <span class="chip">classic 5×5 RFM · 11 segments</span>
-      <span class="chip">~12 chart types</span>
+      <span class="chip">12 chart types</span>
+      <span class="chip">6 findings, $-ranked</span>
     </div>
 
     <div class="rail">
@@ -51,12 +52,12 @@
     <div class="step-ghost">01</div>
     <span class="step-tag">Step 1</span>
     <h2 class="step-title">Input - schema + business context</h2>
-    <p class="step-body">[SKELETON] RFM needs only transaction history. From the Everrest platform we take three tables - customers, orders, order_items - plus one line of context: the CRM team has a fixed Q3 retention budget and wants to know where to spend it.</p>
+    <p class="step-body">RFM needs only transaction history. From the Everrest platform we take three tables - customers, orders, order_items - plus one line of context: the CRM team has a fixed Q3 retention budget and wants to know where to spend it. Recency, Frequency and Monetary are all derivable from these three tables alone.</p>
     <div class="tbl-grid">
-      <div class="tbl-card reveal"><div class="tbl-name">customers <span class="cnt">20k rows</span></div><ul><li><b>customer_id</b> · pk</li><li><b>signup_date</b> · date</li><li><b>channel_id</b> · acquisition channel</li><li><b>region</b> · SEA market</li></ul></div>
-      <div class="tbl-card reveal"><div class="tbl-name">orders <span class="cnt">~60k rows</span></div><ul><li><b>order_id</b> · pk</li><li><b>customer_id</b> · fk</li><li><b>order_ts</b> · timestamp (Recency)</li><li><b>status</b> · enum</li></ul></div>
-      <div class="tbl-card reveal"><div class="tbl-name">order_items <span class="cnt">~130k rows</span></div><ul><li><b>order_id</b> · fk</li><li><b>qty · unit_price · discount</b></li><li><b>→ net = Monetary</b></li></ul></div>
-      <div class="tbl-card reveal"><div class="tbl-name">the 3 RFM signals</div><ul><li><b>Recency</b> · days since last order</li><li><b>Frequency</b> · order count</li><li><b>Monetary</b> · total net spend</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">customers <span class="cnt">20,000 rows</span></div><ul><li><b>customer_id</b> · pk</li><li><b>signup_date</b> · date</li><li><b>channel_id</b> · acquisition channel</li><li><b>region</b> · SEA market</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">orders <span class="cnt">107,417 rows</span></div><ul><li><b>order_id</b> · pk</li><li><b>customer_id</b> · fk</li><li><b>order_ts</b> · timestamp → Recency</li><li><b>status</b> · delivered / returned</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">order_items <span class="cnt">191,762 rows</span></div><ul><li><b>order_id</b> · fk</li><li><b>qty · unit_price · discount</b></li><li><b>→ net = Monetary</b></li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">the 3 RFM signals</div><ul><li><b>Recency</b> · days since last order</li><li><b>Frequency</b> · delivered order count</li><li><b>Monetary</b> · total net delivered spend</li></ul></div>
     </div>
   </div>
 </section>
@@ -67,21 +68,27 @@
     <div class="step-ghost" style="color:#fff">02</div>
     <span class="step-tag">Step 2</span>
     <h2 class="step-title">Generate sample data - customers with real lifecycles</h2>
-    <p class="step-body">[SKELETON] A dedicated seeded generator assigns every Everrest customer a lifecycle archetype so RFM has something to find. Five patterns planted on purpose - Step 5 grades whether the analysis recovered them.</p>
+    <p class="step-body">A dedicated seeded generator draws every customer from a lifecycle archetype, so an RFM segmentation has real structure to recover. Five patterns are planted on purpose and documented in the generator docstring - Step 5 grades whether the analysis found each one.</p>
     <div class="code-card">
-      <div class="code-head"><span>generate_everrest_rfm.py · excerpt</span><button class="copy-btn">Copy</button></div>
-      <pre><span class="c-comment"># [SKELETON] archetype-driven customer behaviour, seed 42</span>
-<span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
-rng = np.random.default_rng(<span class="c-str">42</span>)
-<span class="c-comment"># each customer drawn into a lifecycle: champion / loyal / at-risk /</span>
-<span class="c-comment"># can't-lose-them / hibernating / one-and-done ...</span></pre>
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-rfm/generate_everrest_rfm.py">generate_everrest_rfm.py ↗</a> · excerpt (full script on GitHub)</span><button class="copy-btn">Copy</button></div>
+      <pre>rng = np.random.default_rng(<span class="c-str">42</span>)
+
+<span class="c-comment"># each customer drawn into a lifecycle archetype with its own</span>
+<span class="c-comment"># frequency / recency / spend ranges</span>
+ARCHETYPES = {
+    <span class="c-comment">#                  share  freq     recency   spend</span>
+    <span class="c-str">"champion"</span>:       (<span class="c-str">0.05</span>, (<span class="c-str">12</span>,<span class="c-str">30</span>), (<span class="c-str">1</span>,<span class="c-str">30</span>),  (<span class="c-str">90</span>,<span class="c-str">260</span>)),
+    <span class="c-str">"cant_lose_them"</span>: (<span class="c-str">0.03</span>, (<span class="c-str">8</span>,<span class="c-str">20</span>),  (<span class="c-str">150</span>,<span class="c-str">330</span>),(<span class="c-str">120</span>,<span class="c-str">320</span>)),  <span class="c-comment"># whale lapsers</span>
+    <span class="c-str">"hibernating"</span>:    (<span class="c-str">0.14</span>, (<span class="c-str">2</span>,<span class="c-str">4</span>),   (<span class="c-str">200</span>,<span class="c-str">330</span>),(<span class="c-str">30</span>,<span class="c-str">80</span>)),
+    <span class="c-comment"># ... 10 archetypes total, seed 42</span>
+}</pre>
     </div>
     <div class="quirk-grid">
-      <div class="quirk reveal"><b>🐋 Whale concentration</b><span>Top ~5% of customers drive a huge share of monetary</span></div>
+      <div class="quirk reveal"><b>🐋 Whale concentration</b><span>A small champion + loyal core drives most of the monetary value</span></div>
       <div class="quirk reveal"><b>⏳ Can't-lose-them</b><span>Highest past spenders who have gone quiet - win-back gold</span></div>
       <div class="quirk reveal"><b>🎯 Affiliate one-and-done</b><span>Single low-value order, never returned - over-indexed on affiliate</span></div>
       <div class="quirk reveal"><b>🌊 Nov signup cohort</b><span>Promo-acquired customers who never reactivated</span></div>
-      <div class="quirk reveal"><b>↩ Returns-heavy segment</b><span>High order count but net value dragged negative by returns</span></div>
+      <div class="quirk reveal"><b>↩ Returns-heavy segment</b><span>High order count but net value dragged low by returns</span></div>
     </div>
   </div>
 </section>
@@ -92,7 +99,7 @@ rng = np.random.default_rng(<span class="c-str">42</span>)
     <div class="step-ghost">03</div>
     <span class="step-tag">Step 3</span>
     <h2 class="step-title">Objective - a budget decision, not a scoring exercise</h2>
-    <p class="step-body">[SKELETON] RFM is a means, not the goal. The goal is a defensible answer to where the Q3 retention budget goes.</p>
+    <p class="step-body">RFM is a means, not the goal. The goal is a defensible answer to where the Q3 retention budget goes. Every chart in Step 5 serves one of these sub-questions.</p>
     <div class="objective-banner reveal">
       <div class="q">Which Everrest customers should the CRM team spend its <em>Q3 retention budget</em> on - and which are quietly the most valuable?</div>
       <ul class="subq">
@@ -112,12 +119,12 @@ rng = np.random.default_rng(<span class="c-str">42</span>)
     <div class="step-ghost" style="color:#fff">04</div>
     <span class="step-tag">Step 4</span>
     <h2 class="step-title">Find-skills - Claude assembles its toolbox</h2>
-    <p class="step-body">[SKELETON] The tools and skills that serve an RFM segmentation, picked before any code.</p>
+    <p class="step-body">The tools and skills that serve an RFM segmentation, picked before any code.</p>
     <div class="tool-grid">
-      <div class="tool-card reveal"><span class="t-kind">Technique</span><h4>pandas qcut scoring</h4><p>Quintile R/F/M scores 1-5 - the backbone of classic RFM.</p></div>
-      <div class="tool-card reveal"><span class="t-kind">Reference</span><h4>11-segment standard map</h4><p>Industry-standard R×F grid → Champions, Loyal, At Risk, Hibernating, Lost...</p></div>
-      <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>dataviz discipline</h4><p>Treemap for segment size, scatter for R-F, form follows relationship.</p></div>
-      <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>schema-to-insights playbook</h4><p>Rank each segment by dollar opportunity, tie to a budget action.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Technique</span><h4>pandas qcut scoring</h4><p>Quintile R/F/M scores 1-5 - the backbone of classic RFM. Rank-break ties on frequency.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Reference</span><h4>11-segment standard map</h4><p>Industry-standard R×FM grid → Champions, Loyal, At Risk, Can't Lose Them, Hibernating, Lost...</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>dataviz discipline</h4><p>Treemap for segment size, bubble map for the budget call - form follows the relationship.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>schema-to-insights playbook</h4><p>Rank each segment by dollar opportunity, tie every finding to a budget action.</p></div>
     </div>
   </div>
 </section>
@@ -128,24 +135,59 @@ rng = np.random.default_rng(<span class="c-str">42</span>)
     <div class="step-ghost">05</div>
     <span class="step-tag">Step 5</span>
     <h2 class="step-title">Code + charts - the real run</h2>
-    <p class="step-body">[SKELETON] Score R/F/M → map to 11 segments → size and value each → recommend the budget split. ~12 chart types, all real PNGs in the final build. Placeholders below show layout only.</p>
-    <div class="chart-grid">
-      <div class="chart-card reveal"><div class="ph">R / F / M distributions</div><div class="cap"><b>The three signals.</b> [final: real PNG]</div></div>
-      <div class="chart-card reveal"><div class="ph">segment treemap</div><div class="cap"><b>Segment sizes.</b> [final: real PNG]</div></div>
-      <div class="chart-card reveal"><div class="ph">monetary pareto</div><div class="cap"><b>Whale check.</b> [final: real PNG]</div></div>
-      <div class="chart-card reveal"><div class="ph">R × F heatmap</div><div class="cap"><b>The RFM grid.</b> [final: real PNG]</div></div>
-      <div class="chart-card reveal"><div class="ph">recency vs frequency scatter</div><div class="cap"><b>Where segments live.</b> [final: real PNG]</div></div>
-      <div class="chart-card reveal"><div class="ph">segment × channel</div><div class="cap"><b>Affiliate one-and-done.</b> [final: real PNG]</div></div>
+    <p class="step-body">Score R/F/M on delivered-only revenue → map to 11 named segments → size and value each → recommend the budget split. 12 chart types, every PNG rendered at 300 DPI from the actual run. Grab the code - one click, copy, run.</p>
+    <div class="codelinks reveal">
+      <span class="cl-label">Get the code:</span>
+      <a class="cl-btn" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-rfm/rfm_everrest_v2.py"><span class="gh">▶</span> RFM script (v2)</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-rfm/generate_everrest_rfm.py"><span class="gh">◆</span> Data generator</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-rfm/rfm_everrest_v1.py"><span class="gh">◷</span> v1 (pre-review)</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/tree/main/materials/how-to-rfm"><span class="gh">↗</span> All files</a>
     </div>
+    <div class="code-card">
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-rfm/rfm_everrest_v2.py">rfm_everrest_v2.py ↗</a> · scoring + segment map (excerpt)</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># DQ gate: score on DELIVERED revenue only - returns are not monetary</span>
+deliv = orders[orders.status == <span class="c-str">"delivered"</span>]
+rfm = deliv.groupby(<span class="c-str">"customer_id"</span>).agg(
+    recency=(<span class="c-str">"order_ts"</span>, <span class="c-kw">lambda</span> s: (REF_DATE - s.max()).days),
+    frequency=(<span class="c-str">"order_id"</span>, <span class="c-str">"count"</span>),
+    monetary=(<span class="c-str">"order_value"</span>, <span class="c-str">"sum"</span>))
+
+rfm[<span class="c-str">"R"</span>] = pd.qcut(rfm.recency, <span class="c-str">5</span>, labels=[<span class="c-str">5</span>,<span class="c-str">4</span>,<span class="c-str">3</span>,<span class="c-str">2</span>,<span class="c-str">1</span>])
+<span class="c-comment"># F on rank so ties don't break qcut; M by spend quintile</span>
+<span class="c-comment"># then map (R, FM) -> 11 named segments, value-critical first</span></pre>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card reveal"><img src="charts/rfm_distributions.png" alt="Three histograms: recency, frequency, monetary distributions"><div class="cap"><b>The three signals.</b> Recency, frequency and monetary, each scored 1-5 by quintile.</div></div>
+      <div class="chart-card reveal"><img src="charts/segment_treemap.png" alt="Treemap of 11 RFM segments sized by customers, coloured by total value"><div class="cap"><b>The 11 segments.</b> Champions are the dark block - most customers AND most value. Can't-Lose-Them punches far above its size.</div></div>
+      <div class="chart-card reveal"><img src="charts/monetary_pareto.png" alt="Monetary pareto: top 5 percent of customers drive 35 percent of revenue"><div class="cap"><b>Whale check.</b> The top 5% of customers drive 35% of revenue - Everrest is whale-dependent.</div></div>
+      <div class="chart-card reveal"><img src="charts/rf_heatmap.png" alt="Recency by Frequency score grid heatmap of customer counts"><div class="cap"><b>The RFM grid.</b> Customers cluster at the corners - the actionable segments live in the extremes.</div></div>
+      <div class="chart-card reveal"><img src="charts/recency_frequency.png" alt="Recency vs frequency scatter, Champions and Can't Lose Them highlighted"><div class="cap"><b>Where segments live.</b> Champions cluster low-recency/high-frequency; Can't-Lose-Them drift right and must be pulled back.</div></div>
+      <div class="chart-card reveal"><img src="charts/segment_by_channel.png" alt="Stacked bar of segment composition by acquisition channel, affiliate over-indexed on lost"><div class="cap"><b>Affiliate one-and-done.</b> Affiliate over-indexes on Hibernating &amp; Lost - it buys one-and-done, not loyalty.</div></div>
+      <div class="chart-card reveal"><img src="charts/monetary_by_segment.png" alt="Box plots of monetary value per segment on log scale"><div class="cap"><b>Value per segment.</b> Champions and Can't-Lose-Them carry the money; the rest are thin.</div></div>
+      <div class="chart-card reveal"><img src="charts/nov_cohort.png" alt="Bar chart: November promo cohort barely reactivated vs other months"><div class="cap"><b>Promo mirage.</b> The November cohort barely reactivated - a signup spike, not real growth.</div></div>
+      <div class="chart-card reveal"><img src="charts/budget_map.png" alt="Bubble map of segments by average recency and value, amber marks act-now"><div class="cap"><b>The budget map.</b> Spend where value is high AND recency is slipping - amber is the act-now zone.</div></div>
+      <div class="chart-card reveal"><img src="charts/share_vs_revenue.png" alt="Grouped bars comparing customer share vs revenue share by segment"><div class="cap"><b>Punching above weight.</b> A few segments hold far more revenue than their headcount suggests.</div></div>
+      <div class="chart-card reveal"><img src="charts/validation_heatmap.png" alt="Heatmap validating RFM segments against planted ground-truth archetypes"><div class="cap"><b>Recovery check.</b> Planted archetypes land in the matching RFM segments - the method works.</div></div>
+      <div class="chart-card reveal"><img src="charts/value_at_stake.png" alt="Bar chart of value at stake: two segments to protect, two to win back"><div class="cap"><b>The recommendation.</b> Protect Champions + Loyal (teal); win back At Risk + Can't-Lose-Them now (amber).</div></div>
+    </div>
+
     <div class="caught reveal">
       <table>
-        <thead><tr><th>Planted pattern</th><th>Caught by</th><th>Status</th></tr></thead>
+        <thead><tr><th>Planted pattern</th><th>Caught by</th><th>$ at stake</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td>Whale concentration</td><td>Monetary pareto</td><td class="ok">✓ (final)</td></tr>
-          <tr><td>Can't-lose-them lapsers</td><td>R×F grid + scatter</td><td class="ok">✓ (final)</td></tr>
-          <tr><td>[3 more in final build]</td><td>…</td><td class="ok">…</td></tr>
+          <tr><td>Whale concentration</td><td>Monetary pareto + treemap</td><td class="num">top 5% = 35% of revenue</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Can't-lose-them lapsers</td><td>Segment map + budget map</td><td class="num">$2,249,746</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Affiliate one-and-done</td><td>Segment by channel</td><td class="num">2,056 customers, $143k</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Nov promo cohort</td><td>Cohort reactivation bar</td><td class="num">1,283 lapsed</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Returns-heavy segment</td><td>Delivered-only DQ gate</td><td class="num">$991k excluded</td><td class="ok">✓ caught</td></tr>
+          <tr><td><em>Recovery check (not planted):</em> archetype → segment</td><td>Validation heatmap</td><td class="num">method verified</td><td class="ok">✓ confirmed</td></tr>
         </tbody>
       </table>
+    </div>
+    <div class="codelinks reveal">
+      <span class="cl-label">The deliverable:</span>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-rfm/findings.md"><span class="gh">↗</span> findings.md - segments ranked by $ at stake</a>
     </div>
   </div>
 </section>
@@ -156,12 +198,22 @@ rng = np.random.default_rng(<span class="c-str">42</span>)
     <div class="step-ghost" style="color:#fff">06</div>
     <span class="step-tag">Step 6</span>
     <h2 class="step-title">Expert review - a check that changes the code</h2>
-    <p class="step-body">[SKELETON] A panel of 4-6 senior reviewer agents (10+ years in data, insights, business) reviews the v1 analysis; fixes are applied and the pipeline re-runs. Before/after shown here in the final build.</p>
+    <p class="step-body">A panel of five senior reviewer agents - each with 10+ years in data, data insights, and business - reviewed the first version (<code>rfm_everrest_v1.py</code>, kept in the repo). Every fix below was applied and the pipeline re-ran; the charts above are the post-review v2.</p>
     <div class="mentor-grid">
-      <div class="mentor-card reveal"><div class="m-name">Senior Data Engineer</div><div class="m-lens">code &amp; pipeline</div><p>[final: verdict on the real script]</p><div class="m-fix">Fix applied: [example]</div></div>
-      <div class="mentor-card reveal"><div class="m-name">Analytics Methodology Lead</div><div class="m-lens">scoring rigor</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
-      <div class="mentor-card reveal"><div class="m-name">Data Insights Lead</div><div class="m-lens">segment framing</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
-      <div class="mentor-card reveal"><div class="m-name">Commercial / Business Lead</div><div class="m-lens">budget ROI</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Senior Data Engineer</div><div class="m-lens">12 yrs · code &amp; pipeline</div><p>"v1 scored monetary on all orders, including returns. A customer who returns half their orders isn't high-value - gate to delivered revenue first."</p><div class="m-fix">Fix applied: monetary + frequency computed on delivered orders only; $991k of returned value excluded.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Analytics Methodology Lead</div><div class="m-lens">10 yrs · scoring rigor</div><p>"Raw RF codes (55 combos) aren't actionable, and qcut on tied frequency counts is unstable. Use rank and map to named segments."</p><div class="m-fix">Fix applied: frequency scored on rank; standard 11-segment map; recency from a fixed reference date.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data Insights Lead</div><div class="m-lens">11 yrs · segment framing</div><p>"The channel view is missing - that's where the affiliate one-and-done story lives. And a raw RF-code bar has no action attached."</p><div class="m-fix">Fix applied: added segment-by-channel, treemap and budget map; dropped the RF-code bar; every title is a finding.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Commercial / Business Lead</div><div class="m-lens">14 yrs · budget ROI</div><p>"A segmentation the CRM lead can't spend against is a poster. Which segment gets the next dollar, and what's it worth?"</p><div class="m-fix">Fix applied: every segment carries a $ figure; findings.md ranks the budget priorities, Can't-Lose-Them first.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data QA &amp; Reproducibility</div><div class="m-lens">10 yrs · trust &amp; recall</div><p>"Prove the segments mean something. Check them against the planted archetypes on a clean re-run."</p><div class="m-fix">Fix applied: validation heatmap confirms archetypes land in the matching segments; fixed seed + ref date, byte-identical.</div></div>
+    </div>
+    <div class="code-card">
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-rfm/rfm_everrest_v2.py">before → after ↗</a> · the score that lied</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># v1 (before): monetary on ALL orders - returns counted as value</span>
+rfm = orders.groupby(<span class="c-str">"customer_id"</span>).agg(monetary=(<span class="c-str">"order_value"</span>,<span class="c-str">"sum"</span>))
+
+<span class="c-comment"># v2 (after): delivered-only - $991k of returns removed before scoring</span>
+deliv = orders[orders.status == <span class="c-str">"delivered"</span>]
+rfm = deliv.groupby(<span class="c-str">"customer_id"</span>).agg(monetary=(<span class="c-str">"order_value"</span>,<span class="c-str">"sum"</span>))</pre>
     </div>
   </div>
 </section>
