@@ -73,7 +73,7 @@
     <h2 class="step-title">Generate sample data - with planted quirks</h2>
     <p class="step-body">A seeded generator builds all 8 tables - 233,835 rows, identical on every run. Five problems are planted on purpose, because EDA that finds nothing teaches nothing. Each quirk is documented in the generator's docstring, which turns Step 5 into a recall test: did the analysis catch everything we hid?</p>
     <div class="code-card">
-      <div class="code-head"><span>generate_everrest.py · excerpt (full script in repo)</span><button class="copy-btn">Copy</button></div>
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda/generate_everrest.py">generate_everrest.py ↗</a> · excerpt (full script on GitHub)</span><button class="copy-btn">Copy</button></div>
       <pre><span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
 <span class="c-kw">import</span> pandas <span class="c-kw">as</span> pd
 
@@ -144,9 +144,16 @@ nov_weight = np.where(days.month == <span class="c-str">11</span>, <span class="
     <div class="step-ghost">05</div>
     <span class="step-tag">Step 5</span>
     <h2 class="step-title">Code + charts - the real run</h2>
-    <p class="step-body">One sectioned script, data-quality gate first, business questions on the clean data second. 12 chart types, every PNG rendered at 300 DPI from the actual run, every title a finding rather than a technique. The full script is <code>materials/how-to-eda/eda_everrest_v2.py</code> in the repo.</p>
+    <p class="step-body">One sectioned script, data-quality gate first, business questions on the clean data second. 12 chart types, every PNG rendered at 300 DPI from the actual run, every title a finding rather than a technique. Grab the real code below - one click, copy, run.</p>
+    <div class="codelinks reveal">
+      <span class="cl-label">Get the code:</span>
+      <a class="cl-btn" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda/eda_everrest_v2.py"><span class="gh">▶</span> Analysis script (v2)</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda/generate_everrest.py"><span class="gh">◆</span> Data generator</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda/eda_everrest_v1.py"><span class="gh">◷</span> v1 (pre-review)</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/tree/main/materials/how-to-eda"><span class="gh">↗</span> All files</a>
+    </div>
     <div class="code-card">
-      <div class="code-head"><span>eda_everrest_v2.py · the DQ gate (excerpt)</span><button class="copy-btn">Copy</button></div>
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda/eda_everrest_v2.py">eda_everrest_v2.py ↗</a> · the DQ gate (excerpt)</span><button class="copy-btn">Copy</button></div>
       <pre><span class="c-comment"># Gate 1: exact duplicate order rows (retry bug).</span>
 dupes = orders_raw[orders_raw.duplicated()]
 dup_inflation = order_value.reindex(dupes.order_id).sum()
@@ -187,6 +194,10 @@ null_by_ch = pay.groupby(<span class="c-str">"channel_id"</span>).method.apply(<
         </tbody>
       </table>
     </div>
+    <div class="codelinks reveal">
+      <span class="cl-label">The deliverable:</span>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda/findings.md"><span class="gh">↗</span> findings.md - all 6 findings ranked by $</a>
+    </div>
   </div>
 </section>
 
@@ -205,7 +216,7 @@ null_by_ch = pay.groupby(<span class="c-str">"channel_id"</span>).method.apply(<
       <div class="mentor-card reveal"><div class="m-name">Data QA &amp; Reproducibility</div><div class="m-lens">10 yrs · trust &amp; recall</div><p>"Prove it reproduces. Re-run from a clean checkout and confirm the analysis recovers every planted quirk, not just the easy ones."</p><div class="m-fix">Fix applied: fixed seed verified byte-identical on a clean run; all 5 planted quirks confirmed recovered, plus 1 unplanned finding.</div></div>
     </div>
     <div class="code-card">
-      <div class="code-head"><span>before → after · the aggregate that lied</span><button class="copy-btn">Copy</button></div>
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda/eda_everrest_v2.py">before → after ↗</a> · the aggregate that lied</span><button class="copy-btn">Copy</button></div>
       <pre><span class="c-comment"># v1 (before): revenue computed on raw orders - dupes + cancelled included</span>
 rev = orders.groupby(<span class="c-str">"merchant_id"</span>).order_value.sum()
 
