@@ -1,0 +1,9 @@
+{
+  "name": "how-to-schema-consolidation",
+  "description": "Audit a multi-server table estate and schema-diff before merging drifted copies into one. Ships a runnable baseline engine.",
+  "version": "1.0.0",
+  "author": { "name": "Phoebe Fu" },
+  "homepage": "https://phoebefu6.github.io/phoebe-data-skills",
+  "repository": "https://github.com/phoebefu6/phoebe-data-skills",
+  "license": "MIT"
+}

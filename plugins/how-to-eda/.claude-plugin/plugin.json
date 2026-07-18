@@ -1,0 +1,9 @@
+{
+  "name": "how-to-eda",
+  "description": "Decision-first exploratory data analysis - explore a dataset and surface what to act on, ranked by dollar impact. Ships a runnable baseline python script to tune per use case.",
+  "version": "1.0.0",
+  "author": { "name": "Phoebe Fu" },
+  "homepage": "https://phoebefu6.github.io/phoebe-data-skills",
+  "repository": "https://github.com/phoebefu6/phoebe-data-skills",
+  "license": "MIT"
+}

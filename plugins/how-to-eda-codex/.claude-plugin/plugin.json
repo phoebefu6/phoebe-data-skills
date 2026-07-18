@@ -1,0 +1,9 @@
+{
+  "name": "how-to-eda-codex",
+  "description": "Trust-first EDA - integrity, profiling and forensic checks to answer 'can I trust this data' before building on it. Ships a runnable baseline script.",
+  "version": "1.0.0",
+  "author": { "name": "Phoebe Fu" },
+  "homepage": "https://phoebefu6.github.io/phoebe-data-skills",
+  "repository": "https://github.com/phoebefu6/phoebe-data-skills",
+  "license": "MIT"
+}

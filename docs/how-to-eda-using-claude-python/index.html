@@ -235,8 +235,8 @@ rev = rev_orders.groupby(<span class="c-str">"merchant_id"</span>).order_value.s
       <p>Install once, then hand Claude your tables and business context - the same 6 steps run on your data (step 2 is skipped when real data exists).</p>
       <div class="code-card">
         <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
-        <pre>git clone https://github.com/phoebefu6/phoebe-data-skills.git
-ln -s "$PWD/phoebe-data-skills/skills/how-to-eda" ~/.claude/skills/</pre>
+        <pre>/plugin marketplace add phoebefu6/phoebe-data-skills
+/plugin install how-to-eda@phoebe-data-skills</pre>
       </div>
     </div>
   </div>

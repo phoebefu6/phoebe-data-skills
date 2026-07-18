@@ -169,12 +169,12 @@
 <section class="section" id="install">
   <div class="wrap">
     <div class="install">
-      <h3>Use a skill on your own data</h3>
-      <p>Clone the repo, point Claude at the skill folder, hand it your schema.</p>
+      <h3>Install only the skills you need</h3>
+      <p>Add the marketplace once, then install any skill on its own. Each ships a runnable baseline you tune with Claude.</p>
       <div class="code-card">
-        <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
-        <pre>git clone https://github.com/phoebefu6/phoebe-data-skills.git
-ln -s "$PWD/phoebe-data-skills/skills/how-to-eda" ~/.claude/skills/</pre>
+        <div class="code-head"><span>Claude Code</span><button class="copy-btn">Copy</button></div>
+        <pre>/plugin marketplace add phoebefu6/phoebe-data-skills
+/plugin install how-to-eda@phoebe-data-skills</pre>
       </div>
     </div>
   </div>

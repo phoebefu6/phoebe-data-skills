@@ -8,32 +8,32 @@ Operational guide for running these skills on your own data. For the "what and w
 - Python 3.10+ with `pandas`, `matplotlib`, `seaborn`, `statsmodels`, `duckdb`,
   `pandera` (only needed to run the baseline scripts; Claude writes/tunes them either way)
 
-## Install (recommended for a team) - plugin + marketplace
+## Install (recommended) - one skill at a time
 
-Each analyst runs this once in Claude Code:
+Each skill is its own plugin, so analysts install only what they need. Add the
+marketplace once, then install per skill in Claude Code:
 
 ```
 /plugin marketplace add phoebefu6/phoebe-data-skills
-/plugin install phoebe-data-skills@phoebe-data-skills
+/plugin install how-to-eda@phoebe-data-skills
 ```
 
-That installs all skills at once, each namespaced as `/phoebe-data-skills:<skill>`
-(e.g. `/phoebe-data-skills:how-to-eda`), **with the baseline python bundled**.
-When the repo updates, analysts get the new version on the next marketplace refresh.
+Swap `how-to-eda` for any skill: `how-to-eda-codex`, `how-to-rfm`,
+`how-to-schema-and-warehouse`, `how-to-schema-consolidation`. Each ships **with its
+baseline python bundled**. When the repo updates, analysts get the new version with
+`/plugin marketplace update phoebe-data-skills`.
 
-## Install (single skill) - clone + symlink
+## Install (single skill, no marketplace) - clone + symlink
 
 ```bash
 git clone https://github.com/phoebefu6/phoebe-data-skills.git
-ln -s "$PWD/phoebe-data-skills/skills/how-to-eda" ~/.claude/skills/
+ln -s "$PWD/phoebe-data-skills/plugins/how-to-eda/skills/how-to-eda" ~/.claude/skills/how-to-eda
 ```
-
-Each folder under `skills/` is a standalone Claude skill; symlink the ones you want.
 
 ## The baseline script (start here, then tune)
 
-Every skill ships a runnable baseline in `skills/<skill>/baseline/` - the real code
-behind the Everrest showcase. Ask Claude:
+Every skill ships a runnable baseline in `plugins/<skill>/skills/<skill>/baseline/` -
+the real code behind the Everrest showcase. Ask Claude:
 
 ```
 Use how-to-eda. Start from the baseline script and tune it for my data.
@@ -72,7 +72,8 @@ Fixed seed means byte-identical output every run. `eda_everrest_v1.py` is the pr
 ## Repo layout
 
 ```
-skills/          installable Claude skills (one folder per skill)
+.claude-plugin/  marketplace.json (the skill catalog)
+plugins/         one installable plugin per skill (SKILL.md + baseline/ inside)
 docs/            the showcase site (homepage + one page per skill)
 materials/       Everrest case canon + generator + v1/v2 analysis scripts
 ```

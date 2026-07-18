@@ -1,0 +1,9 @@
+{
+  "name": "how-to-schema-and-warehouse",
+  "description": "Turn a raw operational data dump into a queryable DuckDB star-schema warehouse with a data contract. Ships runnable baseline SQL + python.",
+  "version": "1.0.0",
+  "author": { "name": "Phoebe Fu" },
+  "homepage": "https://phoebefu6.github.io/phoebe-data-skills",
+  "repository": "https://github.com/phoebefu6/phoebe-data-skills",
+  "license": "MIT"
+}

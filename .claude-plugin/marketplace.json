@@ -1,12 +1,36 @@
 {
   "name": "phoebe-data-skills",
-  "description": "Phoebe's curated data-analysis and data-engineering skills - install once, get baseline python you tune with Claude.",
+  "description": "Phoebe's modular data skills - install only the ones you need. Each ships a runnable baseline python script you tune with Claude.",
   "owner": { "name": "Phoebe Fu" },
   "plugins": [
     {
-      "name": "phoebe-data-skills",
-      "description": "Decision-first data skills for analysts (EDA, data-trust, warehouse modeling, schema consolidation, RFM) - each ships a runnable baseline script to tune per use case.",
-      "source": ".",
+      "name": "how-to-eda",
+      "source": "./plugins/how-to-eda",
+      "description": "Decision-first exploratory data analysis - explore a dataset and surface what to act on.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "how-to-eda-codex",
+      "source": "./plugins/how-to-eda-codex",
+      "description": "Trust-first EDA - integrity, profiling and forensic checks before you build on the data.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "how-to-rfm",
+      "source": "./plugins/how-to-rfm",
+      "description": "RFM customer segmentation for retention and marketing spend.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "how-to-schema-and-warehouse",
+      "source": "./plugins/how-to-schema-and-warehouse",
+      "description": "Turn a raw data dump into a queryable star-schema warehouse with a data contract.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "how-to-schema-consolidation",
+      "source": "./plugins/how-to-schema-consolidation",
+      "description": "Audit a multi-server table estate and schema-diff before merging drifted copies.",
       "version": "1.0.0"
     }
   ]
