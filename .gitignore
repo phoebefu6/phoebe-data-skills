@@ -7,3 +7,6 @@ materials/how-to-schema-and-warehouse/raw/
 materials/how-to-schema-and-warehouse/lake/
 materials/how-to-schema-and-warehouse/everrest.duckdb
 materials/how-to-schema-and-warehouse/output/
+materials/how-to-schema-consolidation/data/
+__pycache__/
+*.pyc

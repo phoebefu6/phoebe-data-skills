@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>how-to-schema-consolidation · Phoebe's Data Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Infrastructure layer, sibling shade of indigo. Amber = drift/anomaly flag. */
+  :root{
+    --accent:#6366F1; --accent-dark:#4F46E5;
+    --tint:#EEF2FF; --highlight:#F59E0B;
+  }
+  .layer-badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent-dark);background:var(--tint);
+    border:1px solid rgba(99,102,241,.25);border-radius:999px;padding:4px 12px;margin-bottom:14px;}
+  .frame{border:1px solid var(--hairline);border-radius:12px;overflow:hidden;margin:8px 0 6px;
+    box-shadow:0 10px 30px rgba(15,23,42,.06);background:#fff;}
+  .frame img{width:100%;display:block;cursor:zoom-in;}
+  .frame.pad{padding:10px;}
+  .cap-sub{font-size:13.5px;color:var(--muted);margin:0 0 26px;}
+  .statrow{display:flex;flex-wrap:wrap;gap:14px;margin:18px 0 4px;}
+  .statbox{flex:1;min-width:130px;background:var(--tint);border:1px solid rgba(99,102,241,.18);
+    border-radius:12px;padding:14px 16px;}
+  .statbox .n{font-family:'Poppins';font-weight:600;font-size:26px;color:var(--accent-dark);
+    font-variant-numeric:tabular-nums;}
+  .statbox .l{font-size:12.5px;color:var(--muted);margin-top:2px;}
+</style>
+</head>
+<body>
+<div class="progress"></div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><a href="../" style="color:inherit">phoebe<b>·data·skills</b></a></div>
+    <nav>
+      <a href="../#skills">All skills</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:20px">
+  <div class="wrap">
+    <span class="layer-badge">◆ Infrastructure layer · consolidation</span>
+    <h1 style="font-size:clamp(27px,4.2vw,44px)">how-to-<span class="tealline">schema-consolidation</span></h1>
+    <p class="lede">One clean star schema is the easy case. The real estate is 8,600 tables: every new server cloned the whole schema, the copies quietly drifted apart, and the data dictionary only ever covered the 1,300 logical tables. This skill audits that sprawl and does the one thing you cannot skip before merging - a column-level schema diff across all 9 servers. Real run, seed 42.</p>
+    <div class="statrow">
+      <div class="statbox"><div class="n">8,599</div><div class="l">physical tables</div></div>
+      <div class="statbox"><div class="n">9</div><div class="l">server-schemas</div></div>
+      <div class="statbox"><div class="n">1,300</div><div class="l">logical tables</div></div>
+      <div class="statbox"><div class="n">15%</div><div class="l">documented</div></div>
+    </div>
+
+    <div class="rail">
+      <div class="rail-step"><div class="rail-node" data-step="1"><a href="#step-1"><div class="rail-circle">1</div><div class="rail-label">Input</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="2"><a href="#step-2"><div class="rail-circle">2</div><div class="rail-label">Sample data</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="3"><a href="#step-3"><div class="rail-circle">3</div><div class="rail-label">Objective</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="4"><a href="#step-4"><div class="rail-circle">4</div><div class="rail-label">Find-skills</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="5"><a href="#step-5"><div class="rail-circle">5</div><div class="rail-label">Build</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="6"><a href="#step-6"><div class="rail-circle">6</div><div class="rail-label">Expert review</div></a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 1 -->
+<section class="step-section" id="step-1">
+  <div class="wrap">
+    <div class="step-ghost">01</div>
+    <span class="step-tag">Step 1</span>
+    <h2 class="step-title">Input - an estate that grew by cloning</h2>
+    <p class="step-body">Everrest scaled by standing up a new server for each region and workload - and every server setup cloned the entire schema. Years later the same logical table exists as up to nine physical copies across nine server-schemas, and nobody documented the clones. Three inputs describe the mess.</p>
+    <div class="tbl-grid">
+      <div class="tbl-card reveal"><div class="tbl-name">catalog.csv <span class="cnt">8,599 rows</span></div><ul><li><b>schema</b> · one of 9 servers</li><li><b>physical_name</b> · schema.table</li><li><b>logical_id</b> · the true table it is a copy of</li><li><b>domain</b> · orders, finance, ...</li><li><b>n_columns</b> · per physical copy</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">columns.csv <span class="cnt">~91,000 rows</span></div><ul><li><b>schema</b> · server</li><li><b>logical_id</b> · fk</li><li><b>column_name</b> · <em>differs across copies</em></li><li><b>dtype</b> · <em>sometimes drifts too</em></li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">data_dictionary.csv <span class="cnt">1,300 rows</span></div><ul><li><b>logical_id</b> · pk</li><li><b>logical_name</b> · documented name</li><li><b>description</b> · what it is</li><li><b>owner</b> · team</li><li><em>covers logical only, not clones</em></li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step-section" id="step-2" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">02</div>
+    <span class="step-tag">Step 2</span>
+    <h2 class="step-title">Generate sample data - the estate at real scale</h2>
+    <p class="step-body">A seeded generator builds 1,300 logical tables, replicates each across a random subset of the 9 servers (avg ~6.6 copies), and drifts every copy - dropping optional columns, adding server-unique ones, occasionally changing a dtype. The result is ~8,600 physical tables that look identical and are not.</p>
+    <div class="code-card">
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-consolidation/generate_catalog.py">generate_catalog.py ↗</a> · excerpt</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># replicate each logical table across a random subset of 9 servers</span>
+present = rng.random(N_SERVERS) &lt; <span class="c-str">0.735</span>          <span class="c-comment"># avg ~6.6 copies -&gt; ~8,600 physical</span>
+
+<span class="c-comment"># drift each copy: optional columns come and go, server-unique columns appear</span>
+<span class="c-kw">for</span> c <span class="c-kw">in</span> base_opt[lid]:
+    <span class="c-kw">if</span> rng.random() &lt; <span class="c-str">0.85</span>: cols.append(c)     <span class="c-comment"># 15% chance a column is missing here</span>
+<span class="c-kw">if</span> rng.random() &lt; <span class="c-str">0.12</span>: cols.append(<span class="c-str">f"{schema}_ext_{...}"</span>)  <span class="c-comment"># a singleton column</span></pre>
+    </div>
+    <div class="quirk-grid">
+      <div class="quirk reveal"><b>🧬 Scale</b><span>1,300 logical tables x up to 9 servers = 8,599 physical</span></div>
+      <div class="quirk reveal"><b>📕 Doc gap</b><span>dictionary covers 1,300 logical - only 15% of physical tables</span></div>
+      <div class="quirk reveal"><b>🔀 Column drift</b><span>optional columns present on some servers, missing on others</span></div>
+      <div class="quirk reveal"><b>📍 Singletons</b><span>server-unique columns that exist on exactly one server</span></div>
+      <div class="quirk reveal"><b>⚠️ Type drift</b><span>same column, a different dtype on one server (INT vs BIGINT)</span></div>
+      <div class="quirk reveal"><b>♻️ Redundancy</b><span>7,299 physical tables are clones of a documented logical one</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step-section" id="step-3">
+  <div class="wrap">
+    <div class="step-ghost">03</div>
+    <span class="step-tag">Step 3</span>
+    <h2 class="step-title">Objective - merge to one truth, without losing anything</h2>
+    <p class="step-body">The goal is one governed copy of each table. The trap is that the copies are not identical, so any careless merge either drops columns or fuses incompatible types.</p>
+    <div class="objective-banner reveal">
+      <div class="q">How do we consolidate 8,600 drifted table copies across 9 servers into <em>one trustworthy table each</em> - without silently losing a column that lives on only one server?</div>
+      <ul class="subq">
+        <li>How bad is the documentation gap, really - what share of the estate is undocumented clones?</li>
+        <li>How much of the estate is pure redundancy we can retire?</li>
+        <li>For a given table, exactly which columns differ across the 9 servers?</li>
+        <li>Which columns exist on only one server - the ones a blind UNION would drop?</li>
+        <li>Where do dtypes disagree, and what is the safe merged superset schema?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4 -->
+<section class="step-section" id="step-4" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">04</div>
+    <span class="step-tag">Step 4</span>
+    <h2 class="step-title">Find-skills - the consolidation toolbox</h2>
+    <p class="step-body">Cataloging at this scale is a solved problem - reuse the tools. The one piece worth writing is the schema-diff engine that turns "these look the same" into a column-by-column truth.</p>
+    <div class="tool-grid">
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/open-metadata/OpenMetadata">OpenMetadata</a></h4><p>Auto-catalog every physical table and its columns across all 9 servers - close the documentation gap without hand-writing 8,600 entries.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/datahub-project/datahub">DataHub</a></h4><p>Lineage + ownership so a consolidated table records which servers it merged from and who owns the result.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Skill</span><h4>schema_diff engine</h4><p>The reusable core (in this repo): compares a logical table across servers, finds singletons and type conflicts, emits a safe merged superset.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS engine</span><h4><a href="https://github.com/duckdb/duckdb">DuckDB</a></h4><p>Fast set operations over the 91k-row column inventory - union, intersect and group across the whole estate in seconds.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/great-expectations/great_expectations">Great Expectations</a></h4><p>Once merged, lock the superset schema as a contract so the next server clone cannot silently drift again.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Skill</span><h4>dataviz discipline</h4><p>One anomaly color (amber) for "drift / on one server only" across every chart and the diff matrix.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section class="step-section" id="step-5">
+  <div class="wrap">
+    <div class="step-ghost">05</div>
+    <span class="step-tag">Step 5</span>
+    <h2 class="step-title">Build - audit the estate, then diff before you merge</h2>
+    <p class="step-body">First size the problem across all 9 servers, then zoom into one table and prove exactly how its copies differ. Grab the real code below.</p>
+    <div class="codelinks reveal">
+      <span class="cl-label">Get the code:</span>
+      <a class="cl-btn" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-consolidation/schema_diff.py"><span class="gh">▶</span> schema_diff.py</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-consolidation/generate_catalog.py"><span class="gh">◆</span> Catalog generator</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-consolidation/analyze_catalog.py"><span class="gh">◈</span> Estate analysis</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-consolidation/example_merged.sql"><span class="gh">✓</span> merged superset DDL</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/tree/main/materials/how-to-schema-consolidation"><span class="gh">↗</span> All files</a>
+    </div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:30px 0 4px;color:var(--ink)">Size the sprawl</h3>
+    <div class="chart-grid">
+      <div class="chart-card reveal"><img src="charts/coverage_gap.png" alt="Stacked bar: 1300 documented tables versus 7299 undocumented clones"><div class="cap"><b>The documentation gap.</b> The dictionary covers 1,300 logical tables - 15% of the 8,599 physical. The other 7,299 are undocumented clones.</div></div>
+      <div class="chart-card reveal"><img src="charts/redundancy.png" alt="Histogram of number of server copies per logical table, peaking at 7"><div class="cap"><b>Redundancy.</b> Most logical tables exist on 6-8 servers; 7,299 physical tables are pure clones that consolidation can retire.</div></div>
+      <div class="chart-card reveal"><img src="charts/tables_per_schema.png" alt="Bar chart: each of 9 server-schemas holds about 950 tables"><div class="cap"><b>Cloned wholesale.</b> Each server-schema holds ~950 tables - every new server copied the whole estate, not a subset.</div></div>
+      <div class="chart-card reveal"><img src="charts/drift_prevalence.png" alt="Bar chart: almost 100 percent column drift, 56 percent singleton columns, 63 percent dtype conflict"><div class="cap"><b>They are not identical.</b> Almost every multi-server table has drifted; 56% have a column on one server only, 63% have a dtype conflict. A blind UNION loses data.</div></div>
+    </div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">Diff one table across all 9 servers</h3>
+    <p class="cap-sub">The step you cannot skip before merging. For logical table L0646, compare every column across the 9 servers that host it. Amber = a column that exists on only one server, or whose dtype disagrees.</p>
+    <div class="frame pad reveal"><img src="charts/schema_diff_matrix.png" alt="Schema diff matrix: columns by 9 servers, present cells in indigo with dtype, singleton and conflict rows in amber"></div>
+    <p class="cap-sub">The amber diagonal at the bottom is five server-unique columns - each present on exactly one server. A naive intersection would delete all of them.</p>
+
+    <div class="ba-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div class="frame reveal"><img src="charts/merge_superset.png" alt="Bar chart: common columns 6 versus merged superset 20"></div>
+      <div class="code-card" style="margin:0">
+        <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-schema-consolidation/example_merged.sql">example_merged.sql ↗</a></span><button class="copy-btn">Copy</button></div>
+        <pre><span class="c-kw">CREATE TABLE</span> l0646_merged (
+  server_source <span class="c-kw">VARCHAR</span>,   <span class="c-comment">-- lineage</span>
+  id <span class="c-kw">BIGINT</span>,
+  risk_score <span class="c-kw">VARCHAR</span>,   <span class="c-comment">-- TYPE CONFLICT DATE/TIMESTAMP</span>
+  srv03_ext_3 <span class="c-kw">VARCHAR</span>, <span class="c-comment">-- only 1 server</span>
+  srv09_ext_3 <span class="c-kw">VARCHAR</span>, <span class="c-comment">-- only 1 server</span>
+  warehouse_id <span class="c-kw">VARCHAR</span>, <span class="c-comment">-- TYPE CONFLICT TEXT/VARCHAR</span>
+  ...
+);</pre>
+      </div>
+    </div>
+    <p class="cap-sub"><b>Merge safely.</b> The intersection keeps 6 columns; the superset keeps all 20. The generated DDL unions every column, tags each singleton, and widens type conflicts to a safe type - nothing dropped.</p>
+
+    <div class="caught reveal">
+      <table>
+        <thead><tr><th>What the audit surfaced</th><th>Found by</th><th>Result</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Documentation gap</td><td>catalog vs dictionary</td><td class="num">15% covered · 7,299 undocumented</td><td class="ok">✓ quantified</td></tr>
+          <tr><td>Clone redundancy</td><td>copies per logical table</td><td class="num">7,299 retireable copies</td><td class="ok">✓ quantified</td></tr>
+          <tr><td>Column-presence drift</td><td>union vs intersection</td><td class="num">~100% of multi-server tables</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Singleton columns</td><td>schema_diff engine</td><td class="num">56% of tables have one</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Dtype conflicts</td><td>schema_diff engine</td><td class="num">63% of tables</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Safe merge (example L0646)</td><td>merged superset DDL</td><td class="num">6 common → 20 superset</td><td class="ok">✓ merged</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 6 -->
+<section class="step-section" id="step-6" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">06</div>
+    <span class="step-tag">Step 6</span>
+    <h2 class="step-title">Expert review - a check that changes the merge</h2>
+    <p class="step-body">A panel of five senior reviewer agents - each with 10+ years in data platform, governance and migration - reviewed the first consolidation approach. The naive plan (a UNION of the common columns) ran and looked done, but it would have quietly deleted every server-unique column. Every fix below is in the engine above.</p>
+    <div class="mentor-grid">
+      <div class="mentor-card reveal"><div class="m-name">Principal Platform Architect</div><div class="m-lens">16 yrs · large migrations</div><p>"You cannot merge on the intersection of columns. For L0646 that keeps 6 of 20 - you would drop five columns that exist on exactly one server, and their data with them."</p><div class="m-fix">Fix applied: merge on the superset (union), tagging each singleton, so no column is lost.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data Governance Lead</div><div class="m-lens">13 yrs · catalog &amp; lineage</div><p>"15% documentation coverage means most of what you are merging is unlabeled. Catalog first, and record which servers each merged row came from."</p><div class="m-fix">Fix applied: added a server_source lineage column to every merged table; OpenMetadata cataloging is the step-4 tool.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Senior Data Engineer</div><div class="m-lens">12 yrs · pipelines</div><p>"A UNION ALL across servers where risk_score is DATE here and TIMESTAMP there will either fail or silently coerce. You have to detect type conflicts before you write the DDL."</p><div class="m-fix">Fix applied: schema_diff flags every dtype conflict; the generated DDL widens them to a safe type with a comment.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Migration / Consolidation Lead</div><div class="m-lens">11 yrs · server retirement</div><p>"Do not merge everything blindly - quantify the redundancy so leadership can approve retiring servers. 7,299 clones is the business case."</p><div class="m-fix">Fix applied: redundancy chart quantifies retireable copies per logical table for the decommission plan.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data QA &amp; Reproducibility</div><div class="m-lens">10 yrs · trust</div><p>"Prove the diff is exact and repeatable - a fixed seed and a re-runnable engine, not a one-off spreadsheet."</p><div class="m-fix">Fix applied: seed 42, deterministic schema_diff.py, importable and runnable on any catalog.</div></div>
+    </div>
+    <div class="code-card">
+      <div class="code-head"><span>before → after · the merge that lost columns</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># v1 (before): merge on columns common to every server</span>
+common = set.intersection(*[cols_on(s) <span class="c-kw">for</span> s <span class="c-kw">in</span> servers])   <span class="c-comment"># L0646 -&gt; 6 columns</span>
+<span class="c-comment">#   -&gt; silently drops 14 columns, incl. 5 that exist on one server only</span>
+
+<span class="c-comment"># v2 (after): merge on the superset, tag singletons, widen type conflicts</span>
+d = diff_table(columns, <span class="c-str">"L0646"</span>)
+ddl = merged_ddl(d)                              <span class="c-comment"># -&gt; 20 columns, nothing lost</span></pre>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="install">
+      <h3>Run this skill on your own estate</h3>
+      <p>Point it at a catalog export of your servers - it audits coverage and redundancy, then diffs any table across schemas and emits a safe merged superset.</p>
+      <div class="code-card">
+        <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
+        <pre>git clone https://github.com/phoebefu6/phoebe-data-skills.git
+ln -s "$PWD/phoebe-data-skills/skills/how-to-schema-consolidation" ~/.claude/skills/</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Phoebe Fu</span>
+    <span><a href="../">← All skills</a></span>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>
