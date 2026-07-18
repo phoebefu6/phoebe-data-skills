@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>how-to-RFM-using-claude-python · Phoebe's Data Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="progress"></div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><a href="../" style="color:inherit">phoebe<b>·data·skills</b></a></div>
+    <nav>
+      <a href="../#skills">All skills</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:20px">
+  <div class="wrap">
+    <span class="kicker">Skill walkthrough</span>
+    <h1 style="font-size:clamp(30px,4.6vw,48px)">how-to-<span class="tealline">RFM</span>-using-claude-python</h1>
+    <p class="lede">[SKELETON] One CRM budget decision, one retail platform, six steps. Segment every Everrest customer by Recency, Frequency, Monetary - then rank where the retention money should go. Every chart from a real run, seed 42.</p>
+    <div class="chiprow" style="margin-top:20px">
+      <span class="chip">Case: Everrest · B2B2C retail platform</span>
+      <span class="chip">seed = 42</span>
+      <span class="chip">pandas · matplotlib · seaborn</span>
+      <span class="chip">classic 5×5 RFM · 11 segments</span>
+      <span class="chip">~12 chart types</span>
+    </div>
+
+    <div class="rail">
+      <div class="rail-step"><div class="rail-node" data-step="1"><a href="#step-1"><div class="rail-circle">1</div><div class="rail-label">Input</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="2"><a href="#step-2"><div class="rail-circle">2</div><div class="rail-label">Sample data</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="3"><a href="#step-3"><div class="rail-circle">3</div><div class="rail-label">Objective</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="4"><a href="#step-4"><div class="rail-circle">4</div><div class="rail-label">Find-skills</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="5"><a href="#step-5"><div class="rail-circle">5</div><div class="rail-label">Code + charts</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="6"><a href="#step-6"><div class="rail-circle">6</div><div class="rail-label">Expert review</div></a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 1 -->
+<section class="step-section" id="step-1">
+  <div class="wrap">
+    <div class="step-ghost">01</div>
+    <span class="step-tag">Step 1</span>
+    <h2 class="step-title">Input - schema + business context</h2>
+    <p class="step-body">[SKELETON] RFM needs only transaction history. From the Everrest platform we take three tables - customers, orders, order_items - plus one line of context: the CRM team has a fixed Q3 retention budget and wants to know where to spend it.</p>
+    <div class="tbl-grid">
+      <div class="tbl-card reveal"><div class="tbl-name">customers <span class="cnt">20k rows</span></div><ul><li><b>customer_id</b> · pk</li><li><b>signup_date</b> · date</li><li><b>channel_id</b> · acquisition channel</li><li><b>region</b> · SEA market</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">orders <span class="cnt">~60k rows</span></div><ul><li><b>order_id</b> · pk</li><li><b>customer_id</b> · fk</li><li><b>order_ts</b> · timestamp (Recency)</li><li><b>status</b> · enum</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">order_items <span class="cnt">~130k rows</span></div><ul><li><b>order_id</b> · fk</li><li><b>qty · unit_price · discount</b></li><li><b>→ net = Monetary</b></li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">the 3 RFM signals</div><ul><li><b>Recency</b> · days since last order</li><li><b>Frequency</b> · order count</li><li><b>Monetary</b> · total net spend</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step-section" id="step-2" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">02</div>
+    <span class="step-tag">Step 2</span>
+    <h2 class="step-title">Generate sample data - customers with real lifecycles</h2>
+    <p class="step-body">[SKELETON] A dedicated seeded generator assigns every Everrest customer a lifecycle archetype so RFM has something to find. Five patterns planted on purpose - Step 5 grades whether the analysis recovered them.</p>
+    <div class="code-card">
+      <div class="code-head"><span>generate_everrest_rfm.py · excerpt</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># [SKELETON] archetype-driven customer behaviour, seed 42</span>
+<span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
+rng = np.random.default_rng(<span class="c-str">42</span>)
+<span class="c-comment"># each customer drawn into a lifecycle: champion / loyal / at-risk /</span>
+<span class="c-comment"># can't-lose-them / hibernating / one-and-done ...</span></pre>
+    </div>
+    <div class="quirk-grid">
+      <div class="quirk reveal"><b>🐋 Whale concentration</b><span>Top ~5% of customers drive a huge share of monetary</span></div>
+      <div class="quirk reveal"><b>⏳ Can't-lose-them</b><span>Highest past spenders who have gone quiet - win-back gold</span></div>
+      <div class="quirk reveal"><b>🎯 Affiliate one-and-done</b><span>Single low-value order, never returned - over-indexed on affiliate</span></div>
+      <div class="quirk reveal"><b>🌊 Nov signup cohort</b><span>Promo-acquired customers who never reactivated</span></div>
+      <div class="quirk reveal"><b>↩ Returns-heavy segment</b><span>High order count but net value dragged negative by returns</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step-section" id="step-3">
+  <div class="wrap">
+    <div class="step-ghost">03</div>
+    <span class="step-tag">Step 3</span>
+    <h2 class="step-title">Objective - a budget decision, not a scoring exercise</h2>
+    <p class="step-body">[SKELETON] RFM is a means, not the goal. The goal is a defensible answer to where the Q3 retention budget goes.</p>
+    <div class="objective-banner reveal">
+      <div class="q">Which Everrest customers should the CRM team spend its <em>Q3 retention budget</em> on - and which are quietly the most valuable?</div>
+      <ul class="subq">
+        <li>How concentrated is customer value - is Everrest whale-dependent?</li>
+        <li>Which high-value customers are lapsing right now (win them back before they're gone)?</li>
+        <li>Which acquisition channel floods us with one-and-done, low-value buyers?</li>
+        <li>How big and how valuable is each actionable segment?</li>
+        <li>Where does the next dollar of retention budget earn the most?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4 -->
+<section class="step-section" id="step-4" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">04</div>
+    <span class="step-tag">Step 4</span>
+    <h2 class="step-title">Find-skills - Claude assembles its toolbox</h2>
+    <p class="step-body">[SKELETON] The tools and skills that serve an RFM segmentation, picked before any code.</p>
+    <div class="tool-grid">
+      <div class="tool-card reveal"><span class="t-kind">Technique</span><h4>pandas qcut scoring</h4><p>Quintile R/F/M scores 1-5 - the backbone of classic RFM.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Reference</span><h4>11-segment standard map</h4><p>Industry-standard R×F grid → Champions, Loyal, At Risk, Hibernating, Lost...</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>dataviz discipline</h4><p>Treemap for segment size, scatter for R-F, form follows relationship.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Claude skill</span><h4>schema-to-insights playbook</h4><p>Rank each segment by dollar opportunity, tie to a budget action.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section class="step-section" id="step-5">
+  <div class="wrap">
+    <div class="step-ghost">05</div>
+    <span class="step-tag">Step 5</span>
+    <h2 class="step-title">Code + charts - the real run</h2>
+    <p class="step-body">[SKELETON] Score R/F/M → map to 11 segments → size and value each → recommend the budget split. ~12 chart types, all real PNGs in the final build. Placeholders below show layout only.</p>
+    <div class="chart-grid">
+      <div class="chart-card reveal"><div class="ph">R / F / M distributions</div><div class="cap"><b>The three signals.</b> [final: real PNG]</div></div>
+      <div class="chart-card reveal"><div class="ph">segment treemap</div><div class="cap"><b>Segment sizes.</b> [final: real PNG]</div></div>
+      <div class="chart-card reveal"><div class="ph">monetary pareto</div><div class="cap"><b>Whale check.</b> [final: real PNG]</div></div>
+      <div class="chart-card reveal"><div class="ph">R × F heatmap</div><div class="cap"><b>The RFM grid.</b> [final: real PNG]</div></div>
+      <div class="chart-card reveal"><div class="ph">recency vs frequency scatter</div><div class="cap"><b>Where segments live.</b> [final: real PNG]</div></div>
+      <div class="chart-card reveal"><div class="ph">segment × channel</div><div class="cap"><b>Affiliate one-and-done.</b> [final: real PNG]</div></div>
+    </div>
+    <div class="caught reveal">
+      <table>
+        <thead><tr><th>Planted pattern</th><th>Caught by</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Whale concentration</td><td>Monetary pareto</td><td class="ok">✓ (final)</td></tr>
+          <tr><td>Can't-lose-them lapsers</td><td>R×F grid + scatter</td><td class="ok">✓ (final)</td></tr>
+          <tr><td>[3 more in final build]</td><td>…</td><td class="ok">…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 6 -->
+<section class="step-section" id="step-6" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">06</div>
+    <span class="step-tag">Step 6</span>
+    <h2 class="step-title">Expert review - a check that changes the code</h2>
+    <p class="step-body">[SKELETON] A panel of 4-6 senior reviewer agents (10+ years in data, insights, business) reviews the v1 analysis; fixes are applied and the pipeline re-runs. Before/after shown here in the final build.</p>
+    <div class="mentor-grid">
+      <div class="mentor-card reveal"><div class="m-name">Senior Data Engineer</div><div class="m-lens">code &amp; pipeline</div><p>[final: verdict on the real script]</p><div class="m-fix">Fix applied: [example]</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Analytics Methodology Lead</div><div class="m-lens">scoring rigor</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data Insights Lead</div><div class="m-lens">segment framing</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Commercial / Business Lead</div><div class="m-lens">budget ROI</div><p>[final: verdict]</p><div class="m-fix">Fix applied: [example]</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="install">
+      <h3>Run this skill on your own customers</h3>
+      <p>Install once, hand Claude your transaction tables - the same 6 steps segment your customer base and rank the retention spend.</p>
+      <div class="code-card">
+        <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
+        <pre>git clone https://github.com/phoebefu6/phoebe-data-skills.git
+ln -s "$PWD/phoebe-data-skills/skills/how-to-rfm" ~/.claude/skills/</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Phoebe Fu</span>
+    <span><a href="../">← All skills</a></span>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

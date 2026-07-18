@@ -1,0 +1,401 @@
+merchant_id,category,tier,joined_at
+M0001,Home & Living,premium,2022-08-08
+M0002,Grocery,enterprise,2023-11-21
+M0003,Toys and Kids,standard,2022-04-06
+M0004,Beauty,standard,2022-12-24
+M0005,Beauty,standard,2023-05-02
+M0006,Grocery,standard,2022-07-11
+M0007,Grocery,enterprise,2023-10-08
+M0008,Toys & Kids,premium,2023-02-09
+M0009,electronics,standard,2024-07-03
+M0010,Home & Living,standard,2022-05-02
+M0011,Sports & Outdoor,premium,2023-06-03
+M0012,Pet Supplies,standard,2022-11-30
+M0013,Toys & Kids,standard,2023-12-10
+M0014,Grocery,premium,2022-08-22
+M0015,Toys & Kids,premium,2025-03-07
+M0016,Grocery,premium,2025-01-19
+M0017,Sports & Outdoor,standard,2023-10-17
+M0018,Electronics,standard,2023-01-27
+M0019,Grocery,enterprise,2022-10-29
+M0020,Beauty,standard,2024-01-04
+M0021,Sports & Outdoor,standard,2023-05-03
+M0022,Apparel,standard,2023-08-24
+M0023,Electronics,premium,2022-05-04
+M0024,Pet Supplies,enterprise,2023-04-28
+M0025,Grocery,standard,2024-01-31
+M0026,Toys & Kids,enterprise,2022-04-24
+M0027,Beauty,standard,2025-01-27
+M0028,Grocery,standard,2022-04-07
+M0029,Sports & Outdoor,standard,2024-12-03
+M0030,Beauty,standard,2024-06-29
+M0031,Beauty,standard,2022-10-14
+M0032,Electronics,standard,2023-01-25
+M0033,Home & Living,enterprise,2022-04-23
+M0034,Sports & Outdoor,standard,2023-01-06
+M0035,Pet Supplies,enterprise,2023-05-18
+M0036,Home & Living,premium,2024-04-22
+M0037,Grocery,standard,2025-05-27
+M0038,Grocery,premium,2025-01-08
+M0039,Apparel,standard,2024-06-18
+M0040,Toys & Kids,standard,2025-04-15
+M0041,Electronics,premium,2023-10-16
+M0042,Grocery,premium,2022-12-05
+M0043,Toys & Kids,standard,2022-05-01
+M0044,Apparel,standard,2023-11-07
+M0045,Home & Living,standard,2022-08-13
+M0046,Pet Supplies,premium,2022-04-05
+M0047,Beauty,standard,2022-08-31
+M0048,Pet Supplies,standard,2023-12-05
+M0049,Toys & Kids,standard,2024-05-17
+M0050,Grocery,standard,2022-04-14
+M0051,Grocery,premium,2024-08-22
+M0052,Electronics,premium,2024-02-06
+M0053,Apparel,standard,2025-03-07
+M0054,Beauty,standard,2022-11-16
+M0055,Beauty,standard,2023-05-03
+M0056,Home & Living,premium,2025-02-22
+M0057,Sports & Outdoor,premium,2024-09-15
+M0058,Electronics,standard,2023-08-22
+M0059,Toys & Kids,standard,2023-09-08
+M0060,Toys & Kids,standard,2022-11-06
+M0061,Pet Supplies,standard,2024-07-25
+M0062,Toys & Kids,premium,2022-06-16
+M0063,Apparel,standard,2023-12-29
+M0064,Pet Supplies,standard,2022-10-13
+M0065,Beauty ,enterprise,2024-08-27
+M0066,Apparel,standard,2025-04-19
+M0067,Pet Supplies,standard,2025-03-29
+M0068,apparel,standard,2024-03-22
+M0069,Home & Living,standard,2022-05-13
+M0070,Beauty,standard,2025-04-06
+M0071,Grocery,standard,2024-03-27
+M0072,electronics,standard,2025-01-25
+M0073,Beauty,standard,2022-06-08
+M0074,Electronics,standard,2023-04-03
+M0075,Toys & Kids,premium,2022-12-22
+M0076,Beauty ,standard,2023-02-18
+M0077,Apparel,standard,2023-04-25
+M0078,Electronics,standard,2022-12-09
+M0079,Sports & Outdoor,premium,2025-05-23
+M0080,Toys & Kids,premium,2022-08-24
+M0081,Pet Supplies,standard,2023-01-18
+M0082,Beauty,standard,2023-01-18
+M0083,electronics,standard,2024-02-27
+M0084,Grocery,standard,2022-11-07
+M0085,Toys & Kids,standard,2024-03-12
+M0086,Toys & Kids,standard,2025-04-05
+M0087,Home & Living,standard,2022-07-05
+M0088,Apparel,standard,2024-08-31
+M0089,Grocery,standard,2025-02-02
+M0090,Grocery,standard,2023-06-05
+M0091,Beauty,premium,2024-09-01
+M0092,Grocery,standard,2022-09-01
+M0093,Grocery,enterprise,2023-12-30
+M0094,Beauty,standard,2025-05-27
+M0095,Pet Supplies,premium,2022-05-15
+M0096,Apparel,enterprise,2023-10-08
+M0097,Electronics,enterprise,2024-07-29
+M0098,Toys & Kids,premium,2023-04-01
+M0099,Toys & Kids,premium,2023-09-20
+M0100,Electronics,standard,2025-04-28
+M0101,Grocery,premium,2022-12-26
+M0102,electronics,standard,2024-02-18
+M0103,Grocery,standard,2023-03-06
+M0104,Home & Living,standard,2022-07-20
+M0105,Grocery,premium,2023-06-18
+M0106,Grocery,standard,2023-04-08
+M0107,Grocery,standard,2024-08-08
+M0108,Toys & Kids,standard,2024-08-27
+M0109,Beauty,standard,2024-02-02
+M0110,Toys & Kids,standard,2022-09-08
+M0111,Apparel,standard,2023-09-27
+M0112,Grocery,standard,2024-04-20
+M0113,Sports & Outdoor,standard,2022-12-02
+M0114,Beauty,standard,2022-09-07
+M0115,Sports & Outdoor,standard,2022-07-12
+M0116,Sports & Outdoor,standard,2024-06-17
+M0117,Home & living,standard,2023-02-22
+M0118,Electronics,premium,2023-07-12
+M0119,Electronics,standard,2023-12-24
+M0120,Home & Living,enterprise,2024-02-23
+M0121,Beauty ,enterprise,2025-01-18
+M0122,Toys & Kids,standard,2024-07-15
+M0123,Toys & Kids,standard,2023-08-28
+M0124,Beauty,standard,2022-07-30
+M0125,Grocery,premium,2022-08-23
+M0126,Sports & Outdoor,premium,2024-10-25
+M0127,Home & Living,premium,2023-03-30
+M0128,Grocery,standard,2025-02-22
+M0129,Sports & Outdoor,standard,2023-04-04
+M0130,Toys & Kids,standard,2024-04-27
+M0131,Sports & Outdoor,premium,2023-12-23
+M0132,Sports & Outdoor,standard,2023-02-13
+M0133,Home & Living,premium,2024-01-21
+M0134,Sports & Outdoor,premium,2022-10-31
+M0135,Grocery,standard,2023-09-16
+M0136,Apparel,standard,2022-03-21
+M0137,Sports & Outdoor,standard,2023-05-17
+M0138,Home & Living,premium,2024-06-20
+M0139,Apparel,standard,2022-12-07
+M0140,Beauty,enterprise,2024-02-10
+M0141,Pet Supplies,standard,2023-09-16
+M0142,Electronics,enterprise,2024-12-23
+M0143,Apparel,premium,2025-01-13
+M0144,Beauty,standard,2023-07-30
+M0145,Pet Supplies,premium,2024-10-26
+M0146,Grocery,premium,2022-03-22
+M0147,Home & Living,enterprise,2022-09-04
+M0148,Electronics,standard,2023-03-04
+M0149,Grocary,standard,2023-01-24
+M0150,Home & Living,standard,2023-07-06
+M0151,Grocery,standard,2025-03-23
+M0152,Apparel,standard,2024-02-28
+M0153,Pet Supplies,standard,2023-10-30
+M0154,apparel,standard,2022-06-27
+M0155,Beauty,standard,2024-09-18
+M0156,Toys and Kids,standard,2023-10-29
+M0157,Electronics,premium,2024-04-25
+M0158,Sports & Outdoor,premium,2024-12-26
+M0159,Sports & Outdoor,standard,2025-02-01
+M0160,Grocery,standard,2024-03-31
+M0161,Pet Supplies,enterprise,2025-02-25
+M0162,Toys & Kids,standard,2025-03-15
+M0163,Beauty ,standard,2024-04-17
+M0164,Beauty ,standard,2024-10-08
+M0165,Beauty ,premium,2023-08-22
+M0166,Grocery,standard,2025-05-12
+M0167,Apparel,premium,2024-06-13
+M0168,Electronics,premium,2023-12-19
+M0169,Apparel,standard,2022-05-02
+M0170,Home & Living,premium,2023-05-21
+M0171,Home & Living,premium,2022-08-06
+M0172,Home & Living,standard,2024-04-26
+M0173,Grocery,standard,2023-12-23
+M0174,Toys & Kids,standard,2024-01-27
+M0175,Toys & Kids,standard,2022-07-29
+M0176,Beauty,standard,2022-05-06
+M0177,Toys & Kids,enterprise,2022-05-03
+M0178,Electronics,standard,2023-01-04
+M0179,Pet Supplies,standard,2023-10-22
+M0180,Sports & Outdoor,premium,2023-09-08
+M0181,Pet Supplies,standard,2022-04-11
+M0182,electronics,enterprise,2024-07-04
+M0183,Beauty ,premium,2024-04-22
+M0184,Toys & Kids,standard,2022-07-18
+M0185,Beauty,standard,2024-03-07
+M0186,Beauty,enterprise,2024-08-30
+M0187,Electronics,premium,2023-08-16
+M0188,Beauty,enterprise,2024-05-17
+M0189,Electronics,standard,2022-07-25
+M0190,Apparel,premium,2022-07-04
+M0191,Toys & Kids,standard,2024-06-08
+M0192,Toys & Kids,standard,2023-09-21
+M0193,Sports & Outdoor,standard,2022-04-07
+M0194,apparel,premium,2023-01-15
+M0195,Pet Supplies,standard,2024-09-22
+M0196,Home & Living,standard,2023-07-11
+M0197,Apparel,premium,2023-06-07
+M0198,Home & living,standard,2023-04-29
+M0199,Apparel,standard,2025-05-03
+M0200,Pet Supplies,standard,2024-06-16
+M0201,Apparel,standard,2022-09-06
+M0202,Pet Supplies,enterprise,2024-08-23
+M0203,Beauty,premium,2024-06-16
+M0204,Toys & Kids,standard,2024-05-20
+M0205,Beauty ,enterprise,2024-11-06
+M0206,Apparel,premium,2024-12-02
+M0207,Grocery,standard,2024-04-21
+M0208,Pet Supplies,premium,2022-08-14
+M0209,Apparel,standard,2025-05-31
+M0210,Grocary,enterprise,2024-07-05
+M0211,Apparel,premium,2025-03-23
+M0212,Toys & Kids,premium,2023-08-15
+M0213,Grocery,standard,2024-08-12
+M0214,Beauty,premium,2022-11-18
+M0215,Toys & Kids,standard,2023-07-18
+M0216,Apparel,standard,2022-11-27
+M0217,Home & Living,standard,2023-05-21
+M0218,Home & Living,premium,2024-01-06
+M0219,Beauty,standard,2022-08-29
+M0220,Pet Supplies,enterprise,2023-11-22
+M0221,Electronics,premium,2022-05-17
+M0222,Beauty,standard,2022-03-26
+M0223,Toys & Kids,standard,2023-07-13
+M0224,Electronics,standard,2023-04-04
+M0225,Toys & Kids,standard,2024-08-06
+M0226,Apparel,premium,2022-10-22
+M0227,Grocery,standard,2023-04-08
+M0228,Sports & Outdoor,premium,2022-07-12
+M0229,Sports & Outdoor,standard,2024-07-24
+M0230,Electronics,premium,2022-11-23
+M0231,Beauty,enterprise,2023-11-29
+M0232,Grocery,premium,2024-10-28
+M0233,Home & Living,premium,2024-11-13
+M0234,Grocary,premium,2023-08-14
+M0235,Beauty,standard,2024-05-24
+M0236,Toys & Kids,standard,2025-02-02
+M0237,Toys and Kids,standard,2024-01-19
+M0238,Beauty,standard,2023-04-30
+M0239,Apparel,premium,2024-05-24
+M0240,Toys & Kids,standard,2022-05-11
+M0241,Electronics,premium,2022-12-02
+M0242,Sports & Outdoor,standard,2023-10-11
+M0243,Home & Living,premium,2022-06-04
+M0244,Toys & Kids,standard,2024-01-12
+M0245,Toys & Kids,standard,2024-12-20
+M0246,Home & Living,premium,2025-04-21
+M0247,Grocery,enterprise,2022-05-31
+M0248,Beauty,standard,2022-05-06
+M0249,Grocery,standard,2023-01-19
+M0250,Home & Living,standard,2025-02-01
+M0251,Electronics,standard,2024-06-23
+M0252,Beauty,premium,2025-04-14
+M0253,Electronics,premium,2025-04-03
+M0254,Apparel,standard,2024-08-18
+M0255,Toys and Kids,standard,2023-08-02
+M0256,Electronics,standard,2025-03-17
+M0257,Toys & Kids,enterprise,2022-04-07
+M0258,Home & Living,standard,2023-12-17
+M0259,Electronics,premium,2024-07-28
+M0260,Sports & Outdoor,standard,2023-10-07
+M0261,Grocery,standard,2022-11-20
+M0262,Electronics,standard,2024-06-01
+M0263,Apparel,enterprise,2025-04-07
+M0264,Pet Supplies,standard,2025-04-03
+M0265,Pet Supplies,standard,2022-09-09
+M0266,Sports & Outdoor,premium,2025-01-22
+M0267,Beauty,standard,2023-05-20
+M0268,Apparel,enterprise,2024-03-09
+M0269,Sports & Outdoor,standard,2022-12-05
+M0270,Sports & Outdoor,standard,2025-03-23
+M0271,apparel,standard,2022-07-17
+M0272,Home & living,standard,2023-03-08
+M0273,Electronics,standard,2023-12-24
+M0274,Pet Supplies,standard,2024-10-02
+M0275,Beauty,standard,2022-04-15
+M0276,Beauty,standard,2024-06-13
+M0277,Beauty,standard,2023-11-06
+M0278,Grocary,standard,2024-02-26
+M0279,Home & Living,standard,2024-09-05
+M0280,Home & Living,standard,2024-01-31
+M0281,Apparel,standard,2024-12-06
+M0282,Beauty,standard,2025-05-31
+M0283,Toys & Kids,standard,2024-06-27
+M0284,Beauty,standard,2025-01-21
+M0285,Beauty ,standard,2024-02-02
+M0286,Pet Supplies,standard,2022-08-27
+M0287,Electronics,standard,2024-11-23
+M0288,Sports & Outdoor,standard,2025-05-31
+M0289,Sports & Outdoor,standard,2025-01-23
+M0290,Beauty ,standard,2023-10-16
+M0291,Grocery,premium,2024-07-15
+M0292,Apparel,standard,2023-11-07
+M0293,Pet Supplies,premium,2025-04-28
+M0294,Apparel,standard,2024-05-08
+M0295,Sports & Outdoor,premium,2024-02-08
+M0296,Sports & Outdoor,standard,2024-01-14
+M0297,Grocery,standard,2023-08-27
+M0298,Beauty,standard,2022-12-01
+M0299,apparel,standard,2023-12-03
+M0300,Home & Living,standard,2022-09-21
+M0301,Apparel,premium,2023-09-21
+M0302,Grocery,premium,2024-08-01
+M0303,Home & Living,enterprise,2024-09-07
+M0304,Pet Supplies,standard,2024-05-20
+M0305,Sports & Outdoor,standard,2023-07-03
+M0306,Electronics,premium,2024-08-22
+M0307,Apparel,standard,2022-06-28
+M0308,Sports & Outdoor,premium,2023-11-18
+M0309,Apparel,standard,2022-08-26
+M0310,Home & Living,standard,2023-03-25
+M0311,Toys & Kids,standard,2024-05-07
+M0312,Toys & Kids,premium,2024-09-07
+M0313,Home & living,standard,2023-01-13
+M0314,Apparel,standard,2024-05-11
+M0315,Electronics,standard,2024-08-17
+M0316,Toys & Kids,standard,2022-06-09
+M0317,Toys & Kids,standard,2023-11-15
+M0318,Toys and Kids,premium,2025-04-06
+M0319,Pet Supplies,standard,2023-11-01
+M0320,Grocery,premium,2023-12-10
+M0321,Apparel,premium,2022-08-26
+M0322,Home & Living,standard,2023-02-20
+M0323,Sports & Outdoor,standard,2024-10-21
+M0324,Pet Supplies,standard,2024-12-07
+M0325,Pet Supplies,standard,2023-06-26
+M0326,Electronics,standard,2025-04-07
+M0327,Electronics,enterprise,2024-05-24
+M0328,Home & Living,enterprise,2024-12-22
+M0329,Electronics,premium,2025-05-08
+M0330,Sports & Outdoor,standard,2022-06-22
+M0331,Sports & Outdoor,premium,2025-02-16
+M0332,Apparel,premium,2025-05-22
+M0333,Electronics,premium,2022-06-06
+M0334,Grocery,standard,2024-10-24
+M0335,Beauty,standard,2022-10-20
+M0336,Grocery,standard,2025-04-26
+M0337,Pet Supplies,standard,2024-12-04
+M0338,Apparel,standard,2025-01-23
+M0339,Electronics,standard,2023-02-26
+M0340,Pet Supplies,premium,2023-06-07
+M0341,Toys & Kids,enterprise,2023-11-23
+M0342,Apparel,standard,2024-08-23
+M0343,Sports & Outdoor,premium,2025-02-18
+M0344,Sports & Outdoor,enterprise,2023-08-06
+M0345,Pet Supplies,standard,2024-09-05
+M0346,apparel,standard,2023-07-12
+M0347,Pet Supplies,standard,2023-03-20
+M0348,Pet Supplies,standard,2022-09-12
+M0349,Electronics,premium,2023-11-02
+M0350,Electronics,standard,2025-05-27
+M0351,Sports & Outdoor,standard,2024-07-08
+M0352,Home & Living,standard,2022-09-07
+M0353,Apparel,standard,2023-09-17
+M0354,Beauty,enterprise,2023-06-08
+M0355,Pet Supplies,standard,2023-12-14
+M0356,Pet Supplies,standard,2024-11-23
+M0357,Electronics,standard,2022-07-18
+M0358,Pet Supplies,standard,2022-12-10
+M0359,Home & Living,standard,2022-03-25
+M0360,Toys & Kids,standard,2022-09-05
+M0361,Grocery,standard,2024-06-26
+M0362,Pet Supplies,standard,2024-08-08
+M0363,Electronics,premium,2024-08-15
+M0364,Pet Supplies,standard,2022-06-23
+M0365,Home & Living,standard,2023-08-20
+M0366,Sports & Outdoor,premium,2023-12-18
+M0367,Beauty ,premium,2022-04-26
+M0368,Apparel,standard,2023-06-26
+M0369,Home & Living,standard,2022-07-03
+M0370,Grocery,standard,2022-04-06
+M0371,Apparel,standard,2025-03-01
+M0372,Toys & Kids,premium,2024-04-05
+M0373,Beauty,standard,2023-01-25
+M0374,Apparel,premium,2022-10-24
+M0375,Pet Supplies,premium,2024-12-10
+M0376,Home & Living,standard,2024-05-25
+M0377,Toys & Kids,enterprise,2023-08-30
+M0378,Toys & Kids,standard,2022-11-09
+M0379,Beauty,premium,2025-01-20
+M0380,Apparel,standard,2023-06-30
+M0381,Home & Living,standard,2024-06-20
+M0382,Pet Supplies,standard,2024-09-21
+M0383,Pet Supplies,standard,2023-10-07
+M0384,Electronics,standard,2024-02-03
+M0385,Home & Living,enterprise,2023-05-20
+M0386,Home & Living,standard,2024-05-26
+M0387,Home & Living,standard,2022-10-12
+M0388,Grocery,standard,2025-03-02
+M0389,Pet Supplies,standard,2022-08-28
+M0390,Electronics,standard,2025-04-28
+M0391,Toys & Kids,enterprise,2023-01-23
+M0392,Electronics,standard,2024-04-22
+M0393,Apparel,standard,2024-03-10
+M0394,Sports & Outdoor,standard,2025-05-10
+M0395,Toys & Kids,standard,2023-03-03
+M0396,Grocery,standard,2024-11-20
+M0397,Home & living,premium,2023-04-22
+M0398,Electronics,standard,2023-02-04
+M0399,Apparel,enterprise,2022-09-17
+M0400,Apparel,standard,2023-02-24

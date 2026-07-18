@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>how-to-EDA-using-codex-python · Phoebe's Data Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Codex sibling palette - cyan primary, amber = anomaly flag. */
+  :root{
+    --accent:#0891B2; --accent-dark:#0E7490;
+    --tint:#ECFEFF; --highlight:#F59E0B;
+  }
+  .codex-badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent-dark);background:var(--tint);
+    border:1px solid rgba(8,145,178,.25);border-radius:999px;padding:4px 12px;margin-bottom:14px;}
+  .tool-cat{font-family:'Poppins';font-weight:600;font-size:15px;color:var(--ink);
+    margin:26px 0 12px;padding-top:18px;border-top:1px solid var(--hairline);}
+  .tool-cat:first-of-type{border-top:0;padding-top:0;}
+  .profile-frame{border:1px solid var(--hairline);border-radius:12px;overflow:hidden;
+    margin:8px 0 6px;box-shadow:0 10px 30px rgba(15,23,42,.06);}
+  .profile-frame img{width:100%;display:block;cursor:zoom-in;}
+  .profile-cap{font-size:13.5px;color:var(--muted);margin:0 0 24px;}
+</style>
+</head>
+<body>
+<div class="progress"></div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><a href="../" style="color:inherit">phoebe<b>·data·skills</b></a></div>
+    <nav>
+      <a href="../#skills">All skills</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:20px">
+  <div class="wrap">
+    <span class="codex-badge">◇ Codex edition · sibling of the Claude walkthrough</span>
+    <h1 style="font-size:clamp(30px,4.6vw,48px)">how-to-<span class="tealline">EDA</span>-using-codex-python</h1>
+    <p class="lede">Same Everrest platform, a different question and a different toolbox. Codex assembles a profiling + integrity + forensic kit, then digs out six data-trust defects the naive pass missed entirely. Every chart below came from a real run - seed 42, learn-python env, 232,155 rows generated and analyzed.</p>
+    <div class="chiprow" style="margin-top:20px">
+      <span class="chip">Case: Everrest · B2B2C retail platform</span>
+      <span class="chip">seed = 42</span>
+      <span class="chip">pandas · sweetviz · missingno · pandera · scipy</span>
+      <span class="chip">19 visuals</span>
+      <span class="chip">8 findings, $/trust-ranked</span>
+    </div>
+
+    <div class="rail">
+      <div class="rail-step"><div class="rail-node" data-step="1"><a href="#step-1"><div class="rail-circle">1</div><div class="rail-label">Input</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="2"><a href="#step-2"><div class="rail-circle">2</div><div class="rail-label">Sample data</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="3"><a href="#step-3"><div class="rail-circle">3</div><div class="rail-label">Objective</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="4"><a href="#step-4"><div class="rail-circle">4</div><div class="rail-label">Find-skills</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="5"><a href="#step-5"><div class="rail-circle">5</div><div class="rail-label">Code + charts</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="6"><a href="#step-6"><div class="rail-circle">6</div><div class="rail-label">Expert review</div></a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 1 -->
+<section class="step-section" id="step-1">
+  <div class="wrap">
+    <div class="step-ghost">01</div>
+    <span class="step-tag">Step 1</span>
+    <h2 class="step-title">Input - schema + business context</h2>
+    <p class="step-body">Everrest is a B2B2C retail platform: 400 merchants sell to 20,000 consumers across six Southeast Asian markets. This time the category team is not asking "what's growing" - they are asking <em>"can we trust the platform's data before we build this quarter's dashboards on it?"</em> Eight tables come over from a fresh data pipeline. The discipline is refusing to trust any of them until the keys, types and joins have been proven.</p>
+    <div class="tbl-grid">
+      <div class="tbl-card reveal"><div class="tbl-name">orders <span class="cnt">50,000 rows</span></div><ul><li><b>order_id</b> · pk</li><li><b>customer_id</b> · fk <em>(some orphaned)</em></li><li><b>merchant_id</b> · fk</li><li><b>order_ts</b> · timestamp (UTC)</li><li><b>status</b> · delivered/shipped/paid/cancelled</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">order_items <span class="cnt">107,855 rows</span></div><ul><li><b>order_id</b> · fk</li><li><b>product_id</b> · fk <em>(some orphaned)</em></li><li><b>qty</b> · int</li><li><b>unit_price</b> · numeric</li><li><b>discount</b> · 0 to 0.20</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">payments <span class="cnt">46,006 rows</span></div><ul><li><b>payment_id</b> · pk</li><li><b>order_id</b> · fk</li><li><b>method</b> · card/wallet/bnpl/cod/bank</li><li><b>amount</b> · numeric</li><li><b>paid_ts</b> · timestamp</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">merchants <span class="cnt">400 rows</span></div><ul><li><b>merchant_id</b> · pk</li><li><b>category</b> · 8 categories <em>(dirty labels)</em></li><li><b>tier</b> · standard/premium/enterprise</li><li><b>joined_at</b> · date</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">customers <span class="cnt">20,800 rows</span></div><ul><li><b>customer_id</b> · pk</li><li><b>signup_date</b> · timestamp</li><li><b>channel_id</b> · fk, 6 channels</li><li><b>region</b> · SG/MY/ID/TH/VN/PH</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">products <span class="cnt">5,000 rows</span></div><ul><li><b>product_id</b> · pk</li><li><b>merchant_id</b> · fk</li><li><b>category</b> · enum</li><li><b>price</b> · numeric (current catalog)</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">returns <span class="cnt">2,088 rows</span></div><ul><li><b>return_id</b> · pk</li><li><b>order_id</b> · fk</li><li><b>reason</b> · 5 reasons</li><li><b>return_ts</b> · timestamp</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">channels <span class="cnt">6 rows</span></div><ul><li><b>channel_id</b> · pk</li><li><b>name</b> · organic, paid search, social, email, referral, affiliate</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step-section" id="step-2" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">02</div>
+    <span class="step-tag">Step 2</span>
+    <h2 class="step-title">Generate sample data - a fresh set of planted quirks</h2>
+    <p class="step-body">The generator reuses the canon Everrest schema (M0007 the bulk-wholesale outlier and the weekend + November seasonality stay in as real background) but plants a <em>different</em> six defects from the Claude edition - the kind that hide across joins, not inside a single column. Each is documented in the generator docstring, so Step 5 becomes a recall test.</p>
+    <div class="code-card">
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda-codex/generate_everrest_codex.py">generate_everrest_codex.py ↗</a> · excerpt (full script on GitHub)</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
+SEED = <span class="c-str">42</span>; rng = np.random.default_rng(SEED)
+
+<span class="c-comment"># Quirk 1: ~2.5% of line items reference a non-existent product_id.</span>
+orphan = rng.choice(df.index, size=<span class="c-kw">int</span>(<span class="c-str">0.025</span> * <span class="c-kw">len</span>(df)), replace=<span class="c-kw">False</span>)
+df.loc[orphan, <span class="c-str">"product_id"</span>] = [<span class="c-str">f"P9{i:04d}"</span> <span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-kw">range</span>(<span class="c-kw">len</span>(orphan))]
+
+<span class="c-comment"># Quirk 2: stale Sep-Nov snapshot - unit_price frozen at 0.82x catalog.</span>
+df.loc[stale, <span class="c-str">"unit_price"</span>] = np.round(df.loc[stale, <span class="c-str">"unit_price"</span>] * <span class="c-str">0.82</span>, 2)
+
+<span class="c-comment"># Quirk 3: PH payments logged in local time -> paid_ts ~8h BEFORE order_ts.</span>
+df.loc[ph, <span class="c-str">"paid_ts"</span>] = df.loc[ph, <span class="c-str">"paid_ts"</span>] - pd.Timedelta(hours=<span class="c-str">8</span>)
+
+<span class="c-comment"># Quirk 5: fabricated merchant reports round-hundred amounts (Benford red flag).</span>
+df.loc[fab, <span class="c-str">"amount"</span>] = rng.choice([<span class="c-str">100</span>,<span class="c-str">200</span>,<span class="c-str">300</span>,<span class="c-str">400</span>,<span class="c-str">500</span>,<span class="c-str">600</span>,<span class="c-str">700</span>,<span class="c-str">800</span>,<span class="c-str">900</span>], fab.sum())</pre>
+    </div>
+    <div class="quirk-grid">
+      <div class="quirk reveal"><b>🔗 Orphan foreign keys</b><span>2.5% of order_items and 1% of orders point to product/customer ids that do not exist</span></div>
+      <div class="quirk reveal"><b>🏷 Stale price snapshot</b><span>Sep-Nov 2025 line items frozen at 0.82x the current catalog price</span></div>
+      <div class="quirk reveal"><b>🕗 Timezone bug</b><span>Every PH-region payment logged 8h before its order - impossible negative latency</span></div>
+      <div class="quirk reveal"><b>🔤 Dirty categoricals</b><span>8 categories arrive as 14 labels: 'electronics', 'Beauty ', 'Grocary', 'apparel'</span></div>
+      <div class="quirk reveal"><b>🔢 Benford / fabrication</b><span>M0333 'Apex Gadget Bazaar' reports only round-hundred amounts</span></div>
+      <div class="quirk reveal"><b>👥 Duplicate identities</b><span>800 customers appear twice under different ids, inflating channel acquisition</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step-section" id="step-3">
+  <div class="wrap">
+    <div class="step-ghost">03</div>
+    <span class="step-tag">Step 3</span>
+    <h2 class="step-title">Objective - a trust question, not a technique</h2>
+    <p class="step-body">The Claude edition asked "what should we act on this quarter?" This one asks the question that has to come first: <em>can the data even be trusted yet?</em> Every chart in Step 5 serves one of these five sub-questions; anything that does not change a decision gets cut.</p>
+    <div class="objective-banner reveal">
+      <div class="q">Can Everrest's new data platform be <em>trusted</em> for this quarter's decisions - and which integrity defects would silently corrupt every dashboard built on it?</div>
+      <ul class="subq">
+        <li>Do the foreign keys actually resolve, or are we joining onto ghosts?</li>
+        <li>Are the numbers real - prices, amounts, timestamps - or artifacts of a broken pipeline?</li>
+        <li>Are the category and customer entities clean, or silently split and duplicated?</li>
+        <li>Once the data is cleaned, where is revenue concentrated and how does demand move?</li>
+        <li>Which single defect, if shipped, would embarrass the team in front of the board?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4 -->
+<section class="step-section" id="step-4" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">04</div>
+    <span class="step-tag">Step 4</span>
+    <h2 class="step-title">Find-skills - Codex assembles its own toolbox</h2>
+    <p class="step-body">This is the differentiator. Before writing a line of analysis, Codex activates its agent skills to find the right tools, then pulls open-source profiling, validation and forensic libraries. The output is still a plain Python script that runs anywhere - the toolbox is how it got written well, not a runtime dependency.</p>
+
+    <div class="tool-cat">Agent skills (how Codex found the rest)</div>
+    <div class="tool-grid">
+      <div class="tool-card reveal"><span class="t-kind">OpenAI</span><h4><a href="https://github.com/openai/codex">Codex CLI</a></h4><p>The authoring agent. Reads the schema, runs the pipeline, writes and refactors the analysis script from the terminal.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">GitHub skill</span><h4><a href="https://github.com/obra/superpowers">superpowers</a></h4><p>Skill framework whose <code>find-skills</code> routine surfaces the right specialist for a task instead of improvising from zero.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Agent skill</span><h4>grill-me</h4><p>Interrogates the objective before any code - "what would the business pay to know, and what would embarrass it?" - so Step 3 is sharp.</p></div>
+    </div>
+
+    <div class="tool-cat">Profiling &amp; validation libraries</div>
+    <div class="tool-grid">
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/fbdesignpro/sweetviz">sweetviz</a></h4><p>One-shot profile report - types, missingness, distributions per column. The 10-minute head start; it flagged the orphan joins and price drift on its own.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/ydataai/ydata-profiling">ydata-profiling</a></h4><p>The equivalent profiling card - drops in with <code>ProfileReport(df)</code> where the environment supports it. Reuse beats rebuilding describe().</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/ResidentMario/missingno">missingno</a></h4><p>Missingness matrix - makes it visually obvious that order_items is complete on its own columns and only gaps on JOIN.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/unionai-oss/pandera">pandera</a></h4><p>Schema + referential-integrity checks as code - turns "product_id must exist in products" into an assertion the pipeline enforces.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/great-expectations/great_expectations">Great Expectations</a></h4><p>Promotes the defects EDA finds into permanent CI gates - the orphan keys and dirty labels never ship twice.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Method</span><h4><a href="https://github.com/scipy/scipy">scipy</a> · Benford's law</h4><p>First-digit distribution test - the forensic lens that isolates the fabricated round-number merchant from 400 honest ones.</p></div>
+    </div>
+
+    <div class="tool-cat">Analysis discipline</div>
+    <div class="tool-grid">
+      <div class="tool-card reveal"><span class="t-kind">Skill</span><h4>dataviz discipline</h4><p>Chart form follows the relationship; one consistent anomaly color (amber) means "this is the problem" on every chart.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Skill</span><h4>schema-to-insights playbook</h4><p>Decision-first scan: DQ gate before analysis, findings ranked by dollar and trust impact, not by p-value.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section class="step-section" id="step-5">
+  <div class="wrap">
+    <div class="step-ghost">05</div>
+    <span class="step-tag">Step 5</span>
+    <h2 class="step-title">Code + charts - the real run</h2>
+    <p class="step-body">One sectioned script: the profiling head start, then a data-quality &amp; integrity gate, then the business questions on the cleaned data. 19 visuals, every PNG rendered at 300 DPI from the actual run, every title a finding rather than a technique. Grab the real code below - one click, copy, run.</p>
+    <div class="codelinks reveal">
+      <span class="cl-label">Get the code:</span>
+      <a class="cl-btn" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda-codex/eda_codex_v2.py"><span class="gh">▶</span> Analysis script (v2)</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda-codex/generate_everrest_codex.py"><span class="gh">◆</span> Data generator</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda-codex/profile_report.py"><span class="gh">◈</span> Profiling head start</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda-codex/eda_codex_v1.py"><span class="gh">◷</span> v1 (pre-review)</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/tree/main/materials/how-to-eda-codex"><span class="gh">↗</span> All files</a>
+    </div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:32px 0 4px;color:var(--ink)">The 10-minute head start: one profiling call</h3>
+    <div class="profile-frame reveal"><img src="charts/profile_report.png" alt="Sweetviz profiling report of the enriched order_items table: 107,855 rows, 1,096 duplicates, product_id distinct 7,696, price and category 2 percent missing, price_gap median zero with a negative tail"></div>
+    <p class="profile-cap">The sweetviz report on the enriched line-item table earns its keep before any custom code: <b>price &amp; category show 2% missing</b> (that is the orphan-product join failing), <b>price_gap has a median of 0 with a negative tail</b> (the stale-price drift), and <b>product_id shows 7,696 distinct values</b> where only 5,000 products exist (the fake orphan ids). Three defects surfaced from a single call - then confirmed one by one below.</p>
+
+    <div class="code-card">
+      <div class="code-head"><span><a href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda-codex/eda_codex_v2.py">eda_codex_v2.py ↗</a> · the integrity gate (excerpt)</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># Gate: referential integrity - do the foreign keys resolve?</span>
+prod_ids = <span class="c-kw">set</span>(products.product_id)
+oi_orphan = ~order_items.product_id.isin(prod_ids)
+orphan_value = order_items.loc[oi_orphan, <span class="c-str">"net"</span>].sum()
+
+<span class="c-comment"># Normalize dirty category labels BEFORE any rollup.</span>
+mcat = merchants.assign(category_clean=<span class="c-kw">lambda</span> d: d.category.replace(CLEAN_CAT).str.strip())
+
+<span class="c-comment"># Timezone check: payment latency must never be negative.</span>
+pay[<span class="c-str">"lat_h"</span>] = (pay.paid_ts - pay.order_ts).dt.total_seconds() / <span class="c-str">3600</span>
+neg = pay.lat_h &lt; <span class="c-str">0</span>   <span class="c-comment"># 100% of these are PH -> local-time logging</span></pre>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card reveal"><img src="charts/dq_scorecard.png" alt="Heatmap scorecard of duplicate-row and null rates per table, all low"><div class="cap"><b>Within-table looks clean.</b> Duplicate-row and null rates are near zero on every table - which is the trap. The real defects live across joins, not inside single columns.</div></div>
+      <div class="chart-card reveal"><img src="charts/missingness_matrix.png" alt="missingno matrix of order_items showing every column fully populated"><div class="cap"><b>The gaps hide on JOIN.</b> order_items is 100% complete on its own columns - so a single-table check passes while 2.5% of its product keys are quietly broken.</div></div>
+      <div class="chart-card reveal"><img src="charts/ri_orphans.png" alt="Bar chart: 2.5 percent of order_items and 1 percent of orders are orphaned foreign keys"><div class="cap"><b>Broken keys.</b> 2.5% of line items reference a non-existent product; 1% of orders a non-existent customer. $154k of line value cannot be attributed. Add a pandera gate.</div></div>
+      <div class="chart-card reveal"><img src="charts/dirty_categories.png" alt="Bar chart: 14 raw category labels collapse to 8 after cleaning"><div class="cap"><b>8 categories, 14 labels.</b> 'electronics', 'Beauty ', 'Grocary' split every rollup. $557k of revenue sits under variant labels a naive GROUP BY would miss.</div></div>
+      <div class="chart-card reveal"><img src="charts/price_drift.png" alt="Scatter of recorded unit price versus catalog price, stale points fall below the diagonal in amber"><div class="cap"><b>Stale prices.</b> 30% of line items sit below the unit=catalog diagonal - a Sep-Nov snapshot frozen at 0.82x, understating $385k of revenue in that window.</div></div>
+      <div class="chart-card reveal"><img src="charts/payment_latency.png" alt="Histogram of payment latency with an amber cluster at minus 8 hours"><div class="cap"><b>Paid before ordered.</b> A whole region shows paid_ts ~8h before order_ts - every case is PH, logged in local time. $475k of GMV has untrustworthy timestamps.</div></div>
+      <div class="chart-card reveal"><img src="charts/benford_amounts.png" alt="Bar chart comparing Everrest payment leading digits to Benford's law, close match"><div class="cap"><b>Benford holds - platform-wide.</b> Real payment amounts follow the expected first-digit curve, which is exactly what makes a merchant that breaks it detectable.</div></div>
+      <div class="chart-card reveal"><img src="charts/roundnumber_merchant.png" alt="Bar chart: merchant M0333 has 100 percent round-hundred amounts, far above all others"><div class="cap"><b>The fabricator.</b> M0333 'Apex Gadget Bazaar' reports 100% round-hundred amounts vs near-zero elsewhere - reported payments differ from its line items by $45k. Fraud review.</div></div>
+      <div class="chart-card reveal"><img src="charts/dup_customers.png" alt="Bar chart of duplicate customer identities by acquisition channel"><div class="cap"><b>Double-counted people.</b> 800 customers exist twice under different ids with identical signup, channel and region - 3.8% of the base. Every CAC number is overstated.</div></div>
+      <div class="chart-card reveal"><img src="charts/revenue_pareto.png" alt="Pareto chart of revenue by merchant rank, rank 1 highlighted in amber"><div class="cap"><b>Concentration - after cleaning.</b> Rank #1 is the M0007 bulk outlier, not a hero merchant. Read the platform only once it is excluded.</div></div>
+      <div class="chart-card reveal"><img src="charts/order_value_dist.png" alt="Histogram of order values on a log scale with a median marker"><div class="cap"><b>Skew.</b> Order values span four orders of magnitude - report medians; the mean is dragged by the wholesaler.</div></div>
+      <div class="chart-card reveal"><img src="charts/order_value_by_tier.png" alt="Violin plot of order value by merchant tier on a log scale"><div class="cap"><b>The tier that isn't.</b> Enterprise's long upper tail is essentially one merchant (M0007), not a tier-wide behaviour.</div></div>
+      <div class="chart-card reveal"><img src="charts/corr_heatmap.png" alt="Correlation heatmap of order value, basket size, hour and day of week"><div class="cap"><b>No hidden driver.</b> Order value moves with basket size and nothing else - no time-of-day price effect to chase.</div></div>
+      <div class="chart-card reveal"><img src="charts/demand_decomposition.png" alt="Three-panel seasonal decomposition of daily orders"><div class="cap"><b>Rhythm (canon).</b> November runs 2.1x baseline, weekends lift ~40%. Commit Q4 capacity by September.</div></div>
+      <div class="chart-card reveal"><img src="charts/dow_hour_heatmap.png" alt="Heatmap of orders by day of week and hour"><div class="cap"><b>Prime time.</b> Weekend evenings are the platform's busiest window - staff and promote into it.</div></div>
+      <div class="chart-card reveal"><img src="charts/category_small_multiples.png" alt="Small multiple monthly revenue lines for eight cleaned categories"><div class="cap"><b>Category health - on clean labels.</b> Read only after normalization; Grocery's scale is M0007, not organic demand.</div></div>
+      <div class="chart-card reveal"><img src="charts/cohort_retention.png" alt="Cohort retention heatmap by signup month"><div class="cap"><b>Retention.</b> Month-1 is where customers are lost - the retention play starts in week 2, not month 3.</div></div>
+      <div class="chart-card reveal"><img src="charts/region_breakdown.png" alt="Bar chart of revenue by region with PH highlighted in amber"><div class="cap"><b>Geography.</b> PH revenue is real and sizeable - but until its timestamps are fixed, no PH conversion-time metric can be trusted.</div></div>
+    </div>
+
+    <div class="caught reveal">
+      <table>
+        <thead><tr><th>Planted quirk</th><th>Caught by</th><th>Impact</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Orphan foreign keys (bad ETL join)</td><td>Profiling + RI check</td><td class="num">$153,996 unattributable</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Stale price snapshot (Sep-Nov)</td><td>Price-drift scatter</td><td class="num">$385,330 understated</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Timezone bug (PH paid before order)</td><td>Payment-latency histogram</td><td class="num">$474,948 bad timestamps</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Dirty category labels (8→14)</td><td>Cardinality + rollup fix</td><td class="num">$557,134 mis-bucketed</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Round-number fabrication (M0333)</td><td>Benford + round-share</td><td class="num">$45,433 reconciliation gap</td><td class="ok">✓ caught</td></tr>
+          <tr><td>Duplicate customer identities</td><td>Fingerprint dedup</td><td class="num">800 records (3.8%)</td><td class="ok">✓ caught</td></tr>
+          <tr><td><em>Canon re-confirmed:</em> M0007 outlier + seasonality</td><td>Pareto + decomposition</td><td class="num">2.1x Nov · 12% of revenue</td><td class="ok">✓ confirmed</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="codelinks reveal">
+      <span class="cl-label">The deliverable:</span>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-eda-codex/findings.md"><span class="gh">↗</span> findings.md - all 8 findings ranked</a>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 6 -->
+<section class="step-section" id="step-6" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">06</div>
+    <span class="step-tag">Step 6</span>
+    <h2 class="step-title">Expert review - a check that changes the code</h2>
+    <p class="step-body">A panel of five senior reviewer agents - each with 10+ years in data, data insights, and business - tore into the first pass (<code>eda_codex_v1.py</code>, kept in the repo). v1 ran clean and looked plausible, which is what made it dangerous. Every fix below was applied and the pipeline re-ran; the charts above are the post-review v2.</p>
+    <div class="mentor-grid">
+      <div class="mentor-card reveal"><div class="m-name">Senior Data Engineer</div><div class="m-lens">13 yrs · pipeline &amp; integrity</div><p>"v1 joins order_items to products and never checks the keys resolve. 2.5% of line items point at products that do not exist - they just vanish from the join and nobody notices."</p><div class="m-fix">Fix applied: explicit referential-integrity gate; orphan keys quantified ($154k) and a pandera-style assertion added before any join.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Analytics Methodology Lead</div><div class="m-lens">11 yrs · data quality &amp; rigor</div><p>"Your revenue-by-category chart has 'Beauty' twice and both a 'Grocery' and a 'Grocary'. You grouped on the raw label - every rollup is silently split."</p><div class="m-fix">Fix applied: category labels normalized (14→8) before any aggregate; $557k of mis-bucketed revenue recovered into the right categories.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data Insights Lead</div><div class="m-lens">12 yrs · decision framing</div><p>"v1's latency histogram clips at zero, so the whole PH negative-latency story is hidden. And titles like 'Latency histogram' change no decision."</p><div class="m-fix">Fix applied: latency plotted with the negative tail exposed and split by region; every title rewritten as a finding; the fabricated merchant named on the chart.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Commercial / Business Lead</div><div class="m-lens">14 yrs · impact &amp; actionability</div><p>"Nothing here is quantified and three defects aren't even looked for - a fabricated merchant and 800 duplicate customers would sail straight into the board deck."</p><div class="m-fix">Fix applied: Benford + round-number and duplicate-identity checks added; every finding carries a $ or trust figure and findings.md ranks all eight.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data QA &amp; Reproducibility</div><div class="m-lens">10 yrs · trust &amp; recall</div><p>"Prove it reproduces and prove it recovers everything you planted - not just the easy orphan keys."</p><div class="m-fix">Fix applied: fixed seed verified on a clean re-run; all six planted quirks recovered plus the two canon facts re-confirmed - the scoreboard above is the receipt.</div></div>
+    </div>
+    <div class="code-card">
+      <div class="code-head"><span>before → after · the rollup that lied</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># v1 (before): group on the RAW label - dirty variants split the rollup</span>
+rev = orders.groupby(<span class="c-str">"category"</span>).order_value.sum()
+<span class="c-comment">#   Grocery   $1,590,140      <-- these are the</span>
+<span class="c-comment">#   Grocary   $   56,115      <-- SAME category, split in two</span>
+<span class="c-comment">#   Beauty    $  613,796  |  Beauty  $198,134   <-- and again</span>
+
+<span class="c-comment"># v2 (after): normalize first - 14 labels collapse to 8, buckets are whole</span>
+mcat[<span class="c-str">"category_clean"</span>] = mcat.category.replace(CLEAN_CAT).str.strip()
+rev = orders.groupby(<span class="c-str">"category_clean"</span>).order_value.sum()   <span class="c-comment"># +$557k re-bucketed</span></pre>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="install">
+      <h3>Run this skill on your own schema</h3>
+      <p>Install once, then hand your tables and business context over - the same 6 steps run on your data (step 2 is skipped when real data already exists).</p>
+      <div class="code-card">
+        <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
+        <pre>git clone https://github.com/phoebefu6/phoebe-data-skills.git
+ln -s "$PWD/phoebe-data-skills/skills/how-to-eda-codex" ~/.claude/skills/</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Phoebe Fu</span>
+    <span><a href="../">← All skills</a></span>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>
