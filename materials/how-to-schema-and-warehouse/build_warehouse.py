@@ -347,7 +347,18 @@ def cols(table):
     return con.execute(f"PRAGMA table_info('{table}')").df().name.tolist()
 
 
-def erd_box(ax, x, y, w, h, title, fields, is_fact=False):
+TITLE_GAP = 0.62  # header band height
+ROW_STEP = 0.30  # per-field row height
+PAD_BOT = 0.22  # padding below last field
+
+
+def box_height(n_fields: int) -> float:
+    return TITLE_GAP + n_fields * ROW_STEP + PAD_BOT
+
+
+def erd_box(ax, x, y, w, title, fields, is_fact=False):
+    """Draw a table box whose height is sized to its field count (no clipping)."""
+    h = box_height(len(fields))
     fc = INDIGO if is_fact else "#EEF2FF"
     tc = "white" if is_fact else INK
     ax.add_patch(
@@ -364,62 +375,71 @@ def erd_box(ax, x, y, w, h, title, fields, is_fact=False):
     )
     ax.text(
         x + w / 2,
-        y + h - 0.28,
+        y + h - 0.30,
         title,
         ha="center",
         va="top",
-        fontsize=10.5,
+        fontsize=11,
         fontweight="bold",
         color=tc,
         zorder=4,
     )
     for i, f in enumerate(fields):
         ax.text(
-            x + 0.12,
-            y + h - 0.62 - i * 0.26,
+            x + 0.16,
+            y + h - TITLE_GAP - 0.06 - i * ROW_STEP,
             f,
             ha="left",
             va="top",
-            fontsize=7.6,
-            color=tc if is_fact else MUTED,
-            zorder=4,
+            fontsize=8,
             family="monospace",
+            color=("white" if is_fact else MUTED),
+            zorder=4,
         )
+    return h
 
 
-fig, ax = plt.subplots(figsize=(11, 7.5))
+fig, ax = plt.subplots(figsize=(12, 9.5))
 ax.set_xlim(0, 12)
-ax.set_ylim(0, 9)
+ax.set_ylim(0, 11)
 ax.axis("off")
 ax.set_title(
     "Everrest star schema - fact_orders + 4 conformed dimensions",
-    fontsize=13,
+    fontsize=14,
     fontweight="bold",
     color=INK,
     loc="center",
 )
-fact_fields = [c for c in cols("fact_orders")][:12]
-erd_box(ax, 4.4, 3.4, 3.2, 3.0, "fact_orders", fact_fields, is_fact=True)
+
+# fact in the middle, sized to all its columns
+fact_fields = cols("fact_orders")
+fw, fx = 3.6, 4.2
+fh = box_height(len(fact_fields))
+fy = 5.2 - fh / 2
+erd_box(ax, fx, fy, fw, "fact_orders", fact_fields, is_fact=True)
+fc_center = (fx + fw / 2, fy + fh / 2)
+
+# four dims in the corners; box height follows field count
+dw = 3.4
 dims = [
-    ("dim_merchant", cols("dim_merchant"), 0.4, 6.2),
-    ("dim_customer", cols("dim_customer"), 8.4, 6.2),
-    ("dim_product", cols("dim_product"), 0.4, 1.0),
-    ("dim_date", cols("dim_date"), 8.4, 1.0),
+    ("dim_merchant", cols("dim_merchant"), 0.3, "top"),
+    ("dim_customer", cols("dim_customer"), 8.3, "top"),
+    ("dim_product", cols("dim_product"), 0.3, "bottom"),
+    ("dim_date", cols("dim_date"), 8.3, "bottom"),
 ]
-centers = {}
-for name, c, x, y in dims:
-    erd_box(ax, x, y, 3.2, 2.0, name, c[:6])
-    centers[name] = (x + 1.6, y + 1.0)
-fc_center = (6.0, 4.9)
-for name, (cx, cy) in centers.items():
+for name, c, x, band in dims:
+    h = box_height(len(c))
+    y = (10.6 - h) if band == "top" else 0.5
+    erd_box(ax, x, y, dw, name, c)
     ax.plot(
-        [fc_center[0], cx],
-        [fc_center[1], cy],
+        [fc_center[0], x + dw / 2],
+        [fc_center[1], y + h / 2],
         color=INDIGO,
         lw=1.1,
         zorder=1,
-        alpha=0.6,
+        alpha=0.55,
     )
+
 save(fig, "schema_erd.png")
 
 print(f"\ncharts -> {OUT}")
