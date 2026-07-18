@@ -65,3 +65,16 @@ Keep the before/after - review that changes nothing is theater.
 `findings.md`: findings ranked by $ impact, each 2-3 sentences: what, evidence
 (which chart), recommended action. Charts in a `charts/` folder. Script(s) runnable
 top-to-bottom from a fresh shell.
+
+## Baseline script (start here, then tune)
+
+This skill ships a runnable baseline in `baseline/` - the real code behind the
+Everrest showcase. Read it as the starting point, then tune it to the user's
+schema and question:
+
+- `${CLAUDE_SKILL_DIR}/baseline/eda_everrest_v2.py` - the decision-first EDA (DQ gate + $-ranked findings + charts)
+- `${CLAUDE_SKILL_DIR}/baseline/generate_everrest.py` - seeded sample data (skip when real data exists)
+
+Run it in a Python env with pandas + matplotlib (plus any extras noted). Point it
+at the user's data, then change what the use case needs - new columns, a different
+decision question, their industry. The showcase page walks the full example.

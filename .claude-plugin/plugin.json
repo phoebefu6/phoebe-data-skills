@@ -1,0 +1,9 @@
+{
+  "name": "phoebe-data-skills",
+  "description": "Decision-first data skills for analysts - EDA, data-trust, warehouse modeling, schema consolidation, RFM - each with a runnable baseline python script to tune per use case.",
+  "version": "1.0.0",
+  "author": { "name": "Phoebe Fu" },
+  "homepage": "https://phoebefu6.github.io/phoebe-data-skills",
+  "repository": "https://github.com/phoebefu6/phoebe-data-skills",
+  "license": "MIT"
+}

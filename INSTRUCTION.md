@@ -5,17 +5,44 @@ Operational guide for running these skills on your own data. For the "what and w
 ## Requirements
 
 - [Claude Code](https://claude.com/claude-code)
-- Python 3.10+ with `pandas`, `matplotlib`, `seaborn`, `statsmodels`
-  (only needed to execute the analysis scripts; Claude writes them either way)
+- Python 3.10+ with `pandas`, `matplotlib`, `seaborn`, `statsmodels`, `duckdb`,
+  `pandera` (only needed to run the baseline scripts; Claude writes/tunes them either way)
 
-## Install a skill
+## Install (recommended for a team) - plugin + marketplace
+
+Each analyst runs this once in Claude Code:
+
+```
+/plugin marketplace add phoebefu6/phoebe-data-skills
+/plugin install phoebe-data-skills@phoebe-data-skills
+```
+
+That installs all skills at once, each namespaced as `/phoebe-data-skills:<skill>`
+(e.g. `/phoebe-data-skills:how-to-eda`), **with the baseline python bundled**.
+When the repo updates, analysts get the new version on the next marketplace refresh.
+
+## Install (single skill) - clone + symlink
 
 ```bash
 git clone https://github.com/phoebefu6/phoebe-data-skills.git
 ln -s "$PWD/phoebe-data-skills/skills/how-to-eda" ~/.claude/skills/
 ```
 
-Each folder under `skills/` is a standalone Claude skill. Symlink the ones you want; Claude Code picks them up automatically.
+Each folder under `skills/` is a standalone Claude skill; symlink the ones you want.
+
+## The baseline script (start here, then tune)
+
+Every skill ships a runnable baseline in `skills/<skill>/baseline/` - the real code
+behind the Everrest showcase. Ask Claude:
+
+```
+Use how-to-eda. Start from the baseline script and tune it for my data.
+Business context: <your industry / question>.
+<paste your table + column list>
+```
+
+Claude reads the bundled baseline, then adapts it to your schema and question -
+you get a working script fast instead of a blank page.
 
 ## Run it on your own data
 

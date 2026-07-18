@@ -60,3 +60,17 @@ re-run. Keep the before/after (intersection merge -> superset merge).
 `schema_diff.py` (reusable: `diff_table`, `merged_ddl`), an estate audit with
 charts, and a merged superset `.sql` per consolidated table. Runs top-to-bottom
 from a fresh shell with a fixed seed.
+
+## Baseline script (start here, then tune)
+
+This skill ships a runnable baseline in `baseline/` - the real code behind the
+Everrest showcase. Read it as the starting point, then tune it to the user's
+schema and question:
+
+- `${CLAUDE_SKILL_DIR}/baseline/schema_diff.py` - the reusable engine: diff_table() + merged_ddl() (import or run standalone)
+- `${CLAUDE_SKILL_DIR}/baseline/analyze_catalog.py` - estate audit (coverage, redundancy, drift) + schema-diff matrix
+- `${CLAUDE_SKILL_DIR}/baseline/generate_catalog.py` - seeded multi-server catalog (skip when real data exists)
+
+Run it in a Python env with pandas + matplotlib (plus any extras noted). Point it
+at the user's data, then change what the use case needs - new columns, a different
+decision question, their industry. The showcase page walks the full example.

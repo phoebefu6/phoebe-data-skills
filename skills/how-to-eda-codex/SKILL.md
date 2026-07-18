@@ -81,3 +81,17 @@ Keep the before/after - review that changes nothing is theater.
 `findings.md`: findings ranked by $ / trust impact, each 2-3 sentences: what,
 evidence (which chart), recommended action. Charts in a `charts/` folder. Script(s)
 runnable top-to-bottom from a fresh shell.
+
+## Baseline script (start here, then tune)
+
+This skill ships a runnable baseline in `baseline/` - the real code behind the
+Everrest showcase. Read it as the starting point, then tune it to the user's
+schema and question:
+
+- `${CLAUDE_SKILL_DIR}/baseline/eda_codex_v2.py` - trust-first EDA (integrity + profiling + forensic checks)
+- `${CLAUDE_SKILL_DIR}/baseline/profile_report.py` - one-shot profiling head start (sweetviz)
+- `${CLAUDE_SKILL_DIR}/baseline/generate_everrest_codex.py` - seeded sample data (skip when real data exists)
+
+Run it in a Python env with pandas + matplotlib (plus any extras noted). Point it
+at the user's data, then change what the use case needs - new columns, a different
+decision question, their industry. The showcase page walks the full example.

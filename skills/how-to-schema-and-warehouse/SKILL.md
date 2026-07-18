@@ -67,3 +67,17 @@ Keep the before/after (naive raw query -> modeled warehouse).
 A runnable `warehouse.sql` + `everrest.duckdb`, `data_contract.yaml`, the ERD, and
 query->result evidence. Reconciliation charts in `charts/`. Everything runs
 top-to-bottom from a fresh shell with a fixed seed.
+
+## Baseline script (start here, then tune)
+
+This skill ships a runnable baseline in `baseline/` - the real code behind the
+Everrest showcase. Read it as the starting point, then tune it to the user's
+schema and question:
+
+- `${CLAUDE_SKILL_DIR}/baseline/warehouse.sql` - raw dump -> DuckDB star schema transform (the core artifact)
+- `${CLAUDE_SKILL_DIR}/baseline/build_warehouse.py` - runs the transform, validates the contract, emits ERD + query proofs
+- `${CLAUDE_SKILL_DIR}/baseline/generate_raw.py` - seeded raw multi-source dump (skip when real data exists)
+
+Run it in a Python env with pandas + matplotlib (plus any extras noted). Point it
+at the user's data, then change what the use case needs - new columns, a different
+decision question, their industry. The showcase page walks the full example.
