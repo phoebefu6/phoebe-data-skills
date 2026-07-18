@@ -28,15 +28,15 @@ Most data tutorials show you `df.describe()` on the Titanic dataset. These skill
 
 Each skill walks the same six steps - so once you've seen one, you can read them all:
 
-**Input** → **Sample data** → **Objective** → **Find-skills** → **Code + charts** → **Mentor-verify**
+**Input** → **Sample data** → **Objective** → **Find-skills** → **Code + charts** → **Expert review**
 
-Schema in, a decision question, the toolbox Claude assembles, the real analysis, and a review loop that actually rewrites the code.
+Schema in, a decision question, the toolbox Claude assembles, the real analysis, and a panel of senior reviewer agents (10+ years in data, insights, and business) that actually rewrites the code.
 
 ## What's inside
 
 | Skill | What it does | Status |
 |-------|-------------|--------|
-| **how-to-EDA** | Full exploratory data analysis, decision-first | ✅ Live |
+| **how-to-EDA** | Full exploratory data analysis, decision-first, expert-reviewed | ✅ Live |
 | how-to-feature-engineering | Raw tables → model-ready features | 🔜 Planned |
 | how-to-data-quality | Schema → automated quality gates | 🔜 Planned |
 | how-to-forecasting | Demand forecast with seasonality + honesty | 🔜 Planned |

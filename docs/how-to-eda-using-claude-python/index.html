@@ -40,7 +40,7 @@
       <div class="rail-step"><div class="rail-node" data-step="3"><a href="#step-3"><div class="rail-circle">3</div><div class="rail-label">Objective</div></a></div><div class="rail-connector"></div></div>
       <div class="rail-step"><div class="rail-node" data-step="4"><a href="#step-4"><div class="rail-circle">4</div><div class="rail-label">Find-skills</div></a></div><div class="rail-connector"></div></div>
       <div class="rail-step"><div class="rail-node" data-step="5"><a href="#step-5"><div class="rail-circle">5</div><div class="rail-label">Code + charts</div></a></div><div class="rail-connector"></div></div>
-      <div class="rail-step"><div class="rail-node" data-step="6"><a href="#step-6"><div class="rail-circle">6</div><div class="rail-label">Mentor-verify</div></a></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="6"><a href="#step-6"><div class="rail-circle">6</div><div class="rail-label">Expert review</div></a></div></div>
     </div>
   </div>
 </section>
@@ -195,13 +195,14 @@ null_by_ch = pay.groupby(<span class="c-str">"channel_id"</span>).method.apply(<
   <div class="wrap">
     <div class="step-ghost" style="color:#fff">06</div>
     <span class="step-tag">Step 6</span>
-    <h2 class="step-title">Mentor-verify - review that changes the code</h2>
-    <p class="step-body">Four mentor lenses reviewed the first version of the analysis (<code>eda_everrest_v1.py</code>, kept in the repo). Every fix below was applied and the pipeline re-ran - the charts above are the post-review v2. Review that changes nothing is theater.</p>
+    <h2 class="step-title">Expert review - a check that changes the code</h2>
+    <p class="step-body">A panel of five senior reviewer agents - each with 10+ years in data, data insights, and business - tore into the first version of the analysis (<code>eda_everrest_v1.py</code>, kept in the repo). Every fix below was applied and the pipeline re-ran; the charts above are the post-review v2. Review that changes nothing is theater.</p>
     <div class="mentor-grid">
-      <div class="mentor-card reveal"><div class="m-name">Andrej Karpathy</div><div class="m-lens">Code level</div><p>"v1 never deduped - 600 duplicate rows are inside every aggregate, and cancelled orders leak $527k into revenue. Gate the data before you touch it."</p><div class="m-fix">Fix applied: data-quality gate now runs before any aggregate; dupes and cancelled orders quantified, then excluded.</div></div>
-      <div class="mentor-card reveal"><div class="m-name">Andrew Ng</div><div class="m-lens">Methodology</div><p>"Overall missingness (7.8%) looks benign and hides the story. Break missingness down by segment or you will never see missing-not-at-random."</p><div class="m-fix">Fix applied: added missingness-by-channel chart - exposed the 55% affiliate null rate.</div></div>
-      <div class="mentor-card reveal"><div class="m-name">Cassie Kozyrkov</div><div class="m-lens">Decision framing</div><p>"Half of v1's titles were techniques: 'Correlations', 'Order value distribution'. A chart that doesn't change a decision is decoration."</p><div class="m-fix">Fix applied: every title rewritten as a finding; corr heatmap (no action) replaced with return-reasons chart; log scale added; M0007 named on the chart.</div></div>
-      <div class="mentor-card reveal"><div class="m-name">Monica Rogati</div><div class="m-lens">Practicality</div><p>"Nothing in v1 was quantified. Executives don't rank findings by p-value, they rank by money."</p><div class="m-fix">Fix applied: every finding carries a $ figure; findings.md ranks all six by impact.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Senior Data Engineer</div><div class="m-lens">12 yrs · code &amp; pipeline integrity</div><p>"v1 never deduped - 600 duplicate rows are inside every aggregate, and cancelled orders leak $527k into revenue. Gate the data before you touch it."</p><div class="m-fix">Fix applied: data-quality gate now runs before any aggregate; dupes and cancelled orders quantified, then excluded.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Analytics Methodology Lead</div><div class="m-lens">10 yrs · data quality &amp; rigor</div><p>"Overall missingness (7.8%) looks benign and hides the story. Break missingness down by segment or you will never see missing-not-at-random."</p><div class="m-fix">Fix applied: added missingness-by-channel chart - exposed the 55% affiliate null rate.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data Insights Lead</div><div class="m-lens">11 yrs · decision framing</div><p>"Half of v1's titles were techniques: 'Correlations', 'Order value distribution'. A chart that doesn't change a decision is decoration."</p><div class="m-fix">Fix applied: every title rewritten as a finding; corr heatmap (no action) replaced with return-reasons chart; log scale added; M0007 named on the chart.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Commercial / Business Lead</div><div class="m-lens">14 yrs · impact &amp; actionability</div><p>"Nothing in v1 was quantified. Executives don't rank findings by p-value, they rank by money."</p><div class="m-fix">Fix applied: every finding carries a $ figure; findings.md ranks all six by impact.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data QA &amp; Reproducibility</div><div class="m-lens">10 yrs · trust &amp; recall</div><p>"Prove it reproduces. Re-run from a clean checkout and confirm the analysis recovers every planted quirk, not just the easy ones."</p><div class="m-fix">Fix applied: fixed seed verified byte-identical on a clean run; all 5 planted quirks confirmed recovered, plus 1 unplanned finding.</div></div>
     </div>
     <div class="code-card">
       <div class="code-head"><span>before → after · the aggregate that lied</span><button class="copy-btn">Copy</button></div>

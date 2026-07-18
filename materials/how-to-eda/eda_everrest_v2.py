@@ -1,17 +1,18 @@
-"""Everrest EDA - v2 (post mentor review).
+"""Everrest EDA - v2 (post expert review).
 
 Objective: what should Everrest's category team act on this quarter,
 and what in this data can't be trusted yet?
 
-Mentor fixes applied over v1:
-- Karpathy: data-quality gate FIRST - dedup the 600 double-fired orders and
-  exclude cancelled orders before any aggregate (v1 double-counted both).
-- Ng: structured DQ phase + missingness broken down BY segment (channel),
-  which is what actually exposes missing-not-at-random.
-- Kozyrkov: every chart titled with its FINDING, not its technique; corr
+Expert-review fixes applied over v1 (panel of senior reviewers, 10yr+ in
+data, data insights, and business):
+- Data engineer: data-quality gate FIRST - dedup the 600 double-fired orders
+  and exclude cancelled orders before any aggregate (v1 double-counted both).
+- Methodology lead: structured DQ phase + missingness broken down BY segment
+  (channel), which is what actually exposes missing-not-at-random.
+- Insights lead: every chart titled with its FINDING, not its technique; corr
   heatmap (no action) replaced with return-reason breakdown; log scale on
   the skewed order-value distribution; outlier merchant named on chart.
-- Rogati: every finding quantified in $ and ranked - findings.md is the
+- Business lead: every finding quantified in $ and ranked - findings.md is the
   exec deliverable, charts are the evidence.
 
 Run:  python eda_everrest_v2.py
@@ -143,7 +144,7 @@ ax.set_title("Only one column has a missing-data problem: payments.method (7.8%)
 fig.savefig(OUT / "missingness_matrix.png")
 plt.close(fig)
 
-# Missingness BY CHANNEL (Ng fix) - proves missing-not-at-random.
+# Missingness BY CHANNEL (methodology-lead fix) - proves missing-not-at-random.
 pay = payments.merge(
     orders_raw.drop_duplicates("order_id")[["order_id", "customer_id"]], on="order_id"
 )
@@ -197,7 +198,7 @@ ax.set_xlabel("merchant rank")
 fig.savefig(OUT / "revenue_pareto.png")
 plt.close(fig)
 
-# Outlier merchant isolated + named (Kozyrkov fix).
+# Outlier merchant isolated + named (insights-lead fix).
 med_all = rev_orders.order_value.median()
 m7 = rev_orders[rev_orders.merchant_id == "M0007"]
 m7_share = m7.order_value.sum() / rev.sum() * 100
@@ -231,7 +232,7 @@ ax.set_title(
 fig.savefig(OUT / "order_value_by_tier.png")
 plt.close(fig)
 
-# Distribution, log scale (Kozyrkov fix).
+# Distribution, log scale (insights-lead fix).
 fig, ax = plt.subplots(figsize=(9, 4))
 vals = rev_orders.order_value.dropna()
 ax.hist(vals, bins=np.geomspace(vals.min() + 1, vals.max(), 90), color=TEAL)
@@ -365,7 +366,7 @@ ax.set_ylabel("% of delivered orders returned")
 fig.savefig(OUT / "returns_by_tier.png")
 plt.close(fig)
 
-# Return reasons within premium (replaces v1 corr heatmap - Kozyrkov fix).
+# Return reasons within premium (replaces v1 corr heatmap - insights-lead fix).
 ret_m = returns.merge(delivered[["order_id", "tier"]], on="order_id")
 reason = ret_m.pivot_table(
     index="reason", columns="tier", values="return_id", aggfunc="count"

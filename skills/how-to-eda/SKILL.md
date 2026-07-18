@@ -1,6 +1,6 @@
 ---
 name: how-to-eda
-description: Run a decision-first exploratory data analysis (EDA) with Claude + Python on any schema. Use when handed a data schema or new dataset and asked to "explore the data", "run EDA", "profile this", "what's in this data", "can we trust this data", or before building any dashboard/model on unfamiliar tables. Walks the 6-step pipeline - input, sample data (if no real data yet), objective, find-skills, code with real executed charts, mentor-verify - and outputs findings ranked by dollar impact.
+description: Run a decision-first exploratory data analysis (EDA) with Claude + Python on any schema. Use when handed a data schema or new dataset and asked to "explore the data", "run EDA", "profile this", "what's in this data", "can we trust this data", or before building any dashboard/model on unfamiliar tables. Walks the 6-step pipeline - input, sample data (if no real data yet), objective, find-skills, code with real executed charts, expert review - and outputs findings ranked by dollar impact.
 ---
 
 # how-to-EDA-using-claude-python
@@ -50,12 +50,15 @@ technique ("Top 20 merchants = 68% of revenue", never "Bar chart of revenue");
 name anomalous entities on the chart; 300 DPI PNGs; aim for 10+ chart types when
 the data supports them; kill any chart with no action attached.
 
-### 6. Mentor-verify
-Review the actual code + outputs through four lenses, apply the fixes, re-run:
-- **Code level (Karpathy)**: dedup before aggregates? leakage of phantom rows? vectorized?
-- **Methodology (Ng)**: DQ gate separated from analysis? reproducible (seed, env documented)?
-- **Decision framing (Kozyrkov)**: does every chart answer a sub-question? technique-titled charts renamed or cut?
-- **Practicality (Rogati)**: is every finding quantified in $ and ranked? would an exec know what to do next?
+### 6. Expert review
+Convene a panel of 4-6 senior reviewer agents, each with 10+ years in data,
+data insights, and business. Have them review the actual code + outputs through
+these lenses, apply the fixes, and re-run:
+- **Code & pipeline integrity**: dedup before aggregates? leakage of phantom rows? vectorized?
+- **Methodology & rigor**: DQ gate separated from analysis? reproducible (seed, env documented)? missingness checked by segment, not just overall?
+- **Decision framing**: does every chart answer a sub-question? technique-titled charts renamed or cut?
+- **Business impact**: is every finding quantified in $ and ranked? would an exec know what to do next?
+- **QA & reproducibility**: does a clean re-run reproduce byte-identical output and recover every planted quirk?
 Keep the before/after - review that changes nothing is theater.
 
 ## Output format

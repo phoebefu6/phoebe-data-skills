@@ -1,4 +1,4 @@
-"""Everrest EDA - v1 (first pass, pre mentor review).
+"""Everrest EDA - v1 (first pass, pre expert review).
 
 Objective: what should Everrest's category team act on this quarter,
 and what in this data can't be trusted yet?
