@@ -1,0 +1,205 @@
+{
+  "seed": 42,
+  "recognized_status": "delivered",
+  "take_rate": 0.11,
+  "current_period": "2026Q2",
+  "prior_period": "2026Q1",
+  "generated_from": "Everrest stage-3 marts (seed 42)",
+  "tiles": [
+    {
+      "id": "gmv",
+      "label": "GMV (Delivered)",
+      "sub": "merchandise value",
+      "value": 1498412.1975,
+      "fmt": "money",
+      "pop": -2.3856053760771054,
+      "rag": "amber",
+      "definition": "SUM(qty x unit_price x (1 - discount)) over delivered orders, current quarter. Grain: order. Net of discounts, GROSS of returns. This is merchandise flow, not company revenue.",
+      "validation": "Counting all statuses reports $1,894,948 (+26%). And 5.7% of this GMV ($85,278) sits on orders later returned - so GMV, not 'net revenue', is the honest label."
+    },
+    {
+      "id": "net_revenue",
+      "label": "Platform Net Revenue",
+      "sub": "the take @ 11%",
+      "value": 164825.341725,
+      "fmt": "money",
+      "pop": -2.3856053760771054,
+      "rag": "amber",
+      "definition": "GMV x 11% take rate. This is what Everrest actually earns - the number that belongs on the P&L, not GMV. The take rate is a stated assumption, not yet a data field.",
+      "validation": "Board-critical distinction: GMV is $1,498,412 of merchandise flow; the company earns $164,825. Re-rating the take is a one-number change."
+    },
+    {
+      "id": "orders",
+      "label": "Delivered Orders",
+      "sub": "count",
+      "value": 9929,
+      "fmt": "int",
+      "pop": 3.6105603673171243,
+      "rag": "green",
+      "definition": "COUNT(orders) WHERE status = 'delivered', current quarter.",
+      "validation": "Ties to the GMV order set - same filter, same grain."
+    },
+    {
+      "id": "aov",
+      "label": "Avg Order Value",
+      "sub": "excl. M0007 &middot; median $82",
+      "value": 128.66644138453765,
+      "fmt": "money2",
+      "pop": -7.289272922357598,
+      "rag": "green",
+      "definition": "MEAN(net_amount) over delivered orders, EXCLUDING merchant M0007 (bulk wholesaler, ~50x median order). Grain: order. Median $82 shown alongside because the distribution is right-skewed.",
+      "validation": "Including M0007 lifts the mean to $151 (+17%). The median ($82) sits well below the mean - a right skew, so both are reported."
+    },
+    {
+      "id": "active_buyers",
+      "label": "Active Buyers",
+      "sub": "distinct, delivered",
+      "value": 7829,
+      "fmt": "int",
+      "pop": 6.473548211614307,
+      "rag": "green",
+      "definition": "COUNT(DISTINCT customer_id) with >= 1 delivered order this quarter. The demand side of the marketplace.",
+      "validation": "Active merchants is a constant here (all 400 transact every quarter), so it was dropped for this - the number that actually moves and shows demand."
+    },
+    {
+      "id": "return_rate",
+      "label": "Return Rate",
+      "sub": "returns / delivered",
+      "value": 6.345049853963139,
+      "fmt": "pct",
+      "pop": -0.312573019875952,
+      "pop_is_pts": true,
+      "rag": "amber",
+      "definition": "COUNT(returns on delivered orders) / COUNT(delivered orders), current quarter.",
+      "validation": "Using all orders as the denominator understates it at 5.0%. Only delivered orders can be returned, so they are the honest base."
+    },
+    {
+      "id": "repeat_rate",
+      "label": "Repeat Buyer Rate",
+      "sub": "within quarter",
+      "value": 22.633797419849277,
+      "fmt": "pct",
+      "pop": 2.1251614889367225,
+      "pop_is_pts": true,
+      "rag": "green",
+      "definition": "Share of active buyers with >= 2 delivered orders WITHIN the quarter. Measured per-quarter so it has a trajectory, not a static trailing figure.",
+      "validation": "On delivered orders only, so cancelled-order churn does not masquerade as loyalty. Per-quarter framing lets the board see retention moving."
+    },
+    {
+      "id": "concentration",
+      "label": "Top-Merchant Share",
+      "sub": "M0007 of GMV",
+      "value": 15.033097059395766,
+      "fmt": "pct",
+      "pop": null,
+      "pop_is_pts": true,
+      "rag": "amber",
+      "definition": "GMV of the single largest merchant / total GMV, current quarter. A concentration-risk flag.",
+      "validation": "M0007 alone is 15% and the top 10 are 21% of GMV - a dependency the board should see, not an aggregate that hides it."
+    }
+  ],
+  "trend": {
+    "labels": [
+      "2025-07",
+      "2025-08",
+      "2025-09",
+      "2025-10",
+      "2025-11",
+      "2025-12",
+      "2026-01",
+      "2026-02",
+      "2026-03",
+      "2026-04",
+      "2026-05",
+      "2026-06"
+    ],
+    "values": [
+      340134.9605,
+      423325.348,
+      395434.1175,
+      385412.544,
+      867713.141,
+      384312.3445,
+      440022.7885,
+      395439.2005,
+      699570.0145,
+      457496.2725,
+      531049.1515,
+      509866.7735
+    ],
+    "peak_index": 4
+  },
+  "peak_month": "2025-11",
+  "peak_multiple": 1.8955008880713142,
+  "category": {
+    "labels": [
+      "Grocery",
+      "Apparel",
+      "Beauty",
+      "Toys & Kids",
+      "Home & Living",
+      "Electronics",
+      "Pet Supplies",
+      "Sports & Outdoor"
+    ],
+    "values": [
+      1359063.8995,
+      750830.567,
+      701618.8445,
+      698904.4735,
+      631337.571,
+      624624.776,
+      551165.52,
+      512231.005
+    ]
+  },
+  "concentration_top": {
+    "labels": [
+      "M0007",
+      "M0348",
+      "M0089",
+      "M0147",
+      "M0318",
+      "M0363",
+      "M0281",
+      "M0056",
+      "M0012",
+      "M0051",
+      "M0088",
+      "M0206",
+      "M0374",
+      "M0263",
+      "M0001"
+    ],
+    "values": [
+      225257.75999999998,
+      13728.859,
+      11435.4325,
+      11208.335,
+      8527.4405,
+      7830.018,
+      7754.662,
+      7491.2705,
+      7357.675499999999,
+      7335.1415,
+      7225.904500000001,
+      7079.342000000001,
+      7045.539,
+      7002.8075,
+      6743.8515
+    ],
+    "outlier": "M0007"
+  },
+  "headline": "GMV was $1,498,412 in 2026Q2, down 2.4% QoQ against a seasonally stronger prior quarter - on this platform Everrest's own take is $164,825. 2025-11 is the demand peak at 1.9x a normal month, so plan inventory to it. M0007 is 15% of GMV: a concentration risk to watch.",
+  "checks": {
+    "status_inflation_pct": 26.46372908346537,
+    "aov_distortion_pct": 17.289868512337453,
+    "aov_median": 81.616,
+    "return_rate_naive_pct": 4.9774828158331355,
+    "revenue_all_status": 1894947.942,
+    "returned_gmv": 85277.976,
+    "returned_gmv_pct": 5.691222758482651,
+    "yoy_available": false,
+    "yoy_note": "Year-over-year is not computable: the marts span a single 12-month window (2025Q3 to 2026Q2), so the current quarter has no prior-year comparator. QoQ is shown against the seasonal trend on the card; YoY is the next data requirement."
+  }
+}
