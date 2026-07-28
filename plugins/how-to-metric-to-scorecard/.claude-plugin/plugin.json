@@ -1,0 +1,9 @@
+{
+  "name": "how-to-metric-to-scorecard",
+  "description": "Turn raw marts into a board-ready executive scorecard - define metrics explicitly, validate each against its naive version, and generate a self-contained HTML scorecard where every number is computed, not hand-typed. Ships a runnable baseline python script.",
+  "version": "1.0.0",
+  "author": { "name": "Phoebe Fu" },
+  "homepage": "https://phoebefu6.github.io/phoebe-data-skills",
+  "repository": "https://github.com/phoebefu6/phoebe-data-skills",
+  "license": "MIT"
+}

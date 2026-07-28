@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>how-to-metric-to-scorecard · Phoebe's Data Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Data Analytics layer - teal (site default). Amber = anomaly/validation flag. */
+  :root{ --accent:#0D9488; --accent-dark:#0B7C72; --tint:#F0FDFA; --highlight:#F59E0B; }
+  .layer-badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent-dark);background:var(--tint);
+    border:1px solid rgba(13,148,136,.25);border-radius:999px;padding:4px 12px;margin-bottom:14px;}
+  .frame{border:1px solid var(--hairline);border-radius:12px;overflow:hidden;margin:8px 0 6px;
+    box-shadow:0 10px 30px rgba(15,23,42,.06);background:#fff;}
+  .frame img{width:100%;display:block;cursor:zoom-in;}
+  .frame.pad{padding:10px;}
+  .cap-sub{font-size:13.5px;color:var(--muted);margin:0 0 26px;}
+  .ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:8px 0 6px;}
+  @media(max-width:760px){.ba-grid{grid-template-columns:1fr;}}
+  .lineage-ribbon{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 26px;
+    font-family:'Inter';font-size:13.5px;font-weight:600;color:var(--accent-dark);}
+  .lineage-ribbon span{background:var(--tint);border:1px solid rgba(13,148,136,.2);
+    border-radius:8px;padding:6px 12px;}
+  .lineage-ribbon span.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .lineage-ribbon b{color:var(--muted);font-weight:400;}
+  /* metric-definition table */
+  .mdef{margin-top:26px;border:1px solid var(--hairline);border-radius:12px;overflow:auto;}
+  .mdef table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px;}
+  .mdef th{background:var(--tint);text-align:left;padding:11px 15px;font-size:11.5px;
+    text-transform:uppercase;letter-spacing:.06em;color:var(--accent-dark);white-space:nowrap;}
+  .mdef td{padding:11px 15px;border-top:1px solid var(--hairline);vertical-align:top;}
+  .mdef td b{color:var(--ink);font-weight:600;}
+  .mdef code{background:var(--tint);padding:1px 6px;border-radius:5px;font-size:12.5px;
+    color:var(--accent-dark);font-family:'SF Mono',Menlo,monospace;}
+  .mdef .flag{color:var(--highlight);font-weight:600;}
+  /* live scorecard embed */
+  .embed-wrap{margin-top:12px;border:1px solid var(--hairline);border-radius:14px;overflow:hidden;
+    box-shadow:0 14px 40px rgba(15,23,42,.09);background:#F8FAFC;}
+  .embed-wrap iframe{width:100%;height:860px;border:0;display:block;}
+  @media(max-width:900px){.embed-wrap iframe{height:1580px;}}
+  @media(max-width:560px){.embed-wrap iframe{height:3050px;}}
+  .embed-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+    padding:11px 16px;background:var(--ink);color:#94A3B8;font-size:12.5px;}
+  .embed-bar a{color:var(--highlight);font-weight:600;}
+  .rag-legend{display:flex;gap:18px;flex-wrap:wrap;margin:16px 0 0;font-size:13px;color:var(--muted);}
+  .rag-legend span{display:inline-flex;align-items:center;gap:7px;}
+  .rag-legend i{width:11px;height:11px;border-radius:50%;display:inline-block;}
+</style>
+</head>
+<body>
+<div class="progress"></div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><a href="../" style="color:inherit">phoebe<b>·data·skills</b></a></div>
+    <nav>
+      <a href="../#skills">All skills</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:20px">
+  <div class="wrap">
+    <span class="layer-badge">▲ Data Analytics layer · flagship</span>
+    <h1 style="font-size:clamp(28px,4.4vw,46px)">how-to-<span class="tealline">metric-to-scorecard</span></h1>
+    <p class="lede">Anyone can average a column. The hard part is putting a number in front of a board and defending it. This skill defines eight executive metrics explicitly, validates each against the naive version an analyst ships by accident, then generates a self-contained scorecard where every figure is computed - zero hand-typed numbers. Seed 42, learn-python env, real Everrest marts.</p>
+    <div class="lineage-ribbon">
+      <span>raw dump</span><b>→</b><span>lake</span><b>→</b><span>warehouse</span><b>→</b><span>marts</span><b>→</b><span class="on">scorecard</span><b>→</b><span style="opacity:.5">agent (layer 4)</span>
+    </div>
+    <div class="chiprow" style="margin-top:6px">
+      <span class="chip">Case: Everrest · B2B2C retail platform</span>
+      <span class="chip">seed = 42</span>
+      <span class="chip">pandas · matplotlib · deploy-html</span>
+      <span class="chip">8 board metrics</span>
+      <span class="chip">0 hand-typed numbers</span>
+    </div>
+
+    <div class="rail">
+      <div class="rail-step"><div class="rail-node" data-step="1"><a href="#step-1"><div class="rail-circle">1</div><div class="rail-label">Input</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="2"><a href="#step-2"><div class="rail-circle">2</div><div class="rail-label">Sample data</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="3"><a href="#step-3"><div class="rail-circle">3</div><div class="rail-label">Objective</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="4"><a href="#step-4"><div class="rail-circle">4</div><div class="rail-label">Find-skills</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="5"><a href="#step-5"><div class="rail-circle">5</div><div class="rail-label">Build</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="6"><a href="#step-6"><div class="rail-circle">6</div><div class="rail-label">Expert review</div></a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 1 -->
+<section class="step-section" id="step-1">
+  <div class="wrap">
+    <div class="step-ghost">01</div>
+    <span class="step-tag">Step 1</span>
+    <h2 class="step-title">Input - the clean marts, and the one field that decides everything</h2>
+    <p class="step-body">This skill reads the marts - the clean tables that are the output of <a href="../how-to-schema-and-warehouse/">how-to-schema-and-warehouse</a>. The modeling is done; the analytics judgement starts here. The field that quietly decides half the metrics is <code style="background:var(--tint);padding:1px 6px;border-radius:5px">orders.status</code>: only <b>delivered</b> orders are real revenue.</p>
+    <div class="tbl-grid">
+      <div class="tbl-card reveal"><div class="tbl-name">orders <span class="cnt">50,600 rows</span></div><ul><li><b>order_id</b> · one row per order</li><li><b>merchant_id</b> · fk</li><li><b>customer_id</b> · fk</li><li><b>order_ts</b> · timestamp</li><li><b>status</b> · <em>delivered / cancelled / shipped / paid</em></li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">order_items <span class="cnt">109,154 rows</span></div><ul><li><b>order_id</b> · fk</li><li><b>product_id</b> · fk</li><li><b>qty</b> · units</li><li><b>unit_price</b> · per unit</li><li><b>discount</b> · fraction off</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">returns <span class="cnt">2,672 rows</span></div><ul><li><b>return_id</b> · one per return</li><li><b>order_id</b> · fk</li><li><b>reason</b> · category</li><li><b>return_ts</b> · timestamp</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">merchants <span class="cnt">400 rows</span></div><ul><li><b>merchant_id</b> · pk</li><li><b>category</b> · 8 canonical</li><li><b>tier</b> · standard/premium/enterprise</li><li><em>M0007 = bulk wholesaler</em></li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">customers <span class="cnt">20,000 rows</span></div><ul><li><b>customer_id</b> · pk</li><li><b>signup_date</b> · acquisition</li><li><b>channel_id</b> · fk</li><li><b>region</b> · SEA market</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step-section" id="step-2" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">02</div>
+    <span class="step-tag">Step 2</span>
+    <h2 class="step-title">Sample data - reuse the seeded marts, and the traps inside them</h2>
+    <p class="step-body">No new generator here: the marts already exist (seed 42, from the warehouse build). What matters for a scorecard is knowing the traps a naive metric walks straight into - each one is planted in the data on purpose and shows up in the validation at Step 5.</p>
+    <div class="quirk-grid">
+      <div class="quirk reveal"><b>🚦 Mixed order status</b><span>21% of orders are cancelled or in-flight - counting them inflates GMV 26%</span></div>
+      <div class="quirk reveal"><b>🐘 The wholesale outlier</b><span>M0007 orders ~50x the median - it drags the platform AOV up 17%</span></div>
+      <div class="quirk reveal"><b>➗ Wrong denominator</b><span>only delivered orders can be returned - all-orders base understates return rate</span></div>
+      <div class="quirk reveal"><b>📈 November seasonality</b><span>the demand peak hits 1.9x a normal month - a single average hides it</span></div>
+      <div class="quirk reveal"><b>🎯 GMV concentration</b><span>one merchant is 15% of GMV - an aggregate would bury the dependency</span></div>
+      <div class="quirk reveal"><b>🔁 Loyalty vs churn</b><span>repeat rate on all orders counts cancelled orders as loyalty</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step-section" id="step-3">
+  <div class="wrap">
+    <div class="step-ghost">03</div>
+    <span class="step-tag">Step 3</span>
+    <h2 class="step-title">Objective - a scorecard the board can defend, not a dashboard</h2>
+    <p class="step-body">A dashboard shows numbers. A scorecard defends them. The objective is not "visualize the data" - it is to choose the few numbers a board decides on, and be able to say exactly what each one means and why it is right.</p>
+    <div class="objective-banner reveal">
+      <div class="q">What are the <em>eight numbers</em> Everrest's board needs this quarter - and can we <em>defend</em> every one against the version that is subtly wrong?</div>
+      <ul class="subq">
+        <li>What counts as revenue - and how much do cancelled and in-flight orders inflate it?</li>
+        <li>What is a typical order worth once the one wholesaler is set aside?</li>
+        <li>Is the marketplace healthy - active buyers, repeat rate - or just large?</li>
+        <li>Where is the risk the board should see: concentration, returns, seasonality?</li>
+        <li>Can every number be traced to a formula and reproduced, so none is hand-typed?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4 -->
+<section class="step-section" id="step-4" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">04</div>
+    <span class="step-tag">Step 4</span>
+    <h2 class="step-title">Find-skills - the reporting toolbox</h2>
+    <p class="step-body">A scorecard needs a compute layer, a metric-contract discipline, and one hardened, dependency-free HTML artifact an executive can open anywhere. Assemble those before writing a single tile.</p>
+    <div class="tool-grid">
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/pandas-dev/pandas">pandas</a></h4><p>Every metric is a small, explicit function over the marts - the definition lives in code, not in a BI tool's config nobody can read.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/great-expectations/great_expectations">Great Expectations</a></h4><p>Promote each metric's validation (status filter, denominator, no-negative checks) to a permanent gate so a definition never silently drifts.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Skill</span><h4>deploy-html</h4><p>Inline and harden the scorecard into one self-contained file - no CDN, no build - so it opens in any browser and drops into a board deck.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Skill</span><h4>dataviz discipline</h4><p>Tabular-nums heroes, one amber flag for risk, RAG status, period-over-period deltas - the conventions a board reads without a legend.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Pattern</span><h4>Metric contract</h4><p>Formula + grain + filter + owner for every metric. If you cannot state all four, it is not board-ready - it is an aggregate.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Skill</span><h4><a href="https://github.com/phoebefu6/phoebe-data-skills">phoebe-data-skills EDA</a></h4><p>The upstream EDA and warehouse skills surface the outlier and the status field this scorecard has to handle correctly.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section class="step-section" id="step-5">
+  <div class="wrap">
+    <div class="step-ghost">05</div>
+    <span class="step-tag">Step 5</span>
+    <h2 class="step-title">Build - define, validate, then generate</h2>
+    <p class="step-body">One python script defines all eight metrics as functions, computes each metric AND its naive twin, writes every value to <code style="background:var(--tint);padding:1px 6px;border-radius:5px">metrics.json</code>, and injects those values into a self-contained HTML scorecard. Grab the real code below.</p>
+    <div class="codelinks reveal">
+      <span class="cl-label">Get the code:</span>
+      <a class="cl-btn" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-metric-to-scorecard/build_scorecard.py"><span class="gh">▶</span> build_scorecard.py</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-metric-to-scorecard/metrics.json"><span class="gh">✓</span> metrics.json</a>
+      <a class="cl-btn ghost" href="everrest_scorecard.html"><span class="gh">◆</span> Open the scorecard</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/tree/main/materials/how-to-metric-to-scorecard"><span class="gh">↗</span> All files</a>
+    </div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:30px 0 4px;color:var(--ink)">Define every metric explicitly</h3>
+    <p class="cap-sub">Formula, grain, filter - stated up front so a reader can audit each tile. This table ships on the scorecard itself.</p>
+    <div class="mdef reveal">
+      <table>
+        <thead><tr><th>Metric</th><th>Formula</th><th>Grain</th><th>Key filter / rule</th></tr></thead>
+        <tbody>
+          <tr><td><b>GMV (Delivered)</b></td><td><code>SUM(qty·unit_price·(1-discount))</code></td><td>order</td><td>status = <b>delivered</b>, gross of returns</td></tr>
+          <tr><td><b>Platform Net Revenue</b></td><td><code>GMV × 11%</code></td><td>order</td><td class="flag">the take · rate = assumption</td></tr>
+          <tr><td><b>Delivered Orders</b></td><td><code>COUNT(orders)</code></td><td>order</td><td>status = delivered</td></tr>
+          <tr><td><b>Avg Order Value</b></td><td><code>MEAN(net_amount)</code> + median</td><td>order</td><td class="flag">exclude M0007 wholesaler</td></tr>
+          <tr><td><b>Active Buyers</b></td><td><code>COUNT(DISTINCT customer_id)</code></td><td>customer</td><td>≥ 1 delivered order this qtr</td></tr>
+          <tr><td><b>Return Rate</b></td><td><code>returns / delivered orders</code></td><td>order</td><td class="flag">denominator = delivered only</td></tr>
+          <tr><td><b>Repeat Buyer Rate</b></td><td><code>buyers with ≥2 orders / buyers</code></td><td>customer</td><td>delivered, within quarter</td></tr>
+          <tr><td><b>Top-Merchant Share</b></td><td><code>max merchant GMV / total GMV</code></td><td>merchant</td><td class="flag">concentration-risk flag</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">Validate - what each metric says if you get it wrong</h3>
+    <p class="cap-sub">The step every tutorial skips. Compute the naive version too, and show the gap. These are the numbers that separate a defensible board metric from a plausible-but-wrong one.</p>
+    <div class="ba-grid">
+      <div class="frame pad reveal"><img src="charts/validation_status.png" alt="Bar chart: counting all order statuses reports 1.89M revenue versus 1.50M for delivered-only, a 26 percent inflation"></div>
+      <div class="frame pad reveal"><img src="charts/aov_outlier.png" alt="Histogram of delivered order values with the mean including M0007 at 151 dollars versus 129 dollars excluding it"></div>
+    </div>
+    <p class="cap-sub"><b>Left:</b> counting cancelled and in-flight orders inflates revenue by 26% ($1.89M vs the true $1.50M). <b>Right:</b> one bulk wholesaler (M0007, ~$7,264/order) lifts platform AOV from $129 to $151 - the board metric excludes it and quotes the median beside the mean.</p>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">The scorecard - every number computed, live below</h3>
+    <p class="cap-sub">Generated by the script from <code style="background:var(--tint);padding:1px 6px;border-radius:5px">metrics.json</code> - not one figure is hand-typed. Self-contained HTML: no CDN, no build, drops into a board deck. This is the real artifact, embedded live.</p>
+    <div class="rag-legend">
+      <span><i style="background:#0D9488"></i> On track</span>
+      <span><i style="background:#F59E0B"></i> Watch / risk flag</span>
+      <span>▲▼ period-over-period vs prior quarter</span>
+    </div>
+    <div class="embed-wrap reveal" style="margin-top:14px">
+      <iframe src="everrest_scorecard.html" title="Everrest executive scorecard - every number computed from the marts" loading="lazy"></iframe>
+      <div class="embed-bar"><span>Everrest executive scorecard · current period 2026Q2 vs 2026Q1 · seed 42</span><a href="everrest_scorecard.html" target="_blank">Open full scorecard ↗</a></div>
+    </div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:38px 0 4px;color:var(--ink)">The three charts behind the tiles</h3>
+    <div class="chart-grid">
+      <div class="chart-card reveal"><img src="charts/rev_trend.png" alt="Line chart of delivered revenue over twelve months with November flagged amber as the demand peak"><div class="cap"><b>Plan to the peak.</b> November hits 1.9x a normal month. A single quarterly average would hide the seasonality the inventory plan depends on.</div></div>
+      <div class="chart-card reveal"><img src="charts/category_rev.png" alt="Horizontal bar chart of delivered revenue by the eight clean categories, Grocery highest"><div class="cap"><b>Grocery leads.</b> Revenue by the 8 canonical categories - clean because the warehouse normalized 14 dirty labels upstream, so the rollup is whole.</div></div>
+      <div class="chart-card reveal"><img src="charts/concentration.png" alt="Bar chart of the top fifteen merchants by revenue with M0007 towering in amber"><div class="cap"><b>One merchant, 15%.</b> M0007 alone is 15% of quarterly revenue and dwarfs the field - a concentration risk the scorecard surfaces, not an average that buries it.</div></div>
+    </div>
+
+    <div class="caught reveal">
+      <table>
+        <thead><tr><th>Trap in the data</th><th>Naive metric</th><th>Validated metric</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Cancelled / in-flight orders</td><td class="num">$1,894,948</td><td class="num">$1,498,412 (delivered GMV)</td><td class="ok">✓ 26% inflation removed</td></tr>
+          <tr><td>M0007 wholesale outlier</td><td class="num">AOV $151</td><td class="num">$129 mean / $82 median</td><td class="ok">✓ mean + median shown</td></tr>
+          <tr><td>Wrong return denominator</td><td class="num">5.0% (all orders)</td><td class="num">6.3% (delivered)</td><td class="ok">✓ honest base</td></tr>
+          <tr><td>November seasonality</td><td class="num">flat average</td><td class="num">1.9x peak flagged</td><td class="ok">✓ trend on the card</td></tr>
+          <tr><td>Revenue concentration</td><td class="num">hidden in total</td><td class="num">top-merchant 15% tile</td><td class="ok">✓ risk surfaced</td></tr>
+          <tr><td>Hand-typed numbers</td><td class="num">the usual board deck</td><td class="num">0 - all from metrics.json</td><td class="ok">✓ reproducible</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 6 -->
+<section class="step-section" id="step-6" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">06</div>
+    <span class="step-tag">Step 6</span>
+    <h2 class="step-title">Expert review - a panel that changed the metric set</h2>
+    <p class="step-body">A panel of senior reviewer agents - each 10+ years in analytics engineering, board-facing insight, and commercial strategy - tore into the first draft of the scorecard and its definitions. Every fix below is in the code and the live card above.</p>
+    <div class="mentor-grid" id="panel">
+      <div class="mentor-card reveal"><div class="m-name">Commercial / Board Lead</div><div class="m-lens">14 yrs · marketplace P&amp;L</div><p>"Your top tile says 'Net Revenue $1.5M'. That is GMV - merchandise flowing through the platform. The board will book it as company revenue and it is not. Everrest earns the take, ~$165k. This is the dangerous kind of wrong: plausible and off by 9x."</p><div class="m-fix">Fix applied: tile 1 relabeled <b>GMV (Delivered)</b>; tile 2 promoted to <b>Platform Net Revenue</b> (the take) - two distinct signals, not the same number twice.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">BI / Analytics-Engineering Lead</div><div class="m-lens">13 yrs · semantic layers</div><p>"'Active Merchants' is 400 every quarter, flat, green - because all 400 merchants transact every period. It is COUNT(*) of the merchant table wearing a KPI badge, and its validation text claims a safeguard the data contradicts."</p><div class="m-fix">Fix applied: dropped it for <b>Active Buyers</b> (7,829, +6.5% QoQ) - the demand side that actually moves and that a two-sided board asks about.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Analytics Methodology Lead</div><div class="m-lens">12 yrs · metric integrity</div><p>"The AOV validation promises a median 'reported alongside' that the code never computes. And 5.7% ($85k) of your delivered GMV sits on orders that were later returned, while the tile next to it reports a 6.3% return rate. Internally inconsistent."</p><div class="m-fix">Fix applied: median ($82) now computed and shown beside the mean; GMV definition states it is gross of returns and quantifies the returned share, so the two tiles tell one story.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Data Governance / Metric-Contract Lead</div><div class="m-lens">11 yrs · trust &amp; lineage</div><p>"The headline hard-types 'after the March promo'. There is no promo field anywhere in the marts - that is an unverifiable narrative on a deliverable that advertises 'zero hand-typed numbers'. And 'held' is spin on a metric that fell 2.4%."</p><div class="m-fix">Fix applied: headline rewritten to sourced, sign-honest language - "down 2.4% QoQ against a seasonally stronger quarter" - no invented causes.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Retention / Growth Analyst</div><div class="m-lens">10 yrs · cohorts</div><p>"Repeat Buyer Rate ships as a static 67% with no prior period - decoration. A board wants retention moving. And with only 12 months of data, every QoQ delta here is measured against a seasonal high; there is no year-over-year comparator at all."</p><div class="m-fix">Fix applied: repeat rate reframed to <b>within-quarter</b> (22.6%, +2.1 pts QoQ) so it has a trajectory; YoY flagged honestly in metrics.json as the next data requirement, not faked.</div></div>
+    </div>
+    <div class="code-card">
+      <div class="code-head"><span>before → after · the relabel that changed what the board reads</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># v1 (before): one number, mislabeled - the board books $1.5M as revenue</span>
+net_amount = qty * unit_price * (<span class="c-str">1</span> - discount)      <span class="c-comment"># merchandise value</span>
+tile(<span class="c-str">"Net Revenue"</span>, net_amount.sum())            <span class="c-comment"># -&gt; $1,498,412  (this is GMV!)</span>
+
+<span class="c-comment"># v2 (after): merchandise flow and the take are two different tiles</span>
+gmv = net_amount.sum()                          <span class="c-comment"># -&gt; $1,498,412  GMV (Delivered)</span>
+tile(<span class="c-str">"GMV (Delivered)"</span>, gmv)                     <span class="c-comment"># what flows through the platform</span>
+tile(<span class="c-str">"Platform Net Revenue"</span>, gmv * TAKE_RATE)   <span class="c-comment"># -&gt; $164,825  what Everrest earns</span></pre>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="install">
+      <h3>Run this skill on your own marts</h3>
+      <p>Install once, then point it at your tables - the same 6 steps define and validate your board metrics and generate a self-contained scorecard on your data.</p>
+      <div class="code-card">
+        <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
+        <pre>/plugin marketplace add phoebefu6/phoebe-data-skills
+/plugin install how-to-metric-to-scorecard@phoebe-data-skills</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Phoebe Fu</span>
+    <span><a href="../">← All skills</a></span>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

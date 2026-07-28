@@ -10,3 +10,4 @@ materials/how-to-schema-and-warehouse/output/
 materials/how-to-schema-consolidation/data/
 __pycache__/
 *.pyc
+materials/how-to-metric-to-scorecard/output/

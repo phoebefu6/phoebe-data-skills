@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Everrest Executive Scorecard - 2026Q2</title>
+<style>
+  :root{--ink:#0F172A;--accent:#0D9488;--accent-d:#0B7C72;--muted:#64748B;
+    --hair:#E2E8F0;--tint:#F0FDFA;--amber:#F59E0B;--green:#0D9488;--red:#DC2626;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;color:var(--ink);
+    background:#F8FAFC;padding:34px 26px;font-size:15px;line-height:1.55;}
+  .board{max-width:1120px;margin:0 auto;background:#fff;border:1px solid var(--hair);
+    border-radius:18px;box-shadow:0 18px 50px rgba(15,23,42,.07);overflow:hidden;}
+  .head{background:var(--ink);color:#fff;padding:24px 30px;display:flex;
+    align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .head h1{font-size:21px;font-weight:600;letter-spacing:-.01em;}
+  .head .sub{color:#94A3B8;font-size:13px;margin-top:3px;}
+  .head .spark{display:flex;align-items:center;gap:10px;color:#CBD5E1;font-size:12px;}
+  .headline{background:var(--tint);border-bottom:1px solid var(--hair);
+    padding:16px 30px;font-size:15.5px;color:var(--ink);}
+  .headline b{color:var(--accent-d);}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair);}
+  @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr;}}
+  .tile{background:#fff;padding:18px 18px 16px;position:relative;}
+  .t-top{display:flex;align-items:center;justify-content:space-between;}
+  .t-label{font-weight:600;font-size:13.5px;color:var(--ink);}
+  .t-sub{font-size:11.5px;color:var(--muted);margin-top:1px;}
+  .t-value{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;
+    color:var(--ink);margin:8px 0 2px;letter-spacing:-.01em;}
+  .num{font-variant-numeric:tabular-nums;}
+  .rag-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .rag-green .rag-dot{background:var(--green);}
+  .rag-amber .rag-dot{background:var(--amber);}
+  .rag-red .rag-dot{background:var(--red);}
+  .rag-amber{box-shadow:inset 3px 0 0 var(--amber);}
+  .delta{font-size:12px;font-weight:600;display:inline-block;}
+  .delta.up{color:var(--green);} .delta.down{color:var(--red);}
+  .delta.flat{color:var(--muted);}
+  .t-def,.t-val{font-size:11px;color:var(--muted);margin-top:9px;line-height:1.45;}
+  .t-def b{color:var(--ink);} .t-val b{color:var(--amber);}
+  .foot{padding:14px 30px;font-size:11.5px;color:var(--muted);
+    border-top:1px solid var(--hair);display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:8px;}
+  .foot code{background:var(--tint);padding:1px 6px;border-radius:5px;color:var(--accent-d);}
+</style>
+</head>
+<body>
+  <div class="board">
+    <div class="head">
+      <div>
+        <h1>Everrest - Executive Scorecard</h1>
+        <div class="sub">B2B2C retail marketplace &middot; current period 2026Q2 &middot; vs 2026Q1</div>
+      </div>
+      <div class="spark">GMV, trailing 12 mo <svg viewBox="0 0 150 40" width="150" height="40" preserveAspectRatio="none" aria-hidden="true"><path d="M0.0,36.0 L13.6,31.0 L27.3,32.6 L40.9,33.3 L54.5,4.0 L68.2,33.3 L81.8,29.9 L95.5,32.6 L109.1,14.2 L122.7,28.9 L136.4,24.4 L150.0,25.7" fill="none" stroke="#0D9488" stroke-width="2"/><circle cx="54.5" cy="4.0" r="3.2" fill="#F59E0B"/></svg></div>
+    </div>
+    <div class="headline"><b>Read this first.</b> GMV was $1,498,412 in 2026Q2, down 2.4% QoQ against a seasonally stronger prior quarter - on this platform Everrest's own take is $164,825. 2025-11 is the demand peak at 1.9x a normal month, so plan inventory to it. M0007 is 15% of GMV: a concentration risk to watch.</div>
+    <div class="grid">
+    <div class="tile rag-amber">
+      <div class="t-top"><span class="t-label">GMV (Delivered)</span>
+        <span class="rag-dot"></span></div>
+      <div class="t-sub">merchandise value</div>
+      <div class="t-value num">$1,498,412</div>
+      <span class="delta down">▼ 2.4% QoQ</span>
+      <div class="t-def"><b>Definition.</b> SUM(qty x unit_price x (1 - discount)) over delivered orders, current quarter. Grain: order. Net of discounts, GROSS of returns. This is merchandise flow, not company revenue.</div>
+      <div class="t-val"><b>Validated.</b> Counting all statuses reports $1,894,948 (+26%). And 5.7% of this GMV ($85,278) sits on orders later returned - so GMV, not 'net revenue', is the honest label.</div>
+    </div>
+    <div class="tile rag-amber">
+      <div class="t-top"><span class="t-label">Platform Net Revenue</span>
+        <span class="rag-dot"></span></div>
+      <div class="t-sub">the take @ 11%</div>
+      <div class="t-value num">$164,825</div>
+      <span class="delta down">▼ 2.4% QoQ</span>
+      <div class="t-def"><b>Definition.</b> GMV x 11% take rate. This is what Everrest actually earns - the number that belongs on the P&L, not GMV. The take rate is a stated assumption, not yet a data field.</div>
+      <div class="t-val"><b>Validated.</b> Board-critical distinction: GMV is $1,498,412 of merchandise flow; the company earns $164,825. Re-rating the take is a one-number change.</div>
+    </div>
+    <div class="tile rag-green">
+      <div class="t-top"><span class="t-label">Delivered Orders</span>
+        <span class="rag-dot"></span></div>
+      <div class="t-sub">count</div>
+      <div class="t-value num">9,929</div>
+      <span class="delta up">▲ 3.6% QoQ</span>
+      <div class="t-def"><b>Definition.</b> COUNT(orders) WHERE status = 'delivered', current quarter.</div>
+      <div class="t-val"><b>Validated.</b> Ties to the GMV order set - same filter, same grain.</div>
+    </div>
+    <div class="tile rag-green">
+      <div class="t-top"><span class="t-label">Avg Order Value</span>
+        <span class="rag-dot"></span></div>
+      <div class="t-sub">excl. M0007 &middot; median $82</div>
+      <div class="t-value num">$128.67</div>
+      <span class="delta down">▼ 7.3% QoQ</span>
+      <div class="t-def"><b>Definition.</b> MEAN(net_amount) over delivered orders, EXCLUDING merchant M0007 (bulk wholesaler, ~50x median order). Grain: order. Median $82 shown alongside because the distribution is right-skewed.</div>
+      <div class="t-val"><b>Validated.</b> Including M0007 lifts the mean to $151 (+17%). The median ($82) sits well below the mean - a right skew, so both are reported.</div>
+    </div>
+    <div class="tile rag-green">
+      <div class="t-top"><span class="t-label">Active Buyers</span>
+        <span class="rag-dot"></span></div>
+      <div class="t-sub">distinct, delivered</div>
+      <div class="t-value num">7,829</div>
+      <span class="delta up">▲ 6.5% QoQ</span>
+      <div class="t-def"><b>Definition.</b> COUNT(DISTINCT customer_id) with >= 1 delivered order this quarter. The demand side of the marketplace.</div>
+      <div class="t-val"><b>Validated.</b> Active merchants is a constant here (all 400 transact every quarter), so it was dropped for this - the number that actually moves and shows demand.</div>
+    </div>
+    <div class="tile rag-amber">
+      <div class="t-top"><span class="t-label">Return Rate</span>
+        <span class="rag-dot"></span></div>
+      <div class="t-sub">returns / delivered</div>
+      <div class="t-value num">6.3%</div>
+      <span class="delta down">▼ 0.3 pts QoQ</span>
+      <div class="t-def"><b>Definition.</b> COUNT(returns on delivered orders) / COUNT(delivered orders), current quarter.</div>
+      <div class="t-val"><b>Validated.</b> Using all orders as the denominator understates it at 5.0%. Only delivered orders can be returned, so they are the honest base.</div>
+    </div>
+    <div class="tile rag-green">
+      <div class="t-top"><span class="t-label">Repeat Buyer Rate</span>
+        <span class="rag-dot"></span></div>
+      <div class="t-sub">within quarter</div>
+      <div class="t-value num">22.6%</div>
+      <span class="delta up">▲ 2.1 pts QoQ</span>
+      <div class="t-def"><b>Definition.</b> Share of active buyers with >= 2 delivered orders WITHIN the quarter. Measured per-quarter so it has a trajectory, not a static trailing figure.</div>
+      <div class="t-val"><b>Validated.</b> On delivered orders only, so cancelled-order churn does not masquerade as loyalty. Per-quarter framing lets the board see retention moving.</div>
+    </div>
+    <div class="tile rag-amber">
+      <div class="t-top"><span class="t-label">Top-Merchant Share</span>
+        <span class="rag-dot"></span></div>
+      <div class="t-sub">M0007 of GMV</div>
+      <div class="t-value num">15.0%</div>
+      <span class="delta flat">no prior period</span>
+      <div class="t-def"><b>Definition.</b> GMV of the single largest merchant / total GMV, current quarter. A concentration-risk flag.</div>
+      <div class="t-val"><b>Validated.</b> M0007 alone is 15% and the top 10 are 21% of GMV - a dependency the board should see, not an aggregate that hides it.</div>
+    </div>
+    </div>
+    <div class="foot">
+      <span>Every figure computed by <code>build_scorecard.py</code> from the Everrest marts (seed 42). Zero hand-typed numbers.</span>
+      <span>GMV recognized on <code>status = delivered</code> &middot; take rate 11% (assumption)</span>
+    </div>
+  </div>
+</body>
+</html>
