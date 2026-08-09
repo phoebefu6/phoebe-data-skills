@@ -1,0 +1,1173 @@
+{
+  "seed": 42,
+  "context": {
+    "days": 365,
+    "first_day": "2025-07-01",
+    "last_day": "2026-06-30",
+    "total_units": 140219.0,
+    "depeaked_days": 335,
+    "dq": {
+      "duplicate_order_rows": 600,
+      "affected_order_ids": 600,
+      "duplicate_months": [
+        "2026-03"
+      ],
+      "dropped_item_lines": 1439
+    },
+    "top_merchant": "M0172",
+    "top_merchant_unit_share_pct": 0.34018214364672406,
+    "returned_unit_share_pct": 6.972664189589143,
+    "categories": [
+      "Apparel",
+      "Beauty",
+      "Electronics",
+      "Grocery",
+      "Home & Living",
+      "Pet Supplies",
+      "Sports & Outdoor",
+      "Toys & Kids"
+    ],
+    "median_price_by_cat": {
+      "Apparel": 24.47,
+      "Beauty": 23.38,
+      "Electronics": 24.85,
+      "Grocery": 23.335,
+      "Home & Living": 24.35,
+      "Pet Supplies": 24.18,
+      "Sports & Outdoor": 23.16,
+      "Toys & Kids": 25.43
+    }
+  },
+  "weekday": {
+    "weekday_means": {
+      "Mon": 314.6458333333333,
+      "Tue": 311.6326530612245,
+      "Wed": 310.0833333333333,
+      "Thu": 319.7083333333333,
+      "Fri": 306.6875,
+      "Sat": 448.8936170212766,
+      "Sun": 456.6595744680851
+    },
+    "obs_per_weekday_min": 47,
+    "obs_per_weekday_max": 49,
+    "weekend_lift_pct": 44.864622757647254
+  },
+  "monthly_dummy_trap": {
+    "n_obs": 12,
+    "n_params": 12,
+    "residual_df": 0,
+    "in_sample_mape": 0.0,
+    "monthly_units": {
+      "2025-07": 9402.0,
+      "2025-08": 10064.0,
+      "2025-09": 9732.0,
+      "2025-10": 10012.0,
+      "2025-11": 22334.0,
+      "2025-12": 10638.0,
+      "2026-01": 10777.0,
+      "2026-02": 10046.0,
+      "2026-03": 11505.0,
+      "2026-04": 11033.0,
+      "2026-05": 12777.0,
+      "2026-06": 11899.0
+    }
+  },
+  "backtest_short": {
+    "horizon_days": 28,
+    "folds": 8,
+    "winner": "Holt-Winters (weekly)",
+    "summary": {
+      "Holt-Winters (weekly)": {
+        "mape_all": 12.44,
+        "mae": 47.04,
+        "rmse": 57.06,
+        "mape_normal_months": 12.44,
+        "mape_spike_months": NaN
+      },
+      "seasonal naive (7d)": {
+        "mape_all": 14.24,
+        "mae": 52.66,
+        "rmse": 65.92,
+        "mape_normal_months": 14.24,
+        "mape_spike_months": NaN
+      },
+      "moving average (28d)": {
+        "mape_all": 17.54,
+        "mae": 67.79,
+        "rmse": 85.18,
+        "mape_normal_months": 17.54,
+        "mape_spike_months": NaN
+      },
+      "naive (last day)": {
+        "mape_all": 19.64,
+        "mae": 82.4,
+        "rmse": 107.81,
+        "mape_normal_months": 19.64,
+        "mape_spike_months": NaN
+      },
+      "log-linear + weekday": {
+        "mape_all": 20.25,
+        "mae": 69.95,
+        "rmse": 80.4,
+        "mape_normal_months": 20.25,
+        "mape_spike_months": NaN
+      }
+    },
+    "per_fold": [
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2025-12-30",
+        "hits_spike": null,
+        "mape": 16.65,
+        "mae": 62.14,
+        "rmse": 81.76
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2025-12-30",
+        "hits_spike": null,
+        "mape": 14.23,
+        "mae": 46.0,
+        "rmse": 55.55
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2025-12-30",
+        "hits_spike": null,
+        "mape": 20.19,
+        "mae": 67.95,
+        "rmse": 77.05
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2025-12-30",
+        "hits_spike": null,
+        "mape": 8.97,
+        "mae": 30.77,
+        "rmse": 39.21
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2025-12-30",
+        "hits_spike": null,
+        "mape": 49.35,
+        "mae": 162.12,
+        "rmse": 168.57
+      },
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2026-01-20",
+        "hits_spike": null,
+        "mape": 25.1,
+        "mae": 103.14,
+        "rmse": 130.32
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2026-01-20",
+        "hits_spike": null,
+        "mape": 14.78,
+        "mae": 51.71,
+        "rmse": 67.48
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2026-01-20",
+        "hits_spike": null,
+        "mape": 16.53,
+        "mae": 64.77,
+        "rmse": 83.81
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2026-01-20",
+        "hits_spike": null,
+        "mape": 14.28,
+        "mae": 52.18,
+        "rmse": 60.95
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2026-01-20",
+        "hits_spike": null,
+        "mape": 26.35,
+        "mae": 91.21,
+        "rmse": 98.4
+      },
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2026-02-10",
+        "hits_spike": null,
+        "mape": 17.35,
+        "mae": 68.68,
+        "rmse": 91.83
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2026-02-10",
+        "hits_spike": null,
+        "mape": 11.64,
+        "mae": 41.39,
+        "rmse": 52.23
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2026-02-10",
+        "hits_spike": null,
+        "mape": 20.7,
+        "mae": 71.62,
+        "rmse": 82.23
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2026-02-10",
+        "hits_spike": null,
+        "mape": 11.17,
+        "mae": 36.67,
+        "rmse": 47.89
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2026-02-10",
+        "hits_spike": null,
+        "mape": 25.76,
+        "mae": 84.36,
+        "rmse": 93.98
+      },
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2026-03-03",
+        "hits_spike": null,
+        "mape": 24.18,
+        "mae": 101.14,
+        "rmse": 126.18
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2026-03-03",
+        "hits_spike": null,
+        "mape": 18.48,
+        "mae": 67.93,
+        "rmse": 83.03
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2026-03-03",
+        "hits_spike": null,
+        "mape": 15.99,
+        "mae": 63.03,
+        "rmse": 82.93
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2026-03-03",
+        "hits_spike": null,
+        "mape": 15.61,
+        "mae": 59.62,
+        "rmse": 72.11
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2026-03-03",
+        "hits_spike": null,
+        "mape": 15.02,
+        "mae": 52.53,
+        "rmse": 67.33
+      },
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2026-03-24",
+        "hits_spike": null,
+        "mape": 18.38,
+        "mae": 73.18,
+        "rmse": 95.44
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2026-03-24",
+        "hits_spike": null,
+        "mape": 17.08,
+        "mae": 60.39,
+        "rmse": 72.32
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2026-03-24",
+        "hits_spike": null,
+        "mape": 18.72,
+        "mae": 73.66,
+        "rmse": 94.92
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2026-03-24",
+        "hits_spike": null,
+        "mape": 10.18,
+        "mae": 36.84,
+        "rmse": 45.34
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2026-03-24",
+        "hits_spike": null,
+        "mape": 13.21,
+        "mae": 44.07,
+        "rmse": 54.65
+      },
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2026-04-14",
+        "hits_spike": null,
+        "mape": 19.0,
+        "mae": 82.46,
+        "rmse": 109.59
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2026-04-14",
+        "hits_spike": null,
+        "mape": 13.02,
+        "mae": 48.89,
+        "rmse": 62.27
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2026-04-14",
+        "hits_spike": null,
+        "mape": 15.13,
+        "mae": 59.68,
+        "rmse": 81.28
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2026-04-14",
+        "hits_spike": null,
+        "mape": 12.96,
+        "mae": 50.54,
+        "rmse": 57.42
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2026-04-14",
+        "hits_spike": null,
+        "mape": 12.52,
+        "mae": 45.9,
+        "rmse": 59.48
+      },
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2026-05-05",
+        "hits_spike": null,
+        "mape": 15.31,
+        "mae": 68.79,
+        "rmse": 92.86
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2026-05-05",
+        "hits_spike": null,
+        "mape": 12.54,
+        "mae": 51.93,
+        "rmse": 63.56
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2026-05-05",
+        "hits_spike": null,
+        "mape": 15.1,
+        "mae": 66.1,
+        "rmse": 87.88
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2026-05-05",
+        "hits_spike": null,
+        "mape": 11.42,
+        "mae": 46.34,
+        "rmse": 57.11
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2026-05-05",
+        "hits_spike": null,
+        "mape": 11.25,
+        "mae": 44.91,
+        "rmse": 56.85
+      },
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2026-05-26",
+        "hits_spike": null,
+        "mape": 21.18,
+        "mae": 99.64,
+        "rmse": 134.48
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2026-05-26",
+        "hits_spike": null,
+        "mape": 12.14,
+        "mae": 53.0,
+        "rmse": 70.95
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2026-05-26",
+        "hits_spike": null,
+        "mape": 17.99,
+        "mae": 75.49,
+        "rmse": 91.31
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2026-05-26",
+        "hits_spike": null,
+        "mape": 14.9,
+        "mae": 63.35,
+        "rmse": 76.42
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2026-05-26",
+        "hits_spike": null,
+        "mape": 8.5,
+        "mae": 34.48,
+        "rmse": 43.93
+      }
+    ],
+    "lead_curve_pct": [
+      11.76,
+      12.77,
+      12.27,
+      10.13,
+      12.77,
+      10.41,
+      13.27,
+      15.09,
+      12.29,
+      11.64,
+      15.8,
+      12.4,
+      8.89,
+      11.81,
+      20.3,
+      13.05,
+      15.68,
+      7.47,
+      9.02,
+      11.68,
+      12.28,
+      12.67,
+      15.18,
+      9.49,
+      9.53,
+      12.85,
+      8.78,
+      18.92
+    ]
+  },
+  "backtest_long": {
+    "horizon_days": 120,
+    "folds": 3,
+    "effective_folds": 1.52,
+    "winner": "log-linear + weekday",
+    "summary": {
+      "log-linear + weekday": {
+        "mape": 10.73,
+        "abs_agg_bias_pct": 2.52
+      },
+      "Holt-Winters (weekly)": {
+        "mape": 10.85,
+        "abs_agg_bias_pct": 2.37
+      },
+      "seasonal naive (7d)": {
+        "mape": 14.14,
+        "abs_agg_bias_pct": 6.06
+      },
+      "moving average (28d)": {
+        "mape": 16.77,
+        "abs_agg_bias_pct": 6.7
+      },
+      "naive (last day)": {
+        "mape": 18.99,
+        "abs_agg_bias_pct": 9.15
+      }
+    },
+    "per_fold": [
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2025-12-30",
+        "test_days": 120,
+        "mape": 16.67,
+        "agg_rel_pct": -12.96
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2025-12-30",
+        "test_days": 120,
+        "mape": 13.74,
+        "agg_rel_pct": -4.05
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2025-12-30",
+        "test_days": 120,
+        "mape": 17.81,
+        "agg_rel_pct": -3.86
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2025-12-30",
+        "test_days": 120,
+        "mape": 10.55,
+        "agg_rel_pct": 0.21
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2025-12-30",
+        "test_days": 120,
+        "mape": 10.34,
+        "agg_rel_pct": 0.89
+      },
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2026-01-30",
+        "test_days": 120,
+        "mape": 17.28,
+        "agg_rel_pct": -4.04
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2026-01-30",
+        "test_days": 120,
+        "mape": 12.08,
+        "agg_rel_pct": -2.2
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2026-01-30",
+        "test_days": 120,
+        "mape": 16.86,
+        "agg_rel_pct": -8.01
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2026-01-30",
+        "test_days": 120,
+        "mape": 11.15,
+        "agg_rel_pct": -3.01
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2026-01-30",
+        "test_days": 120,
+        "mape": 10.97,
+        "agg_rel_pct": -2.67
+      },
+      {
+        "model": "naive (last day)",
+        "fold_origin": "2026-03-02",
+        "test_days": 120,
+        "mape": 23.01,
+        "agg_rel_pct": 10.47
+      },
+      {
+        "model": "seasonal naive (7d)",
+        "fold_origin": "2026-03-02",
+        "test_days": 120,
+        "mape": 16.6,
+        "agg_rel_pct": -11.92
+      },
+      {
+        "model": "moving average (28d)",
+        "fold_origin": "2026-03-02",
+        "test_days": 120,
+        "mape": 15.64,
+        "agg_rel_pct": -8.23
+      },
+      {
+        "model": "Holt-Winters (weekly)",
+        "fold_origin": "2026-03-02",
+        "test_days": 120,
+        "mape": 10.84,
+        "agg_rel_pct": -3.89
+      },
+      {
+        "model": "log-linear + weekday",
+        "fold_origin": "2026-03-02",
+        "test_days": 120,
+        "mape": 10.89,
+        "agg_rel_pct": -4.01
+      }
+    ],
+    "agg_rel_errors": [
+      0.0089,
+      -0.0267,
+      -0.0401
+    ]
+  },
+  "spikes": {
+    "november": {
+      "month": "2025-11",
+      "days": 30,
+      "actual_units": 22334.0,
+      "baseline_units": 10266.739007315591,
+      "uplift": 2.1753742823389053,
+      "extra_units": 12067.260992684409,
+      "baseline_daily": [
+        423.30784261684653,
+        430.02742018814456,
+        296.6939389373473,
+        292.4956968258215,
+        293.2672713203135,
+        302.6160072246633,
+        291.00920512260694,
+        425.62765035262584,
+        432.38405249096877,
+        298.3198783256914,
+        294.0986290464581,
+        294.8744319163799,
+        304.27440067702776,
+        292.60399108511854,
+        427.9601710773678,
+        434.75359958840835,
+        299.95472817207843,
+        295.71034564146925,
+        296.49040005912536,
+        305.9418824418981,
+        294.20751677895635,
+        430.3054744606769,
+        437.1361322560017,
+        301.59853730751894,
+        297.33089475090304,
+        298.1152240155859,
+        307.6185023249604,
+        295.8198300995151,
+        432.6636305539615,
+        439.53172165715023
+      ],
+      "actual_daily": [
+        849.0,
+        857.0,
+        620.0,
+        623.0,
+        773.0,
+        569.0,
+        686.0,
+        959.0,
+        823.0,
+        637.0,
+        571.0,
+        606.0,
+        693.0,
+        620.0,
+        937.0,
+        927.0,
+        716.0,
+        575.0,
+        651.0,
+        710.0,
+        667.0,
+        915.0,
+        983.0,
+        720.0,
+        731.0,
+        702.0,
+        605.0,
+        638.0,
+        998.0,
+        973.0
+      ],
+      "dates": [
+        "2025-11-01",
+        "2025-11-02",
+        "2025-11-03",
+        "2025-11-04",
+        "2025-11-05",
+        "2025-11-06",
+        "2025-11-07",
+        "2025-11-08",
+        "2025-11-09",
+        "2025-11-10",
+        "2025-11-11",
+        "2025-11-12",
+        "2025-11-13",
+        "2025-11-14",
+        "2025-11-15",
+        "2025-11-16",
+        "2025-11-17",
+        "2025-11-18",
+        "2025-11-19",
+        "2025-11-20",
+        "2025-11-21",
+        "2025-11-22",
+        "2025-11-23",
+        "2025-11-24",
+        "2025-11-25",
+        "2025-11-26",
+        "2025-11-27",
+        "2025-11-28",
+        "2025-11-29",
+        "2025-11-30"
+      ],
+      "mape_if_ignored": 53.85647076410777,
+      "held_out": [
+        "2025-11"
+      ]
+    }
+  },
+  "uplift_bootstrap": {
+    "november": {
+      "point": 2.1753742823389053,
+      "p05": 2.125459685691632,
+      "p50": 2.174560831655051,
+      "p95": 2.224680455975505,
+      "spread_pct": 4.562795799479033,
+      "scope": "within-month day variation only; year-to-year variation is unobservable at n = 1 year and is added via YOY_SIGMA"
+    }
+  },
+  "plan": {
+    "baseline_model": "log-linear + weekday",
+    "baseline_candidates": {
+      "naive (last day)": 12060.0,
+      "seasonal naive (7d)": 12553.0,
+      "moving average (28d)": 12034.285714285714,
+      "Holt-Winters (weekly)": 13251.17699773731,
+      "log-linear + weekday": 13481.774328273972
+    },
+    "baseline_total_units": 13481.774328273972,
+    "trend_pct_per_month": 2.3698869616811002,
+    "horizon_days": 153,
+    "validated_horizon_days": 120,
+    "yoy_sigma": 0.25,
+    "nov_shares": {
+      "Apparel": 0.1393391242052476,
+      "Beauty": 0.12698128414077192,
+      "Electronics": 0.12774245544909107,
+      "Grocery": 0.1347720963553327,
+      "Home & Living": 0.12223515715948778,
+      "Pet Supplies": 0.10732515447300081,
+      "Sports & Outdoor": 0.10051938748097072,
+      "Toys & Kids": 0.14108534073609744
+    },
+    "share_drift_pts": 0.9291260949408436,
+    "q_star": 0.7142857142857143,
+    "p50_units": 29887.429160089858,
+    "commit_units": 34548.47271770335,
+    "p90_units": 41638.773054265235,
+    "band_width_pct": 39.318684224160435,
+    "cat_commit_total_units": 35338.0,
+    "cat_p50_total_units": 30536.0,
+    "pooling_gap_units": 789.5272822966508,
+    "commit_cost_usd": 683810.0,
+    "commit_retail_usd": 854763.0,
+    "p50_cost_usd": 590813.8312585297,
+    "p90_cost_usd": 826144.8710017015,
+    "option_tranche_cost_usd": 92996.16874147032,
+    "spike_bet_units": 22332.0,
+    "spike_bet_cost_usd": 432081.9517836482,
+    "spike_bet_share_pct": 63.195427019072945,
+    "best_level_empirical": 0.7150000000000002,
+    "min_expected_cost_usd": 19195.039660591196,
+    "price_weighted": 24.185135219844184,
+    "uplift_used": 2.1753742823389053,
+    "sensitivity": [
+      {
+        "sigma": 0.0,
+        "p50": 30010.596008997996,
+        "commit": 30407.139042041767,
+        "p90": 30827.758862328854
+      },
+      {
+        "sigma": 0.1,
+        "p50": 29906.368464012594,
+        "commit": 31713.627501739382,
+        "p90": 34244.252929980204
+      },
+      {
+        "sigma": 0.2,
+        "p50": 29909.967318283976,
+        "commit": 33556.45832859792,
+        "p90": 38993.48146363798
+      },
+      {
+        "sigma": 0.25,
+        "p50": 29887.429160089858,
+        "commit": 34548.47271770335,
+        "p90": 41638.773054265235
+      },
+      {
+        "sigma": 0.35,
+        "p50": 29899.889610992643,
+        "commit": 36579.55733593316,
+        "p90": 47460.04829295118
+      },
+      {
+        "sigma": 0.5,
+        "p50": 29879.99260243048,
+        "commit": 39823.8760331866,
+        "p90": 57822.83784868746
+      }
+    ],
+    "cost_sensitivity": [
+      {
+        "label": "25% margin / 25% overstock",
+        "margin": 0.25,
+        "overstock": 0.25,
+        "q_star": 0.5,
+        "commit_units": 29887.429160089858,
+        "commit_cost_usd": 542123.6367077155,
+        "filed": false
+      },
+      {
+        "label": "35% margin / 20% overstock",
+        "margin": 0.35,
+        "overstock": 0.2,
+        "q_star": 0.6363636363636362,
+        "commit_units": 32706.426016026588,
+        "commit_cost_usd": 514156.0682410313,
+        "filed": false
+      },
+      {
+        "label": "20% margin / 8% overstock (filed)",
+        "margin": 0.2,
+        "overstock": 0.08,
+        "q_star": 0.7142857142857143,
+        "commit_units": 34548.47271770335,
+        "commit_cost_usd": 668447.5874534026,
+        "filed": true
+      },
+      {
+        "label": "40% margin / 10% overstock",
+        "margin": 0.4,
+        "overstock": 0.1,
+        "q_star": 0.8,
+        "commit_units": 37175.969762432396,
+        "commit_cost_usd": 539463.5133799596,
+        "filed": false
+      },
+      {
+        "label": "45% margin / 5% overstock",
+        "margin": 0.45,
+        "overstock": 0.05,
+        "q_star": 0.9,
+        "commit_units": 41638.773054265235,
+        "commit_cost_usd": 553871.6461881951,
+        "filed": false
+      }
+    ]
+  },
+  "phantom_march": {
+    "month": "2026-03",
+    "as_read": {
+      "actual_units": 17110.0,
+      "baseline_units": 11465.421909912657,
+      "uplift": 1.4923131599027517,
+      "extra_units": 5644.578090087343,
+      "actual_daily": [
+        659.0,
+        394.0,
+        472.0,
+        472.0,
+        569.0,
+        439.0,
+        546.0,
+        640.0,
+        671.0,
+        522.0,
+        493.0,
+        420.0,
+        527.0,
+        744.0,
+        607.0,
+        553.0,
+        673.0,
+        453.0,
+        598.0,
+        369.0,
+        760.0,
+        654.0,
+        546.0,
+        411.0,
+        528.0,
+        458.0,
+        381.0,
+        664.0,
+        895.0,
+        486.0,
+        506.0
+      ],
+      "baseline_daily": [
+        471.91798276709557,
+        322.4857265528098,
+        320.4232629961923,
+        321.1872494158842,
+        331.6388852882071,
+        322.99222287754435,
+        469.69042970897584,
+        474.5069584658251,
+        324.2549062402144,
+        322.18112786148254,
+        322.94930556514106,
+        333.4582798570059,
+        324.76418123989697,
+        472.26718489281615,
+        477.1101374698186,
+        326.033791773517,
+        323.9486364987499,
+        324.7210284800577,
+        335.2876557541226,
+        326.54586069215645,
+        474.85807633930364,
+        479.7275976994206,
+        327.8224363996808,
+        325.72584181441573,
+        326.5024711932005,
+        337.12706773783555,
+        328.33731456491574,
+        477.46318160098394,
+        482.35941750245377,
+        329.62089365778434,
+        327.51279700514834
+      ]
+    },
+    "cleaned": {
+      "actual_units": 11505.0,
+      "baseline_units": 11465.421909912657,
+      "uplift": 1.003451952348402,
+      "extra_units": 39.5780900873433,
+      "actual_daily": [
+        427.0,
+        277.0,
+        301.0,
+        335.0,
+        365.0,
+        290.0,
+        355.0,
+        502.0,
+        429.0,
+        316.0,
+        312.0,
+        310.0,
+        348.0,
+        428.0,
+        453.0,
+        375.0,
+        444.0,
+        341.0,
+        382.0,
+        250.0,
+        503.0,
+        449.0,
+        361.0,
+        304.0,
+        340.0,
+        309.0,
+        259.0,
+        507.0,
+        567.0,
+        363.0,
+        303.0
+      ],
+      "baseline_daily": [
+        471.91798276709557,
+        322.4857265528098,
+        320.4232629961923,
+        321.1872494158842,
+        331.6388852882071,
+        322.99222287754435,
+        469.69042970897584,
+        474.5069584658251,
+        324.2549062402144,
+        322.18112786148254,
+        322.94930556514106,
+        333.4582798570059,
+        324.76418123989697,
+        472.26718489281615,
+        477.1101374698186,
+        326.033791773517,
+        323.9486364987499,
+        324.7210284800577,
+        335.2876557541226,
+        326.54586069215645,
+        474.85807633930364,
+        479.7275976994206,
+        327.8224363996808,
+        325.72584181441573,
+        326.5024711932005,
+        337.12706773783555,
+        328.33731456491574,
+        477.46318160098394,
+        482.35941750245377,
+        329.62089365778434,
+        327.51279700514834
+      ]
+    },
+    "defect_units": 5605.0,
+    "phantom_buy_units": 5644.578090087343,
+    "phantom_buy_cost_usd": 109211.90749418578,
+    "note": "the multiplier v1 measured was a duplicate-row defect, not demand; the March recommendation is: fix the retry bug, stock nothing"
+  },
+  "commitments": [
+    {
+      "category": "Apparel",
+      "nov_share_pct": 13.93,
+      "baseline_units": 1660,
+      "p50_units": 3879,
+      "commit_units": 4485,
+      "p90_units": 5422,
+      "buffer_over_p50_units": 606,
+      "service_level": 0.714,
+      "nov_uplift": 2.29,
+      "median_unit_price": 24.47,
+      "commit_cost_usd": 87799,
+      "commit_retail_usd": 109749,
+      "stockout_cost_per_unit": 4.89,
+      "overstock_cost_per_unit": 1.96
+    },
+    {
+      "category": "Beauty",
+      "nov_share_pct": 12.7,
+      "baseline_units": 1953,
+      "p50_units": 4222,
+      "commit_units": 4898,
+      "p90_units": 5911,
+      "buffer_over_p50_units": 676,
+      "service_level": 0.714,
+      "nov_uplift": 2.12,
+      "median_unit_price": 23.38,
+      "commit_cost_usd": 91606,
+      "commit_retail_usd": 114507,
+      "stockout_cost_per_unit": 4.68,
+      "overstock_cost_per_unit": 1.87
+    },
+    {
+      "category": "Electronics",
+      "nov_share_pct": 12.77,
+      "baseline_units": 1617,
+      "p50_units": 4099,
+      "commit_units": 4727,
+      "p90_units": 5723,
+      "buffer_over_p50_units": 628,
+      "service_level": 0.714,
+      "nov_uplift": 2.49,
+      "median_unit_price": 24.85,
+      "commit_cost_usd": 93968,
+      "commit_retail_usd": 117460,
+      "stockout_cost_per_unit": 4.97,
+      "overstock_cost_per_unit": 1.99
+    },
+    {
+      "category": "Grocery",
+      "nov_share_pct": 13.48,
+      "baseline_units": 1857,
+      "p50_units": 4311,
+      "commit_units": 4984,
+      "p90_units": 6022,
+      "buffer_over_p50_units": 674,
+      "service_level": 0.714,
+      "nov_uplift": 2.27,
+      "median_unit_price": 23.34,
+      "commit_cost_usd": 93049,
+      "commit_retail_usd": 116312,
+      "stockout_cost_per_unit": 4.67,
+      "overstock_cost_per_unit": 1.87
+    },
+    {
+      "category": "Home & Living",
+      "nov_share_pct": 12.22,
+      "baseline_units": 1591,
+      "p50_units": 3879,
+      "commit_units": 4477,
+      "p90_units": 5405,
+      "buffer_over_p50_units": 598,
+      "service_level": 0.714,
+      "nov_uplift": 2.39,
+      "median_unit_price": 24.35,
+      "commit_cost_usd": 87203,
+      "commit_retail_usd": 109004,
+      "stockout_cost_per_unit": 4.87,
+      "overstock_cost_per_unit": 1.95
+    },
+    {
+      "category": "Pet Supplies",
+      "nov_share_pct": 10.73,
+      "baseline_units": 1331,
+      "p50_units": 3107,
+      "commit_units": 3600,
+      "p90_units": 4350,
+      "buffer_over_p50_units": 492,
+      "service_level": 0.714,
+      "nov_uplift": 2.3,
+      "median_unit_price": 24.18,
+      "commit_cost_usd": 69633,
+      "commit_retail_usd": 87042,
+      "stockout_cost_per_unit": 4.84,
+      "overstock_cost_per_unit": 1.93
+    },
+    {
+      "category": "Sports & Outdoor",
+      "nov_share_pct": 10.05,
+      "baseline_units": 1144,
+      "p50_units": 2655,
+      "commit_units": 3084,
+      "p90_units": 3725,
+      "buffer_over_p50_units": 429,
+      "service_level": 0.714,
+      "nov_uplift": 2.28,
+      "median_unit_price": 23.16,
+      "commit_cost_usd": 57133,
+      "commit_retail_usd": 71416,
+      "stockout_cost_per_unit": 4.63,
+      "overstock_cost_per_unit": 1.85
+    },
+    {
+      "category": "Toys & Kids",
+      "nov_share_pct": 14.11,
+      "baseline_units": 1853,
+      "p50_units": 4384,
+      "commit_units": 5083,
+      "p90_units": 6141,
+      "buffer_over_p50_units": 699,
+      "service_level": 0.714,
+      "nov_uplift": 2.33,
+      "median_unit_price": 25.43,
+      "commit_cost_usd": 103419,
+      "commit_retail_usd": 129273,
+      "stockout_cost_per_unit": 5.09,
+      "overstock_cost_per_unit": 2.03
+    }
+  ],
+  "weekly_staging": [
+    {
+      "week": "W1",
+      "demand_share_pct": 22.3,
+      "commit_units": 7875.0,
+      "cumulative_units": 7875.0
+    },
+    {
+      "week": "W2",
+      "demand_share_pct": 22.0,
+      "commit_units": 7767.0,
+      "cumulative_units": 15642.0
+    },
+    {
+      "week": "W3",
+      "demand_share_pct": 23.2,
+      "commit_units": 8201.0,
+      "cumulative_units": 23843.0
+    },
+    {
+      "week": "W4",
+      "demand_share_pct": 23.7,
+      "commit_units": 8376.0,
+      "cumulative_units": 32219.0
+    },
+    {
+      "week": "W5",
+      "demand_share_pct": 8.8,
+      "commit_units": 3119.0,
+      "cumulative_units": 35338.0
+    }
+  ]
+}

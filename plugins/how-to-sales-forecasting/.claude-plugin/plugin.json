@@ -1,0 +1,9 @@
+{
+  "name": "how-to-sales-forecasting",
+  "description": "Forecast seasonal demand honestly - separate what the data can prove (weekly seasonality, backtested accuracy) from what it cannot (a peak observed once), then turn the unprovable part into a costed inventory decision instead of a fake confidence interval. Ships a runnable baseline python script.",
+  "version": "1.0.0",
+  "author": { "name": "Phoebe Fu" },
+  "homepage": "https://phoebefu6.github.io/phoebe-data-skills",
+  "repository": "https://github.com/phoebefu6/phoebe-data-skills",
+  "license": "MIT"
+}

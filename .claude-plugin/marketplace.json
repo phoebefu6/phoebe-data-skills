@@ -38,6 +38,12 @@
       "source": "./plugins/how-to-metric-to-scorecard",
       "description": "Define board metrics explicitly, validate each against its naive version, and generate a self-contained executive scorecard where every number is computed.",
       "version": "1.0.0"
+    },
+    {
+      "name": "how-to-sales-forecasting",
+      "source": "./plugins/how-to-sales-forecasting",
+      "description": "Forecast seasonal demand honestly - DQ gate first, measure what 12 months can prove, declare what it cannot, and turn a once-observed peak into a costed, signable inventory buy.",
+      "version": "1.0.0"
     }
   ]
 }

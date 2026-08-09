@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>how-to-sales-forecasting · Phoebe's Data Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Data Science layer - cyan. Amber = anomaly/flag. */
+  :root{ --accent:#0891B2; --accent-dark:#075E75; --tint:#ECFEFF; --highlight:#F59E0B; }
+  .layer-badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent-dark);background:var(--tint);
+    border:1px solid rgba(8,145,178,.25);border-radius:999px;padding:4px 12px;margin-bottom:14px;}
+  .lineage-ribbon{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 26px;
+    font-family:'Inter';font-size:13.5px;font-weight:600;color:var(--accent-dark);}
+  .lineage-ribbon span{background:var(--tint);border:1px solid rgba(8,145,178,.2);
+    border-radius:8px;padding:6px 12px;}
+  .lineage-ribbon span.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .lineage-ribbon b{color:var(--muted);font-weight:400;}
+  .cap-sub{font-size:13.5px;color:var(--muted);margin:0 0 26px;}
+  .frame{border:1px solid var(--hairline);border-radius:12px;overflow:hidden;margin:8px 0 6px;
+    box-shadow:0 10px 30px rgba(15,23,42,.06);background:#fff;}
+  .frame img{width:100%;display:block;cursor:zoom-in;}
+  .frame.pad{padding:10px;}
+  .ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:8px 0 6px;}
+  @media(max-width:760px){.ba-grid{grid-template-columns:1fr;}}
+  .decision-band{background:var(--ink);color:#E2E8F0;border-radius:14px;padding:22px 26px;
+    margin:26px 0 8px;box-shadow:0 14px 40px rgba(15,23,42,.18);}
+  .decision-band .num{font-family:'Poppins';font-weight:600;font-size:clamp(26px,3.4vw,38px);
+    color:#fff;font-variant-numeric:tabular-nums;}
+  .decision-band .sub{font-size:13.5px;color:#94A3B8;margin-top:6px;line-height:1.55;}
+  .decision-band em{color:var(--highlight);font-style:normal;font-weight:600;}
+  .memo-tbl{margin-top:14px;border:1px solid var(--hairline);border-radius:12px;overflow:auto;}
+  .memo-tbl table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:680px;}
+  .memo-tbl th{background:var(--tint);text-align:left;padding:10px 14px;font-size:11.5px;
+    text-transform:uppercase;letter-spacing:.06em;color:var(--accent-dark);white-space:nowrap;}
+  .memo-tbl td{padding:10px 14px;border-top:1px solid var(--hairline);font-variant-numeric:tabular-nums;}
+  .memo-tbl td b{color:var(--ink);}
+  /* scoreboard scrolls inside its own frame on small screens */
+  .caught{overflow-x:auto;}
+  .caught table{min-width:640px;}
+</style>
+</head>
+<body>
+<div class="progress"></div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><a href="../" style="color:inherit">phoebe<b>·data·skills</b></a></div>
+    <nav>
+      <a href="../#skills">All skills</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:20px">
+  <div class="wrap">
+    <span class="layer-badge">◆ Data Science layer · flagship</span>
+    <h1 style="font-size:clamp(28px,4.4vw,46px)">how-to-<span class="tealline">sales-forecasting</span></h1>
+    <p class="lede">Twelve months of data show two demand spikes. One is real; the other is a retry bug wearing a spike costume - and a naive forecast would have bought $109k of stock for it. This skill forecasts honestly: data-quality gate first, measure what 12 months can prove, declare what they cannot, and turn a once-observed peak into a costed buy a P&amp;L owner can actually sign. Seed 42, learn-python env, real Everrest marts.</p>
+    <div class="lineage-ribbon">
+      <span>raw dump</span><b>→</b><span>lake</span><b>→</b><span>warehouse</span><b>→</b><span>marts</span><b>→</b><span class="on">forecast + buy</span><b>→</b><span style="opacity:.5">agent (layer 4)</span>
+    </div>
+    <div class="chiprow" style="margin-top:6px">
+      <span class="chip">Case: Everrest · B2B2C retail platform</span>
+      <span class="chip">seed = 42</span>
+      <span class="chip">pandas · statsmodels · numpy</span>
+      <span class="chip">17 executed charts</span>
+      <span class="chip">output = a buy paper, not a point estimate</span>
+    </div>
+
+    <div class="rail">
+      <div class="rail-step"><div class="rail-node" data-step="1"><a href="#step-1"><div class="rail-circle">1</div><div class="rail-label">Input</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="2"><a href="#step-2"><div class="rail-circle">2</div><div class="rail-label">Sample data</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="3"><a href="#step-3"><div class="rail-circle">3</div><div class="rail-label">Objective</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="4"><a href="#step-4"><div class="rail-circle">4</div><div class="rail-label">Find-skills</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="5"><a href="#step-5"><div class="rail-circle">5</div><div class="rail-label">Build</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="6"><a href="#step-6"><div class="rail-circle">6</div><div class="rail-label">Expert review</div></a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 1 -->
+<section class="step-section" id="step-1">
+  <div class="wrap">
+    <div class="step-ghost">01</div>
+    <span class="step-tag">Step 1</span>
+    <h2 class="step-title">Input - the marts, and the field that decides what counts as demand</h2>
+    <p class="step-body">This skill reads the marts produced by <a href="../how-to-schema-and-warehouse/">how-to-schema-and-warehouse</a>. Two fields decide everything: <code style="background:var(--tint);padding:1px 6px;border-radius:5px">orders.status</code> (only <b>delivered</b> orders consumed stock) and <code style="background:var(--tint);padding:1px 6px;border-radius:5px">orders.order_id</code> - because if that key is not unique, every join fans out and the "demand" is partly fiction. It was not unique.</p>
+    <div class="tbl-grid">
+      <div class="tbl-card reveal"><div class="tbl-name">orders <span class="cnt">50,600 rows</span></div><ul><li><b>order_id</b> · <em>600 rows duplicated</em></li><li><b>merchant_id</b> · fk</li><li><b>order_ts</b> · timestamp</li><li><b>status</b> · delivered / cancelled / shipped / paid</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">order_items <span class="cnt">109,154 rows</span></div><ul><li><b>order_id</b> · fk</li><li><b>qty</b> · units - the demand signal</li><li><b>unit_price</b> · prices the buy</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">merchants <span class="cnt">400 rows</span></div><ul><li><b>merchant_id</b> · pk</li><li><b>category</b> · 8 canonical - the buy is per category</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">returns <span class="cnt">2,672 rows</span></div><ul><li><b>order_id</b> · fk only - no line detail</li><li><em>so the return rate is an order-level upper bound</em></li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step-section" id="step-2" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">02</div>
+    <span class="step-tag">Step 2</span>
+    <h2 class="step-title">Sample data - the same seeded marts, and the traps a forecast walks into</h2>
+    <p class="step-body">No new generator: the marts already exist (seed 42). What matters is what is hiding in them - each trap planted on purpose, each one caught (or honestly declared unmeasurable) in Step 5.</p>
+    <div class="quirk-grid">
+      <div class="quirk reveal"><b>👻 The phantom spike</b><span>600 orders double-fired by a retry bug in March 2026 - joins fan out 4x and manufacture a 1.49x "demand spike"</span></div>
+      <div class="quirk reveal"><b>🎄 The real spike</b><span>November runs 2.2x a normal month - planted once, observed once, and the whole buy hangs on whether it repeats</span></div>
+      <div class="quirk reveal"><b>📅 Weekend rhythm</b><span>weekends run 45% above weekdays - 47+ observations each, the one seasonality that is actually provable</span></div>
+      <div class="quirk reveal"><b>🐘 The wrong outlier</b><span>M0007 dominates GMV but is 0.3% of units - the revenue-metric outlier treatment would be the wrong move here</span></div>
+      <div class="quirk reveal"><b>🕳️ n = 1 year</b><span>12 months = one observation per calendar month - annual seasonality cannot be validated, only declared</span></div>
+      <div class="quirk reveal"><b>🚦 Mixed status</b><span>21% of orders are cancelled or in-flight - counting them inflates demand that never consumed stock</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step-section" id="step-3">
+  <div class="wrap">
+    <div class="step-ghost">03</div>
+    <span class="step-tag">Step 3</span>
+    <h2 class="step-title">Objective - a buy that survives finance, not a model that wins a leaderboard</h2>
+    <p class="step-body">Everrest runs consignment fulfilment: the platform commits inventory in advance. Committing low burns margin; committing high burns cash in holding and markdown. The question is never "which model has the best MAPE".</p>
+    <div class="objective-banner reveal">
+      <div class="q">How many units - <em>and how many dollars</em> - does each category stage for November 2026, and do we repeat the March buy?</div>
+      <ul class="subq">
+        <li>Is every spike in the data actually demand - or a data defect wearing a costume?</li>
+        <li>What can 12 months of history prove, and what must be declared as an assumption?</li>
+        <li>Which model earns the right to produce the baseline, at the real planning distance?</li>
+        <li>What service level does the margin/overstock asymmetry justify, per category?</li>
+        <li>How does the buy split into a firm tranche now and an option tranche later?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4 -->
+<section class="step-section" id="step-4" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">04</div>
+    <span class="step-tag">Step 4</span>
+    <h2 class="step-title">Find-skills - the forecasting toolbox</h2>
+    <p class="step-body">A demand plan needs a series layer, candidate models, a validation harness that cannot peek, and the economics that turn a distribution into a signable number.</p>
+    <div class="tool-grid">
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/pandas-dev/pandas">pandas</a></h4><p>Order lines to daily delivered units, total and per category - plus the dedup gate that decides the whole analysis.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/statsmodels/statsmodels">statsmodels</a></h4><p>Holt-Winters exponential smoothing - the short-horizon winner, and honestly beaten at 120 days by a 9-parameter regression.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Pattern</span><h4>Rolling-origin backtest</h4><p>Expanding train window, untouched test window, at BOTH horizons - 28 days and the 120-day planning distance. No peeking, ever.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Pattern</span><h4>Leave-month-out</h4><p>Size a spike against a baseline that never saw it - with every spike month held out, or the estimate contaminates itself.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Pattern</span><h4>Newsvendor economics</h4><p>q* = margin / (margin + overstock). The service level is a cost decision, not a taste - and the cost rates get their own sensitivity chart.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Skill</span><h4><a href="https://github.com/phoebefu6/phoebe-data-skills">upstream Everrest skills</a></h4><p>The warehouse skill built the marts; the EDA skills profiled them. This layer inherits their lineage and their planted traps.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section class="step-section" id="step-5">
+  <div class="wrap">
+    <div class="step-ghost">05</div>
+    <span class="step-tag">Step 5</span>
+    <h2 class="step-title">Build - gate, measure, declare, then cost the decision</h2>
+    <p class="step-body">One deterministic script (seeded per random purpose - two runs are byte-identical) walks from raw marts to a buy paper. Grab the real code:</p>
+    <div class="codelinks reveal">
+      <span class="cl-label">Get the code:</span>
+      <a class="cl-btn" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-sales-forecasting/forecast_demand.py"><span class="gh">▶</span> forecast_demand.py</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-sales-forecasting/output/findings.md"><span class="gh">✓</span> findings.md (the buy paper)</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-sales-forecasting/output/forecast.json"><span class="gh">◆</span> forecast.json</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/tree/main/materials/how-to-sales-forecasting"><span class="gh">↗</span> All files</a>
+    </div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:30px 0 4px;color:var(--ink)">5a · The data-quality gate runs before anything is measured</h3>
+    <p class="cap-sub">The single most valuable "forecasting" step touched no model. 600 duplicate order rows - a retry bug, all in March - fan out against order_items and manufacture a whole phantom month.</p>
+    <div class="frame pad reveal"><img src="charts/daily_series.png" alt="Daily delivered units across twelve months with the November spike shaded amber as real and the March spike drawn in red as duplicate rows"></div>
+    <p class="cap-sub">One year, two spikes - and only one survives the gate. The red trace is what the marts say <em>as read</em>; the cyan series is demand after deduplication.</p>
+    <div class="frame pad reveal"><img src="charts/phantom_march.png" alt="Two panels of March 2026 daily units, before the gate at 1.49 times baseline in red and after the gate at 1.00 times baseline in cyan"></div>
+    <p class="cap-sub">Same month, same baseline, before and after the gate: <b>1.49x becomes 1.00x</b>. The v1 draft of this analysis skipped the gate, measured the phantom, and priced a repeat buy at <b>$109,212</b> - the March recommendation is an engineering ticket, not a purchase order.</p>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">5b · Count the evidence before trusting any seasonality</h3>
+    <div class="ba-grid">
+      <div class="frame pad reveal"><img src="charts/evidence_count.png" alt="Log-scale bar chart comparing 47 observations per weekday slot against 1 observation per month-of-year slot"></div>
+      <div class="frame pad reveal"><img src="charts/leak_monthly.png" alt="Monthly units with a twelve-parameter month-dummy fit passing through every point exactly, labeled zero residual degrees of freedom"></div>
+    </div>
+    <p class="cap-sub"><b>Left:</b> weekday seasonality has 47+ observations per slot - knowledge. Month-of-year has exactly one - a guess. <b>Right:</b> the trap most tutorials fall into, shown rather than named: month dummies fit 12 points with 12 parameters, R-squared 1.000, and prove nothing.</p>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">5c · Two backtests, two honest winners</h3>
+    <div class="ba-grid">
+      <div class="frame pad reveal"><img src="charts/model_mape.png" alt="Horizontal bars of 28-day MAPE for five models, Holt-Winters weekly first at 12.4 percent"></div>
+      <div class="frame pad reveal"><img src="charts/long_horizon.png" alt="Horizontal bars of 120-day MAPE for all five models, log-linear plus weekday first at 10.7 percent just ahead of Holt-Winters"></div>
+    </div>
+    <p class="cap-sub"><b>Left:</b> at 28 days Holt-Winters wins (12.4% MAPE, 8 rolling folds). <b>Right:</b> at the 120-day planning distance the ranking flips - all five models race on a spike-imputed series, and log-linear + weekday takes it by a nose (10.7% vs 10.8%). The chart also confesses its own weakness: 3 overlapping folds are about 2 independent comparisons. The buy is 153 days out - past the last validated point, and the memo says so.</p>
+    <div class="frame pad reveal"><img src="charts/lead_time_error.png" alt="Line chart of forecast error growing with lead time across the 28-day validated window, annotated that the November buy is 153 days out"></div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">5d · Size the one real spike against a baseline that never saw it</h3>
+    <div class="ba-grid">
+      <div class="frame pad reveal"><img src="charts/spike_lno.png" alt="November 2025 daily units in amber towering over a held-out baseline line, 2.18 times, 12,067 extra units"></div>
+      <div class="frame pad reveal"><img src="charts/uplift_bootstrap.png" alt="Bootstrap histogram of the November multiplier centered at 2.18 with a five percent spread"></div>
+    </div>
+    <p class="cap-sub"><b>Left:</b> November ran <b>2.18x</b> a baseline fitted with the spike held out - 12,067 extra units. <b>Right:</b> the multiplier is tight <em>within</em> its month (5% spread). The dangerous uncertainty is year-to-year - unobservable at n = 1 - so it enters as a declared sigma with a sensitivity chart, never as a fake confidence interval.</p>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">5e · Turn the distribution into a signable buy</h3>
+    <div class="decision-band reveal">
+      <div class="num">35,338 units · $683,810 at cost</div>
+      <div class="sub">Firm tranche now: <em>30,536 units ($590,814)</em> at P50 · option tranche released on the autumn run-rate: <em>4,802 units ($92,996)</em> · <em>63% of the cash rides on the once-observed November peak repeating</em> - stated, priced, and signed off as a bet, not buried.</div>
+    </div>
+    <div class="frame pad reveal"><img src="charts/mc_distribution.png" alt="Histogram of 10,000 simulated November totals with P50 at 29,887, the buy at 35,338, and P90 at 41,639 marked"></div>
+    <p class="cap-sub">10,000 seeded draws: measured baseline error x measured day variation x the declared year sigma. The buy stands at the newsvendor optimum - above the middle, because being short costs 20% of price and being long costs 8%.</p>
+    <div class="ba-grid">
+      <div class="frame pad reveal"><img src="charts/cost_curve.png" alt="U-shaped expected cost versus service level curve with the minimum marked at q star 0.71"></div>
+      <div class="frame pad reveal"><img src="charts/commit_by_category.png" alt="Dot-range chart of per-category commitments between P50 and P90 with the commit marked in amber"></div>
+    </div>
+    <p class="cap-sub"><b>Left:</b> the analytic q* (0.71) lands on the empirical cost minimum - the model checks itself. <b>Right:</b> every category simulated on its own baseline and its own multiplier - a real per-category newsvendor, not one pooled quantile split by share.</p>
+    <div class="ba-grid">
+      <div class="frame pad reveal"><img src="charts/yoy_sensitivity.png" alt="Line chart showing P50 flat while commit and P90 fan out as the assumed year sigma runs from zero to fifty percent"></div>
+      <div class="frame pad reveal"><img src="charts/cost_sensitivity.png" alt="Horizontal bars of the commitment under five margin and overstock scenarios spanning 154 thousand dollars of committed cash"></div>
+    </div>
+    <p class="cap-sub"><b>Left:</b> the ONE declared unknown, swept: the commit moves 31% across sigma 0-50%; the P90 nearly doubles its distance. <b>Right:</b> the sweep most forecasts never run - the margin/overstock assumption swings the buy by <b>$154k of committed cash</b>, as hard as the model itself. Both are inputs; both get charts.</p>
+
+    <div class="caught reveal">
+      <table>
+        <thead><tr><th>Trap in the data</th><th>Naive forecast</th><th>This build</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Duplicate-row phantom spike</td><td class="num">buys $109,212 of stock</td><td class="num">DQ gate: 1.49x → 1.00x</td><td class="ok">✓ caught before modeling</td></tr>
+          <tr><td>Once-observed November peak</td><td class="num">hidden inside a CI</td><td class="num">declared sigma + sensitivity</td><td class="ok">✓ named as input</td></tr>
+          <tr><td>Month-dummy overfit</td><td class="num">R² = 1.000, "seasonality!"</td><td class="num">12 obs, 12 params, shown</td><td class="ok">✓ trap demonstrated</td></tr>
+          <tr><td>28-day winner extrapolated 5 months</td><td class="num">Holt-Winters everywhere</td><td class="num">second race at 120d - new winner</td><td class="ok">✓ horizon-honest</td></tr>
+          <tr><td>Units-only deliverable</td><td class="num">"32k units" - unsignable</td><td class="num">$683,810 at cost, tranched</td><td class="ok">✓ priced for finance</td></tr>
+          <tr><td>Revenue-outlier reflex (M0007)</td><td class="num">trims the top merchant</td><td class="num">0.3% of units - kept in</td><td class="ok">✓ right metric, right treatment</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 6 -->
+<section class="step-section" id="step-6" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">06</div>
+    <span class="step-tag">Step 6</span>
+    <h2 class="step-title">Expert review - the panel that found a phantom, a sign error, and a fake trend</h2>
+    <p class="step-body">Five senior reviewer agents - forecasting methodology, supply-chain planning, executive insight, data engineering, commercial P&amp;L - reviewed the v1 code and its real outputs. This was not polish: three findings changed the numbers, one changed the story. Every fix below is in the shipped code.</p>
+    <div class="mentor-grid" id="panel">
+      <div class="mentor-card reveal"><div class="m-name">Data Engineering Lead</div><div class="m-lens">12 yrs · reproducible analytics</div><p>"Your March 'spike' is 100% the duplicate-row bug. orders.csv has 600 duplicated order_ids - all in March - and the join fans out 4x. The generator has no March demand term at all. Your memo says no driver exists in the marts; the driver IS the marts."</p><div class="m-fix">Fix applied: DQ gate added before any measurement - March collapses from 1.49x to 1.00x, the March buy is cancelled, and the phantom is now the page's opening chart instead of its blind spot.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Forecasting Methodology Lead</div><div class="m-lens">15 yrs · retail demand</div><p>"Two real defects. Your error propagation multiplies by (1+e) where the algebra requires dividing - the residuals are asymmetric, so the whole distribution shifts the wrong way. And your 'median-preserving' lognormal subtracts sigma-squared-over-2, which preserves the mean instead - your sensitivity chart shows expected demand FALLING as uncertainty rises. That is an artifact, not a finding."</p><div class="m-fix">Fix applied: base = pred / (1 + e); the sigma^2/2 term dropped. P50 is now flat across sigma - exactly what a median-preserving spread should do - and the commit moved by about 4%.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Supply-Chain Planning Lead</div><div class="m-lens">12 yrs · seasonal buys</div><p>"Commit/P50 is 1.151 in all eight rows - that is not eight service levels, that is one platform quantile split by share, spending the pooling benefit without earning it. And no planner signs one irrevocable number 153 days out with no tranches and no weekly phasing."</p><div class="m-fix">Fix applied: each category simulated on its own baseline and multiplier; the buy split into a firm P50 tranche + an option tranche; november_weekly_staging.csv emitted from the observed within-month shape.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Commercial P&amp;L Owner</div><div class="m-lens">18 yrs · category P&amp;L</div><p>"I cannot sign units. Where is the cash? And your 2.5x March asymmetry is just your two assumed cost rates restated as a finding - margin over overstock, the units cancel. Put the dollars in and sweep the rates you assumed."</p><div class="m-fix">Fix applied: the buy paper leads with $683,810 at cost, names the $432k riding on the once-observed peak, and cost_sensitivity.png sweeps the rates - a $154k swing, as large as any modelling choice.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Head of Insights</div><div class="m-lens">14 yrs · exec committees</div><p>"Your flagship chart is titled 'Simulated November units' - a technique label. And the long-horizon chart claims the weekly models 'cannot be fitted' on a gapped series. They can; the real reason is weekday phase. A false claim on the page path is worse than a wrong number."</p><div class="m-fix">Fix applied: every title now states the finding; the long-horizon race imputes the spike month so all five models compete, and the caption reports effective (overlap-adjusted) folds, not just nominal.</div></div>
+    </div>
+    <div class="code-card">
+      <div class="code-head"><span>before → after · the sign error that moved the whole distribution</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># v1 (before): agg_rel_pct = (pred - actual) / actual, so truth = pred / (1+e).</span>
+<span class="c-comment"># Multiplying applies the model's bias in the WRONG direction:</span>
+base = baseline_total * (1 + RNG.choice(long_resid, size=n))   <span class="c-comment"># shifts LOW</span>
+yoy  = np.exp(RNG.normal(0, sigma, n) - sigma**2 / 2)          <span class="c-comment"># mean-preserving, median sags</span>
+
+<span class="c-comment"># v2 (after): divide to invert, drop the sigma^2/2 so the MEDIAN stays put</span>
+base = baseline_total / (1.0 + resid_draws)                    <span class="c-comment"># under-forecast bias corrected UP</span>
+yoy  = np.exp(z * sigma)                                       <span class="c-comment"># median 1.0 at every sigma</span></pre>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="install">
+      <h3>Run this skill on your own demand data</h3>
+      <p>Install once, point it at your marts, set the calendar constants and the cost rates finance confirms - the same 6 steps produce your buy paper.</p>
+      <div class="code-card">
+        <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
+        <pre>/plugin marketplace add phoebefu6/phoebe-data-skills
+/plugin install how-to-sales-forecasting@phoebe-data-skills</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Phoebe Fu</span>
+    <span><a href="../">← All skills</a></span>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

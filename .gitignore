@@ -11,3 +11,5 @@ materials/how-to-schema-consolidation/data/
 __pycache__/
 *.pyc
 materials/how-to-metric-to-scorecard/output/
+materials/how-to-sales-forecasting/output_v1/
+materials/how-to-sales-forecasting/forecast_demand_v1.py
