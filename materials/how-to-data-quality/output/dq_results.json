@@ -1,0 +1,520 @@
+{
+  "seed": 42,
+  "raw_files": {
+    "transactions": 107841,
+    "payments": 46007,
+    "products": 5000,
+    "merchants": 400
+  },
+  "fail_run": {
+    "score": {
+      "dimensions": {
+        "completeness": {
+          "score": 99.0,
+          "checks": 1,
+          "worst_check": "customer attributes present"
+        },
+        "validity": {
+          "score": 91.12,
+          "checks": 2,
+          "worst_check": "category in canon set"
+        },
+        "consistency": {
+          "score": 0.0,
+          "checks": 4,
+          "worst_check": "merchant key formats agree across systems"
+        },
+        "timeliness": {
+          "score": 100.0,
+          "checks": 1,
+          "worst_check": "every feed fresh within SLA"
+        },
+        "uniqueness": {
+          "score": 92.99,
+          "checks": 1,
+          "worst_check": "one identity, one customer id"
+        },
+        "accuracy": {
+          "score": 99.82,
+          "checks": 1,
+          "worst_check": "reported amounts free of round-number heaping"
+        }
+      },
+      "overall": 80.49,
+      "verdict": "BLOCKED",
+      "blocking_checks": [
+        "customer attributes present",
+        "category in canon set",
+        "product_id exists in catalog",
+        "merchant key formats agree across systems",
+        "paid_at is not before order_ts"
+      ],
+      "warn_checks": [
+        "one identity, one customer id",
+        "reported amounts free of round-number heaping"
+      ]
+    },
+    "checks": [
+      {
+        "check": "structural schema (pandera)",
+        "dimension": "validity",
+        "table": "transactions",
+        "severity": "BLOCKER",
+        "rows_checked": 107841,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "types, ranges and keys all conform",
+        "owner": "data engineering",
+        "sample": []
+      },
+      {
+        "check": "customer attributes present",
+        "dimension": "completeness",
+        "table": "transactions",
+        "severity": "BLOCKER",
+        "rows_checked": 107841,
+        "rows_failed": 1074,
+        "error_rate_pct": 0.996,
+        "passed": false,
+        "detail": "1074 line rows arrived with null signup/channel/region - 500 customer ids have no master record (orphan references surfacing as missing attributes after denormalization)",
+        "owner": "customer-data steward",
+        "sample": [
+          {
+            "txn_id": "T0000186",
+            "customer_id": "C800303"
+          },
+          {
+            "txn_id": "T0000312",
+            "customer_id": "C800247"
+          },
+          {
+            "txn_id": "T0000515",
+            "customer_id": "C800330"
+          },
+          {
+            "txn_id": "T0000576",
+            "customer_id": "C800436"
+          },
+          {
+            "txn_id": "T0000577",
+            "customer_id": "C800436"
+          }
+        ]
+      },
+      {
+        "check": "category in canon set",
+        "dimension": "validity",
+        "table": "transactions",
+        "severity": "BLOCKER",
+        "rows_checked": 107841,
+        "rows_failed": 9572,
+        "error_rate_pct": 8.876,
+        "passed": false,
+        "detail": "14 distinct labels arrived for 8 real categories: ['Apparel', 'Beauty', 'Beauty ', 'Electronics', 'Grocary', 'Grocery', 'Home & Living', 'Home & living', 'Pet Supplies', 'Sports & Outdoor', 'Toys & Kids', 'Toys and Kids', 'apparel', 'electronics']",
+        "owner": "merchandising data owner",
+        "sample": [
+          {
+            "txn_id": "T0000017",
+            "category_raw": "apparel"
+          },
+          {
+            "txn_id": "T0000018",
+            "category_raw": "apparel"
+          },
+          {
+            "txn_id": "T0000019",
+            "category_raw": "apparel"
+          },
+          {
+            "txn_id": "T0000020",
+            "category_raw": "apparel"
+          },
+          {
+            "txn_id": "T0000098",
+            "category_raw": "apparel"
+          }
+        ]
+      },
+      {
+        "check": "product_id exists in catalog",
+        "dimension": "consistency",
+        "table": "transactions",
+        "severity": "BLOCKER",
+        "rows_checked": 107841,
+        "rows_failed": 2696,
+        "error_rate_pct": 2.5,
+        "passed": false,
+        "detail": "2696 transaction lines reference product ids absent from the catalog master",
+        "owner": "catalog data owner",
+        "sample": [
+          {
+            "txn_id": "T0000036",
+            "product_id": "P92198"
+          },
+          {
+            "txn_id": "T0000054",
+            "product_id": "P91231"
+          },
+          {
+            "txn_id": "T0000057",
+            "product_id": "P91278"
+          },
+          {
+            "txn_id": "T0000120",
+            "product_id": "P90670"
+          },
+          {
+            "txn_id": "T0000232",
+            "product_id": "P91452"
+          }
+        ]
+      },
+      {
+        "check": "payment's order exists in transactions",
+        "dimension": "consistency",
+        "table": "payments",
+        "severity": "BLOCKER",
+        "rows_checked": 46007,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "every payment lands on a shipped order",
+        "owner": "finance data owner",
+        "sample": []
+      },
+      {
+        "check": "merchant key formats agree across systems",
+        "dimension": "consistency",
+        "table": "merchants",
+        "severity": "BLOCKER",
+        "rows_checked": 107841,
+        "rows_failed": 107841,
+        "error_rate_pct": 100.0,
+        "passed": false,
+        "detail": "transactions use 'M0001' while the merchant master keys on 'MER-0001' - a join on the master's primary key matches 0 of 107841 rows; every merchant attribute would be null downstream",
+        "owner": "merchant-data steward",
+        "sample": [
+          {
+            "transactions": "M0307",
+            "merchant_master": "MER-0001"
+          }
+        ]
+      },
+      {
+        "check": "paid_at is not before order_ts",
+        "dimension": "consistency",
+        "table": "payments",
+        "severity": "BLOCKER",
+        "rows_checked": 46007,
+        "rows_failed": 3798,
+        "error_rate_pct": 8.255,
+        "passed": false,
+        "detail": "3798 payments preceded their own order; every one was in region(s) {'PH': 3798} - the signature of a local-time export (UTC+8) mislabeled as UTC, not of broken data entry",
+        "owner": "payments platform owner",
+        "sample": [
+          {
+            "pmt_ref": "PMT-000014",
+            "order_id": "O000015"
+          },
+          {
+            "pmt_ref": "PMT-000025",
+            "order_id": "O000026"
+          },
+          {
+            "pmt_ref": "PMT-000036",
+            "order_id": "O000037"
+          },
+          {
+            "pmt_ref": "PMT-000074",
+            "order_id": "O000077"
+          },
+          {
+            "pmt_ref": "PMT-000092",
+            "order_id": "O000097"
+          }
+        ]
+      },
+      {
+        "check": "every feed fresh within SLA",
+        "dimension": "timeliness",
+        "table": "payments",
+        "severity": "BLOCKER",
+        "rows_checked": 2,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "every feed's newest event is within 24h of the load line (transactions.order_ts_utc lags 0.9h, payments.paid_at lags 0.0h)",
+        "owner": "pipeline operations",
+        "sample": [
+          {
+            "transactions.order_ts_utc": "2026-06-30 22:52:11",
+            "payments.paid_at": "2026-06-30 23:47:58"
+          }
+        ]
+      },
+      {
+        "check": "one identity, one customer id",
+        "dimension": "uniqueness",
+        "table": "customers",
+        "severity": "WARN",
+        "rows_checked": 18888,
+        "rows_failed": 1324,
+        "error_rate_pct": 7.01,
+        "passed": false,
+        "detail": "662 identity groups spanned 1324 customer ids (identical signup timestamp to the second, channel and region) - retention and repeat-rate metrics double-count these people. Merge policy: at 18,888 customers the expected false-pair count on this key is well under one, so the merge is auto-applied here; at millions of signups per year the same key false-merges real people - require a corroborating attribute (hashed email/phone) or route to stewardship before merging",
+        "owner": "customer-data steward",
+        "sample": [
+          {
+            "identity_group": [
+              "C011073",
+              "C900007"
+            ]
+          },
+          {
+            "identity_group": [
+              "C018239",
+              "C900760"
+            ]
+          },
+          {
+            "identity_group": [
+              "C016534",
+              "C900328"
+            ]
+          }
+        ]
+      },
+      {
+        "check": "reported amounts free of round-number heaping",
+        "dimension": "accuracy",
+        "table": "payments",
+        "severity": "WARN",
+        "rows_checked": 46007,
+        "rows_failed": 85,
+        "error_rate_pct": 0.185,
+        "passed": false,
+        "detail": "merchant(s) ['M0333'] report ['100%'] of amounts on exact 100s across [85] payments - peer base rate 0.011%; the chance of 100% round amounts across 85 payments by luck is below 1e-336. Routed to investigation and excluded from finance rollups, never 'corrected'. Legitimate merchants can trip a round-share screen (gift cards, fixed-price bundles, COD rounding) - the disambiguators are catalog-price match, distinct-amount diversity and refund ratio",
+        "owner": "risk & fraud",
+        "sample": [
+          {
+            "merchant_id": "M0333",
+            "n": "85",
+            "round_share": "1.0"
+          }
+        ]
+      }
+    ]
+  },
+  "pass_run": {
+    "score": {
+      "dimensions": {
+        "completeness": {
+          "score": 100.0,
+          "checks": 1,
+          "worst_check": "customer attributes present"
+        },
+        "validity": {
+          "score": 100.0,
+          "checks": 2,
+          "worst_check": "structural schema (pandera)"
+        },
+        "consistency": {
+          "score": 100.0,
+          "checks": 4,
+          "worst_check": "product_id exists in catalog"
+        },
+        "timeliness": {
+          "score": 100.0,
+          "checks": 1,
+          "worst_check": "every feed fresh within SLA"
+        },
+        "uniqueness": {
+          "score": 100.0,
+          "checks": 1,
+          "worst_check": "one identity, one customer id"
+        },
+        "accuracy": {
+          "score": 99.82,
+          "checks": 1,
+          "worst_check": "reported amounts free of round-number heaping"
+        }
+      },
+      "overall": 99.97,
+      "verdict": "SHIP WITH HOLDS",
+      "blocking_checks": [],
+      "warn_checks": [
+        "reported amounts free of round-number heaping"
+      ]
+    },
+    "checks": [
+      {
+        "check": "structural schema (pandera)",
+        "dimension": "validity",
+        "table": "transactions",
+        "severity": "BLOCKER",
+        "rows_checked": 104099,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "types, ranges and keys all conform",
+        "owner": "data engineering",
+        "sample": []
+      },
+      {
+        "check": "customer attributes present",
+        "dimension": "completeness",
+        "table": "transactions",
+        "severity": "BLOCKER",
+        "rows_checked": 104099,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "every line carries full customer attributes",
+        "owner": "customer-data steward",
+        "sample": []
+      },
+      {
+        "check": "category in canon set",
+        "dimension": "validity",
+        "table": "transactions",
+        "severity": "BLOCKER",
+        "rows_checked": 104099,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "all labels sit in the 8-value canon set",
+        "owner": "merchandising data owner",
+        "sample": []
+      },
+      {
+        "check": "product_id exists in catalog",
+        "dimension": "consistency",
+        "table": "transactions",
+        "severity": "BLOCKER",
+        "rows_checked": 104099,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "every line's product id resolves in the catalog master",
+        "owner": "catalog data owner",
+        "sample": []
+      },
+      {
+        "check": "payment's order exists in transactions",
+        "dimension": "consistency",
+        "table": "payments",
+        "severity": "BLOCKER",
+        "rows_checked": 45081,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "every payment lands on a shipped order",
+        "owner": "finance data owner",
+        "sample": []
+      },
+      {
+        "check": "merchant key formats agree across systems",
+        "dimension": "consistency",
+        "table": "merchants",
+        "severity": "BLOCKER",
+        "rows_checked": 104099,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "all 104,099 rows join the merchant master on the conformed key",
+        "owner": "merchant-data steward",
+        "sample": [
+          {
+            "transactions": "M0307",
+            "merchant_master": "M0001"
+          }
+        ]
+      },
+      {
+        "check": "paid_at is not before order_ts",
+        "dimension": "consistency",
+        "table": "payments",
+        "severity": "BLOCKER",
+        "rows_checked": 45081,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "every payment follows its order",
+        "owner": "payments platform owner",
+        "sample": []
+      },
+      {
+        "check": "every feed fresh within SLA",
+        "dimension": "timeliness",
+        "table": "payments",
+        "severity": "BLOCKER",
+        "rows_checked": 2,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "every feed's newest event is within 24h of the load line (transactions.order_ts_utc lags 0.9h, payments.paid_at lags 0.0h)",
+        "owner": "pipeline operations",
+        "sample": [
+          {
+            "transactions.order_ts_utc": "2026-06-30 22:52:11",
+            "payments.paid_at": "2026-06-30 23:47:58"
+          }
+        ]
+      },
+      {
+        "check": "one identity, one customer id",
+        "dimension": "uniqueness",
+        "table": "customers",
+        "severity": "WARN",
+        "rows_checked": 18185,
+        "rows_failed": 0,
+        "error_rate_pct": 0.0,
+        "passed": true,
+        "detail": "every identity maps to exactly one customer id",
+        "owner": "customer-data steward",
+        "sample": []
+      },
+      {
+        "check": "reported amounts free of round-number heaping",
+        "dimension": "accuracy",
+        "table": "payments",
+        "severity": "WARN",
+        "rows_checked": 45081,
+        "rows_failed": 83,
+        "error_rate_pct": 0.184,
+        "passed": false,
+        "detail": "merchant(s) ['M0333'] report ['100%'] of amounts on exact 100s across [83] payments - peer base rate 0.011%; the chance of 100% round amounts across 83 payments by luck is below 1e-328. Routed to investigation and excluded from finance rollups, never 'corrected'. Legitimate merchants can trip a round-share screen (gift cards, fixed-price bundles, COD rounding) - the disambiguators are catalog-price match, distinct-amount diversity and refund ratio [payments on finance_hold - resolved by routing, not editing]",
+        "owner": "risk & fraud",
+        "sample": [
+          {
+            "merchant_id": "M0333",
+            "n": "83",
+            "round_share": "1.0"
+          }
+        ]
+      }
+    ]
+  },
+  "ledger_actions": {
+    "quarantined": 4668,
+    "corrected": 3754,
+    "merged": 662,
+    "finance_hold": 83
+  },
+  "tx_loaded": 104099,
+  "payments_loaded": 45081,
+  "identities_merged_into": 662,
+  "tz_regions_diagnosed": [
+    "PH"
+  ],
+  "evidence_sha256": "241e8a5c7b24a2ec331979f6665df21a82fabd2e8536c824550ec7b59821d01a",
+  "money": {
+    "gmv_quarantined": 215075.8515,
+    "amount_on_hold": 46200.0,
+    "ids_merged": 662,
+    "buyer_overstatement_pct": 3.5048708174502328,
+    "tz_shift_hours": 8,
+    "payments_shifted_pct": 8.159627882713501
+  }
+}

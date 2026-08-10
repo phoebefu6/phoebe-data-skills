@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>how-to-data-quality · Phoebe's Data Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Data Analytics layer - teal. Amber = anomaly/flag. */
+  :root{ --accent:#0D9488; --accent-dark:#0B7C72; --tint:#F0FDFA; --highlight:#F59E0B; }
+  .layer-badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent-dark);background:var(--tint);
+    border:1px solid rgba(13,148,136,.25);border-radius:999px;padding:4px 12px;margin-bottom:14px;}
+  .lineage-ribbon{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 26px;
+    font-family:'Inter';font-size:13.5px;font-weight:600;color:var(--accent-dark);}
+  .lineage-ribbon span{background:var(--tint);border:1px solid rgba(13,148,136,.2);
+    border-radius:8px;padding:6px 12px;}
+  .lineage-ribbon span.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .lineage-ribbon b{color:var(--muted);font-weight:400;}
+  .cap-sub{font-size:13.5px;color:var(--muted);margin:0 0 26px;}
+  .frame{border:1px solid var(--hairline);border-radius:12px;overflow:hidden;margin:8px 0 6px;
+    box-shadow:0 10px 30px rgba(15,23,42,.06);background:#fff;}
+  .frame img{width:100%;display:block;cursor:zoom-in;}
+  .frame.pad{padding:10px;}
+  .ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:8px 0 6px;}
+  @media(max-width:760px){.ba-grid{grid-template-columns:1fr;}}
+  .verdict-band{display:flex;gap:16px;flex-wrap:wrap;align-items:center;background:var(--ink);
+    color:#E2E8F0;border-radius:14px;padding:20px 24px;margin:26px 0 8px;
+    box-shadow:0 14px 40px rgba(15,23,42,.18);}
+  .verdict-band .vb{font-family:'Poppins';font-weight:600;font-size:19px;border-radius:10px;
+    padding:8px 16px;color:#fff;}
+  .verdict-band .sub{font-size:13.5px;color:#94A3B8;line-height:1.55;flex:1;min-width:260px;}
+  .verdict-band em{color:var(--highlight);font-style:normal;font-weight:600;}
+  .dmap{margin-top:14px;border:1px solid var(--hairline);border-radius:12px;overflow-x:auto;}
+  .dmap table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:660px;}
+  .dmap th{background:var(--tint);text-align:left;padding:10px 14px;font-size:11.5px;
+    text-transform:uppercase;letter-spacing:.06em;color:var(--accent-dark);white-space:nowrap;}
+  .dmap td{padding:10px 14px;border-top:1px solid var(--hairline);}
+  .dmap td b{color:var(--ink);}
+  .dmap .flag{color:var(--highlight);font-weight:600;}
+  .embed-wrap{margin-top:12px;border:1px solid var(--hairline);border-radius:14px;overflow:hidden;
+    box-shadow:0 14px 40px rgba(15,23,42,.09);background:#F8FAFC;}
+  .embed-wrap iframe{width:100%;height:1120px;border:0;display:block;}
+  @media(max-width:900px){.embed-wrap iframe{height:1750px;}}
+  @media(max-width:560px){.embed-wrap iframe{height:2600px;}}
+  .embed-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+    padding:11px 16px;background:var(--ink);color:#94A3B8;font-size:12.5px;}
+  .embed-bar a{color:var(--highlight);font-weight:600;}
+  .caught{overflow-x:auto;}
+  .caught table{min-width:640px;}
+</style>
+</head>
+<body>
+<div class="progress"></div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><a href="../" style="color:inherit">phoebe<b>·data·skills</b></a></div>
+    <nav>
+      <a href="../#skills">All skills</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:20px">
+  <div class="wrap">
+    <span class="layer-badge">▲ Data Analytics layer</span>
+    <h1 style="font-size:clamp(28px,4.4vw,46px)">how-to-<span class="tealline">data-quality</span></h1>
+    <p class="lede">Every tutorial runs checks. This one runs a <b>gate</b>: the raw load is genuinely BLOCKED on five defects, the ingestion fixes are applied with a quarantine ledger that reconciles every row, the same checks re-run to SHIP WITH HOLDS - and the fabrication suspect is routed to investigation, never "corrected". Real FAIL run, real PASS run, seed 42.</p>
+    <div class="lineage-ribbon">
+      <span>raw dump</span><b>→</b><span class="on">DQ gate</span><b>→</b><span>warehouse</span><b>→</b><span>marts</span><b>→</b><span>scorecard</span><b>→</b><span style="opacity:.5">agent (layer 4)</span>
+    </div>
+    <div class="chiprow" style="margin-top:6px">
+      <span class="chip">Case: Everrest · B2B2C retail platform</span>
+      <span class="chip">seed = 42</span>
+      <span class="chip">pandera · pandas · deploy-html</span>
+      <span class="chip">6 dimensions · 10 checks</span>
+      <span class="chip">every row reconciled</span>
+    </div>
+
+    <div class="rail">
+      <div class="rail-step"><div class="rail-node" data-step="1"><a href="#step-1"><div class="rail-circle">1</div><div class="rail-label">Input</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="2"><a href="#step-2"><div class="rail-circle">2</div><div class="rail-label">Sample data</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="3"><a href="#step-3"><div class="rail-circle">3</div><div class="rail-label">Objective</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="4"><a href="#step-4"><div class="rail-circle">4</div><div class="rail-label">Find-skills</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="5"><a href="#step-5"><div class="rail-circle">5</div><div class="rail-label">Build</div></a></div><div class="rail-connector"></div></div>
+      <div class="rail-step"><div class="rail-node" data-step="6"><a href="#step-6"><div class="rail-circle">6</div><div class="rail-label">Expert review</div></a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 1 -->
+<section class="step-section" id="step-1">
+  <div class="wrap">
+    <div class="step-ghost">01</div>
+    <span class="step-tag">Step 1</span>
+    <h2 class="step-title">Input - the raw dump, before anyone has cleaned anything</h2>
+    <p class="step-body">This gate sits at stage 0 of the lineage: the same four raw files the <a href="../how-to-schema-and-warehouse/">warehouse build</a> consumes. Quality problems are ingestion problems - catch them where they enter, with a ledger, not downstream where they surface as a wrong board number.</p>
+    <div class="tbl-grid">
+      <div class="tbl-card reveal"><div class="tbl-name">raw_transactions.csv <span class="cnt">107,841 rows</span></div><ul><li><b>txn_id / order_id</b> · line grain</li><li><b>order_ts_utc</b> · claims UTC</li><li><b>customer_id</b> + denormalized attrs</li><li><b>merchant_id</b> · 'M0001' format</li><li><b>category_raw</b> · free-text label</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">raw_payments_export.csv <span class="cnt">46,007 rows</span></div><ul><li><b>pmt_ref</b> · one per payment</li><li><b>order_id</b> · fk</li><li><b>amount_reported</b> · merchant-reported</li><li><b>paid_at</b> · processor timestamp</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">raw_products_export.csv <span class="cnt">5,000 rows</span></div><ul><li><b>product_id</b> · pk</li><li><b>merchant_id</b> · fk</li><li><b>catalog_price</b> · current</li></ul></div>
+      <div class="tbl-card reveal"><div class="tbl-name">raw_merchants_extract.json <span class="cnt">400 rows</span></div><ul><li><b>merchant_key</b> · 'MER-0001' format</li><li><b>legacy_id</b> · 'M0001' crosswalk</li><li><b>category / tier / onboarded</b></li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step-section" id="step-2" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">02</div>
+    <span class="step-tag">Step 2</span>
+    <h2 class="step-title">Sample data - six planted defects, one per quality dimension</h2>
+    <p class="step-body">The raw generator plants six defects on purpose (seed 42, each documented in its docstring), and they map one-to-one onto the classic data-quality dimensions - so the gate is a complete tour of the discipline on data where the ground truth is known and recall can be verified.</p>
+    <div class="dmap reveal">
+      <table>
+        <thead><tr><th>Defect in the raw dump</th><th>Dimension</th><th>Gate check</th></tr></thead>
+        <tbody>
+          <tr><td>Orphan customer refs (nulls after denormalization)</td><td><b>completeness</b></td><td>customer attributes present</td></tr>
+          <tr><td>14 category spellings for 8 real categories</td><td><b>validity</b></td><td>accepted-values against the canon set</td></tr>
+          <tr><td>Orphan product FKs · MER-0001 vs M0001 key split</td><td><b>consistency</b></td><td>referential integrity + cross-system conformity</td></tr>
+          <tr><td>One region's payments logged in local time (UTC+8)</td><td><b>consistency</b> <span class="flag">· event order</span></td><td>paid_at not before order_ts</td></tr>
+          <tr><td><span class="flag">(none planted - measured anyway)</span></td><td><b>timeliness</b></td><td>every feed fresh within a 24h SLA</td></tr>
+          <tr><td>~800 customers cloned under two ids</td><td><b>uniqueness</b></td><td>duplicate-identity scan</td></tr>
+          <tr><td>Merchant M0333: 100% round-hundred amounts</td><td><b>accuracy</b></td><td>heaping / fabrication screen</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap-sub" style="margin-top:10px">Honesty note: the event-order defect was originally filed under "timeliness" - the expert panel corrected it to temporal consistency, and timeliness got a real freshness-SLA check instead. The page you are reading reflects the reviewed mapping.</p>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step-section" id="step-3">
+  <div class="wrap">
+    <div class="step-ghost">03</div>
+    <span class="step-tag">Step 3</span>
+    <h2 class="step-title">Objective - does Monday's load ship?</h2>
+    <p class="step-body">Not "run some checks". A gate answers a decision question with a verdict, and accounts for every row it touched on the way.</p>
+    <div class="objective-banner reveal">
+      <div class="q">Does Monday's warehouse load <em>ship or get blocked</em> - and can we account for <em>every row</em> either way?</div>
+      <ul class="subq">
+        <li>Which defects BLOCK the load, and which only warrant a warning?</li>
+        <li>What gets quarantined, what gets corrected, what gets merged - and what must only be HELD, never repaired?</li>
+        <li>Does rows_in = rows_loaded + rows_quarantined hold for every table?</li>
+        <li>What was the bad data about to cost, in dollars and metric points?</li>
+        <li>What does the board see - a score, or a verdict it can act on?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4 -->
+<section class="step-section" id="step-4" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">04</div>
+    <span class="step-tag">Step 4</span>
+    <h2 class="step-title">Find-skills - the quality-gate toolbox</h2>
+    <p class="step-body">A gate needs declarative structural checks, custom forensic scans, a ledger discipline, and one self-contained artifact an executive can open anywhere.</p>
+    <div class="tool-grid">
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/unionai-oss/pandera">pandera</a></h4><p>Declarative structural schemas - types, ranges, nullability - validated lazily so every failure is collected, counted on row grain, and reported at once.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/pandas-dev/pandas">pandas</a></h4><p>The four forensic scans no schema language expresses: cross-system key conformity, event-order latency, duplicate-identity groups, round-amount heaping.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Pattern</span><h4>Quarantine ledger</h4><p>Every row the gate touches gets a ledger entry with a reason: quarantined, corrected, merged or held. rows_in reconciles to rows_out, per table, by construction.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Skill</span><h4>deploy-html</h4><p>The DQ scorecard ships as one self-contained file - no CDN, no build - generated by the script from computed values, so not one figure is hand-typed.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">Pattern</span><h4>Route, never repair</h4><p>Suspected fabrication is evidence, not a formatting defect: snapshot it immutably (sha256), hold it out of finance rollups, and hand it to an investigator.</p></div>
+      <div class="tool-card reveal"><span class="t-kind">OSS tool</span><h4><a href="https://github.com/great-expectations/great_expectations">Great Expectations</a></h4><p>The production home for these checks once they stabilize - promote the gate's assertions to a versioned suite that runs on every load.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section class="step-section" id="step-5">
+  <div class="wrap">
+    <div class="step-ghost">05</div>
+    <span class="step-tag">Step 5</span>
+    <h2 class="step-title">Build - FAIL, fix, PASS, and account for every row</h2>
+    <p class="step-body">One script runs the gate on the raw dump (it genuinely blocks), applies the ingestion fixes with a ledger, re-runs the same check functions on what ships, and generates the scorecard from the results dict. Grab the real code below.</p>
+    <div class="codelinks reveal">
+      <span class="cl-label">Get the code:</span>
+      <a class="cl-btn" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-data-quality/dq_gate.py"><span class="gh">▶</span> dq_gate.py</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-data-quality/output/dq_results.json"><span class="gh">✓</span> dq_results.json</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/blob/main/materials/how-to-data-quality/output/quarantine_ledger.csv"><span class="gh">◆</span> quarantine_ledger.csv</a>
+      <a class="cl-btn ghost" href="https://github.com/phoebefu6/phoebe-data-skills/tree/main/materials/how-to-data-quality"><span class="gh">↗</span> All files</a>
+    </div>
+
+    <div class="verdict-band reveal">
+      <span class="vb" style="background:#DC2626">BLOCKED</span>
+      <span style="color:#64748B;font-size:20px">→</span>
+      <span class="vb" style="background:#F59E0B;color:#1F2937">SHIP WITH HOLDS</span>
+      <div class="sub">As received: <em>5 blocking failures</em>, DQ score 80.49. After the fixes: score 99.97 - <em>not 100</em>, because 83 payments from the fabrication suspect stay counted until the investigation closes. The verdict is not the score: a gate that averages its way past a blocker is decoration.</div>
+    </div>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:30px 0 4px;color:var(--ink)">The gate at a glance - every check, before and after</h3>
+    <div class="frame pad reveal"><img src="charts/dq_dimension_matrix.png" alt="Two-panel bar chart of ten checks: the FAIL run shows five blocking failures up to 100 percent error rate, the PASS run shows all zeros except a held 0.18 percent accuracy warning"></div>
+    <p class="cap-sub">Red = blocking failure, amber = warning, teal = pass. The PASS panel is genuinely re-executed on the fixed tables - only the fabrication hold survives, by design.</p>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">What tripped - the evidence, one chart per defect family</h3>
+    <div class="ba-grid">
+      <div class="frame pad reveal"><img src="charts/category_variants.png" alt="Bar chart of 14 raw category labels, eight canon in teal and six dirty variants in amber including Grocary and Beauty with a trailing space"></div>
+      <div class="frame pad reveal"><img src="charts/latency_histogram.png" alt="Histogram of order-to-payment hours showing 3,798 impossible negative-latency payments in amber, corrected to positive after the UTC shift in teal"></div>
+      <div class="frame pad reveal"><img src="charts/referential_orphans.png" alt="Bar chart sizing the two orphan populations: 2,696 orphan product references and 1,074 orphan customer references, all quarantined"></div>
+      <div class="frame pad reveal"><img src="charts/heaping_m0333.png" alt="Scatter of round-amount share per merchant: every peer sits near zero percent while M0333 sits at 100 percent of 85 payments, 9,184 times the peer rate"></div>
+    </div>
+    <p class="cap-sub"><b>Top-left:</b> 14 labels arrive for 8 categories - the fix is an explicit reviewed mapping that raises on anything unmapped, never fuzzy matching. <b>Top-right:</b> 3,798 payments precede their own orders, every one in a single region: a timezone diagnosis, so the whole region cohort is shifted to UTC and any residual negative latency is quarantined instead of blanket-"corrected". <b>Bottom-left:</b> two orphan populations, quarantined with reasons. <b>Bottom-right:</b> one merchant's amounts land on round hundreds 9,184x the peer rate (suspect excluded from its own baseline) - held, not edited.</p>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">Every row accounted for</h3>
+    <div class="frame pad reveal"><img src="charts/gate_funnel.png" alt="Linear bar chart: 107,841 transaction lines in, 3,742 quarantined with reasons, 104,099 loaded"></div>
+    <p class="cap-sub">Transactions: 107,841 in = 104,099 loaded + 3,742 quarantined. Payments: 46,007 in = 45,081 loaded + 926 quarantined - those 926 followed their quarantined orders out, because a fix that strands orphan payments is itself a defect (a reviewer caught v1 doing exactly that). Corrected (3,754), merged (662) and held (83) rows live in the ledger.</p>
+
+    <h3 style="font-family:'Poppins';font-weight:600;margin:34px 0 4px;color:var(--ink)">The scorecard - live below, every number computed</h3>
+    <p class="cap-sub">Generated by the script from the results dict - zero hand-typed figures. Badge language: <b>PASS</b> = was never dirty, <b>FIXED</b> = repaired at ingestion, <b>HOLD</b> = routed to investigation, still open.</p>
+    <div class="embed-wrap reveal" style="margin-top:14px">
+      <iframe src="everrest_dq_scorecard.html" title="Everrest data-quality scorecard - every number computed from the gate run" loading="lazy"></iframe>
+      <div class="embed-bar"><span>Everrest DQ scorecard · raw dump → warehouse ingestion · seed 42</span><a href="everrest_dq_scorecard.html" target="_blank">Open full scorecard ↗</a></div>
+    </div>
+
+    <div class="caught reveal">
+      <table>
+        <thead><tr><th>Planted defect</th><th>Caught by</th><th>Fix applied</th><th>Recall</th></tr></thead>
+        <tbody>
+          <tr><td>Orphan customer refs (1,074 lines)</td><td class="num">completeness check</td><td>quarantined with reasons</td><td class="ok">✓ exact</td></tr>
+          <tr><td>14 dirty category labels (8.88%)</td><td class="num">validity check</td><td>reviewed mapping, raises on unmapped</td><td class="ok">✓ exact</td></tr>
+          <tr><td>Orphan product FKs (2,696 · 2.50%)</td><td class="num">referential check</td><td>quarantined; payments cascade too</td><td class="ok">✓ exact</td></tr>
+          <tr><td>MER-/M- key split (100% mismatch)</td><td class="num">conformity check</td><td>conformed via the master's own crosswalk</td><td class="ok">✓ exact</td></tr>
+          <tr><td>UTC+8 export (3,798 payments)</td><td class="num">event-order check</td><td>whole region cohort shifted; residuals quarantined</td><td class="ok">✓ exact</td></tr>
+          <tr><td>800 cloned customers</td><td class="num">uniqueness scan</td><td>662 merged - all that exist in the shipped facts (800 x 0.91² = 662; only pairs where both ids transact can double-count)</td><td class="ok">✓ all observable</td></tr>
+          <tr><td>M0333 round-amount fabrication</td><td class="num">heaping screen</td><td>HELD + sha256 evidence snapshot - never edited</td><td class="ok">✓ routed</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 6 -->
+<section class="step-section" id="step-6" style="background:var(--tint)">
+  <div class="wrap">
+    <div class="step-ghost" style="color:#fff">06</div>
+    <span class="step-tag">Step 6</span>
+    <h2 class="step-title">Expert review - the panel that found the gate's own defects</h2>
+    <p class="step-body">Four senior reviewer agents - data-quality governance, analytics engineering, payments fraud, and board-facing insights, each 10+ years - reviewed the real code and outputs. They found defects in the gate itself. Every fix below is in the shipped code, and the numbers on this page are from the re-run.</p>
+    <div class="mentor-grid" id="panel">
+      <div class="mentor-card reveal"><div class="m-name">DQ / Governance Lead</div><div class="m-lens">14 yrs · ingestion gates</div><p>"Your fix quarantines 3,742 transaction lines - and silently ships 926 payments whose orders just left. They appear in no ledger. Your memo's 'every row is accounted for' is untrue for the payments table."</p><div class="m-fix">Fix applied: a payments-to-orders referential check + cascade quarantine - payments follow their orders out, and the payments reconciliation (46,007 = 45,081 + 926) is now printed, not asserted.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Analytics Engineer</div><div class="m-lens">12 yrs · pipeline test suites</div><p>"The timezone fix shifts whatever shows negative latency. That is symptom-conditioned: a genuinely broken timestamp in another region would get +8h and a ledger entry claiming a local-time export - a false audit trail."</p><div class="m-fix">Fix applied: the shift now applies to the diagnosed region cohort (&gt;=90% impossible latencies), and residual negatives outside a cohort are quarantined, never blanket-corrected.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Payments Fraud Lead</div><div class="m-lens">11 yrs · marketplace risk</div><p>"Your 500x anomaly is diluted - the suspect supplies 92% of its own base rate. Peers-only, it is 9,184x. And the file is named benford_*.png for a test you explicitly do not run. Preserve evidence an investigator can anchor on."</p><div class="m-fix">Fix applied: peer base rate excludes flagged merchants; the chart is renamed heaping_m0333.png; held payments are snapshotted as received with the raw file's sha256 in the ledger.</div></div>
+      <div class="mentor-card reveal"><div class="m-name">Head of Insights</div><div class="m-lens">14 yrs · executive committees</div><p>"The log-scale funnel reads as 'we lost a third of the data'. Four tiles wear PASS while describing live defects in present tense. And there is no money anywhere - SHIP WITH HOLDS is a decision with no stake attached."</p><div class="m-fix">Fix applied: linear transactions-only funnel; three-badge language (PASS / FIXED / HOLD) with past-tense notes; a computed "what the bad data was about to cost" table on the memo and the scorecard.</div></div>
+    </div>
+    <div class="code-card">
+      <div class="code-head"><span>before → after · the cascade the panel forced</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="c-comment"># v1 (before): quarantine transaction lines... and strand their payments</span>
+tx = tx[~orphan_cust]
+tx = tx[~orphan_prod]        <span class="c-comment"># 926 payments now reference orders that no longer ship -</span>
+                             <span class="c-comment"># they load anyway, in no ledger. "Every row accounted for" = false.</span>
+
+<span class="c-comment"># v2 (after): payments follow their orders out, with reasons</span>
+orphan_pay = ~pay.order_id.isin(tx.order_id)
+for r in pay[orphan_pay].itertuples():
+    ledger_rows.append({<span class="c-str">"table"</span>: <span class="c-str">"payments"</span>, <span class="c-str">"row_id"</span>: r.pmt_ref,
+                        <span class="c-str">"action"</span>: <span class="c-str">"quarantined"</span>,
+                        <span class="c-str">"reason"</span>: <span class="c-str">f"order {r.order_id} was quarantined upstream"</span>})
+pay = pay[~orphan_pay]       <span class="c-comment"># 46,007 = 45,081 loaded + 926 quarantined - printed every run</span></pre>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="install">
+      <h3>Run this gate on your own loads</h3>
+      <p>Install once, point it at your raw files, rewrite the check set to your schema - keep the three rules: a gate not a report, every row accounted for, route fabrication instead of repairing it.</p>
+      <div class="code-card">
+        <div class="code-head"><span>terminal</span><button class="copy-btn">Copy</button></div>
+        <pre>/plugin marketplace add phoebefu6/phoebe-data-skills
+/plugin install how-to-data-quality@phoebe-data-skills</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Phoebe Fu</span>
+    <span><a href="../">← All skills</a></span>
+  </div>
+</footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

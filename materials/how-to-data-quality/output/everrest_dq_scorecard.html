@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Everrest data-quality scorecard</title>
+<style>
+  :root{--ink:#0F172A;--muted:#64748B;--hair:#E2E8F0;--teal:#0D9488;--teal-d:#0B7C72;
+    --tint:#F0FDFA;--amber:#F59E0B;--red:#DC2626}
+  *{box-sizing:border-box;margin:0}
+  body{font-family:Inter,-apple-system,'Segoe UI',sans-serif;color:var(--ink);
+    background:#F8FAFC;padding:28px 20px;font-size:14px}
+  .wrap{max-width:1060px;margin:0 auto}
+  h1{font-size:21px;margin-bottom:2px}
+  .sub{color:var(--muted);font-size:12.5px;margin-bottom:18px}
+  .verdict-bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:#fff;
+    border:1px solid var(--hair);border-radius:14px;padding:16px 20px;margin-bottom:18px;
+    box-shadow:0 6px 18px rgba(15,23,42,.05)}
+  .v-badge{font-size:19px;font-weight:700;letter-spacing:.02em;padding:8px 18px;
+    border-radius:10px;color:#fff;font-variant-numeric:tabular-nums}
+  .v-scores{display:flex;gap:26px;margin-left:auto;flex-wrap:wrap}
+  .v-s b{display:block;font-size:23px;font-variant-numeric:tabular-nums}
+  .v-s span{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+  @media(max-width:860px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .tile{background:#fff;border:1px solid var(--hair);border-radius:12px;padding:14px 16px}
+  .t-head{display:flex;justify-content:space-between;align-items:center}
+  .t-dim{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;
+    color:var(--teal-d)}
+  .t-badge{font-size:10.5px;font-weight:700;border-radius:999px;padding:2px 9px}
+  .t-scores{margin:10px 0 6px;font-variant-numeric:tabular-nums}
+  .t-before{font-size:17px;color:var(--muted);text-decoration:line-through}
+  .t-arrow{color:var(--muted);margin:0 5px}
+  .t-after{font-size:26px;font-weight:700}
+  .t-check{font-size:12px;font-weight:600;margin-bottom:3px}
+  .t-note{font-size:11.5px;color:var(--muted);line-height:1.45}
+  h2{font-size:15px;margin:22px 0 8px}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--hair);
+    border-radius:12px;overflow:hidden;font-size:12.5px}
+  th{background:var(--tint);text-align:left;padding:9px 12px;font-size:10.5px;
+    text-transform:uppercase;letter-spacing:.06em;color:var(--teal-d)}
+  td{padding:9px 12px;border-top:1px solid var(--hair);vertical-align:top}
+  .num{font-variant-numeric:tabular-nums;text-align:right}
+  .ok{color:var(--teal-d)}.bad{color:var(--red)}.hold{color:#92400E}
+  .tbl-scroll{overflow-x:auto;border-radius:12px}
+  .formula{background:#fff;border:1px solid var(--hair);border-radius:12px;
+    padding:13px 16px;font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:18px}
+  .formula code{background:var(--tint);color:var(--teal-d);padding:1px 6px;
+    border-radius:5px;font-size:11.5px}
+</style></head><body><div class="wrap">
+  <h1>Everrest warehouse load - data-quality gate</h1>
+  <div class="sub">Raw dump &#8594; warehouse ingestion &middot; seed 42 &middot; every figure computed by dq_gate.py, none typed</div>
+  <div class="verdict-bar">
+    <span class="v-badge" style="background:#DC2626">BLOCKED</span>
+    <span style="color:var(--muted);font-size:13px">as received &middot; 5 blocking failures</span>
+    <span class="v-badge" style="background:#F59E0B">SHIP WITH HOLDS</span>
+    <span style="color:var(--muted);font-size:13px">after fixes &middot; 83 payments on hold</span>
+    <div class="v-scores">
+      <div class="v-s"><b>80.49</b><span>DQ score in</span></div>
+      <div class="v-s"><b>99.97</b><span>DQ score out - not 100 while a hold is open</span></div>
+      <div class="v-s"><b>104,099</b><span>lines loaded</span></div>
+    </div>
+  </div>
+  <div class="grid">
+      <div class="tile">
+        <div class="t-head"><span class="t-dim">completeness</span>
+          <span class="t-badge" style="background:#E0F2FE;color:#075985">FIXED</span></div>
+        <div class="t-scores"><span class="t-before">99.0</span>
+          <span class="t-arrow">&#8594;</span>
+          <span class="t-after">100.0</span></div>
+        <div class="t-check">customer attributes present</div>
+        <div class="t-note">1,074 lines arrived without customer master records - quarantined with reasons</div>
+      </div>
+      <div class="tile">
+        <div class="t-head"><span class="t-dim">validity</span>
+          <span class="t-badge" style="background:#E0F2FE;color:#075985">FIXED</span></div>
+        <div class="t-scores"><span class="t-before">91.1</span>
+          <span class="t-arrow">&#8594;</span>
+          <span class="t-after">100.0</span></div>
+        <div class="t-check">category in canon set</div>
+        <div class="t-note">14 category spellings arrived for 8 real categories - mapped through a reviewed dictionary</div>
+      </div>
+      <div class="tile">
+        <div class="t-head"><span class="t-dim">consistency</span>
+          <span class="t-badge" style="background:#E0F2FE;color:#075985">FIXED</span></div>
+        <div class="t-scores"><span class="t-before">0.0</span>
+          <span class="t-arrow">&#8594;</span>
+          <span class="t-after">100.0</span></div>
+        <div class="t-check">merchant key formats agree across systems</div>
+        <div class="t-note">orphan references, a cross-system key split and one region's clock bug - quarantined, conformed and corrected</div>
+      </div>
+      <div class="tile">
+        <div class="t-head"><span class="t-dim">timeliness</span>
+          <span class="t-badge" style="background:#F0FDFA;color:#0B7C72">PASS</span></div>
+        <div class="t-scores"><span class="t-before">100.0</span>
+          <span class="t-arrow">&#8594;</span>
+          <span class="t-after">100.0</span></div>
+        <div class="t-check">every feed fresh within SLA</div>
+        <div class="t-note">no defects found in this load</div>
+      </div>
+      <div class="tile">
+        <div class="t-head"><span class="t-dim">uniqueness</span>
+          <span class="t-badge" style="background:#E0F2FE;color:#075985">FIXED</span></div>
+        <div class="t-scores"><span class="t-before">93.0</span>
+          <span class="t-arrow">&#8594;</span>
+          <span class="t-after">100.0</span></div>
+        <div class="t-check">one identity, one customer id</div>
+        <div class="t-note">1,324 customer ids belonged to people who already had one - merged, earliest id kept</div>
+      </div>
+      <div class="tile">
+        <div class="t-head"><span class="t-dim">accuracy</span>
+          <span class="t-badge" style="background:#FEF3C7;color:#92400E">HOLD</span></div>
+        <div class="t-scores"><span class="t-before">99.8</span>
+          <span class="t-arrow">&#8594;</span>
+          <span class="t-after">99.8</span></div>
+        <div class="t-check">reported amounts free of round-number heaping</div>
+        <div class="t-note">one merchant reports only round amounts - suspected fabrication, held out of finance rollups</div>
+      </div></div>
+  <h2>What the bad data was about to cost</h2>
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>Exposure</th><th>Amount</th><th>Where it would have landed</th></tr></thead>
+    <tbody>
+      <tr><td>GMV on quarantined lines</td><td class="num">$215,076</td>
+        <td>revenue-by-product and finance reconciliation would disagree by this much</td></tr>
+      <tr><td>Reported amounts on finance hold</td><td class="num">$46,200</td>
+        <td>suspected fabrication that would have been booked as clean revenue</td></tr>
+      <tr><td>Active-buyer overstatement</td><td class="num">3.5%</td>
+        <td>662 duplicate ids inflating every buyer and repeat-rate metric</td></tr>
+      <tr><td>Settlement-lag distortion</td><td class="num">-8h on 8.2% of payments</td>
+        <td>one region's settlement SLA reporting would have been fiction</td></tr>
+    </tbody>
+  </table></div>
+  <h2>Every check, before and after</h2>
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>Dimension</th><th>Check</th><th>Table</th><th>Rows checked</th>
+      <th>Failed (in)</th><th>Error rate</th><th>Failed (out)</th><th>Status</th></tr></thead>
+    <tbody><tr><td>validity</td><td>structural schema (pandera)</td><td>transactions</td><td class='num'>107,841</td><td class='num'>0</td><td class='num'>0.00%</td><td class='num'>0</td><td><b class=ok>PASS</b></td></tr><tr><td>completeness</td><td>customer attributes present</td><td>transactions</td><td class='num'>107,841</td><td class='num'>1,074</td><td class='num'>1.00%</td><td class='num'>0</td><td><b class=ok>PASS</b></td></tr><tr><td>validity</td><td>category in canon set</td><td>transactions</td><td class='num'>107,841</td><td class='num'>9,572</td><td class='num'>8.88%</td><td class='num'>0</td><td><b class=ok>PASS</b></td></tr><tr><td>consistency</td><td>product_id exists in catalog</td><td>transactions</td><td class='num'>107,841</td><td class='num'>2,696</td><td class='num'>2.50%</td><td class='num'>0</td><td><b class=ok>PASS</b></td></tr><tr><td>consistency</td><td>payment's order exists in transactions</td><td>payments</td><td class='num'>46,007</td><td class='num'>0</td><td class='num'>0.00%</td><td class='num'>0</td><td><b class=ok>PASS</b></td></tr><tr><td>consistency</td><td>merchant key formats agree across systems</td><td>merchants</td><td class='num'>107,841</td><td class='num'>107,841</td><td class='num'>100.00%</td><td class='num'>0</td><td><b class=ok>PASS</b></td></tr><tr><td>consistency</td><td>paid_at is not before order_ts</td><td>payments</td><td class='num'>46,007</td><td class='num'>3,798</td><td class='num'>8.26%</td><td class='num'>0</td><td><b class=ok>PASS</b></td></tr><tr><td>timeliness</td><td>every feed fresh within SLA</td><td>payments</td><td class='num'>2</td><td class='num'>0</td><td class='num'>0.00%</td><td class='num'>0</td><td><b class=ok>PASS</b></td></tr><tr><td>uniqueness</td><td>one identity, one customer id</td><td>customers</td><td class='num'>18,888</td><td class='num'>1,324</td><td class='num'>7.01%</td><td class='num'>0</td><td><b class=ok>PASS</b></td></tr><tr><td>accuracy</td><td>reported amounts free of round-number heaping</td><td>payments</td><td class='num'>46,007</td><td class='num'>85</td><td class='num'>0.18%</td><td class='num'>83</td><td><b class=hold>HOLD</b></td></tr></tbody>
+  </table></div>
+  <h2>Quarantine ledger - where every row went</h2>
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>Action</th><th>Rows</th><th>Example reason</th></tr></thead>
+    <tbody><tr><td>quarantined</td><td class='num'>4,668</td><td>customer C800303 has no master record</td></tr><tr><td>corrected</td><td class='num'>3,754</td><td>paid_at shifted +8h to UTC - region PH diagnosed as a local-time export (100% impossible latencies)</td></tr><tr><td>merged</td><td class='num'>662</td><td>duplicate identity of C011073 (same signup second, channel, region; earliest id survives)</td></tr><tr><td>finance_hold</td><td class='num'>83</td><td>merchant in ['M0333'] under round-amount investigation - excluded from finance rollups, amount untouched; evidence snapshot sha256 241e8a5c7b24a2ec</td></tr></tbody>
+  </table></div>
+  <div class="formula"><b>How the scores are computed.</b>
+    check error rate = <code>rows failing / rows checked</code> on the check's own grain &middot;
+    dimension score = <code>100 x (1 - worst check's error rate)</code> - a dimension is as good as its worst defect &middot;
+    overall = mean of the six dimension scores &middot;
+    the verdict ignores the average: any BLOCKER failure blocks the load, and fabrication
+    suspicion (83 payments) HOLDS finance rollups rather than
+    editing amounts. Reconciliation: 107,841 lines in =
+    104,099 loaded + 3,742 quarantined.
+  </div>
+</div></body></html>

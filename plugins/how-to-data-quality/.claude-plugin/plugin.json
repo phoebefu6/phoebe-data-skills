@@ -1,0 +1,9 @@
+{
+  "name": "how-to-data-quality",
+  "description": "Put a data-quality gate on any warehouse load - map defects to the six DQ dimensions, run a real FAIL -> fix -> PASS cycle with a quarantine ledger that reconciles every row, and generate a computed executive DQ scorecard. Routes fabrication suspicion to a hold instead of 'correcting' it. Ships a runnable baseline python script (pandera).",
+  "version": "1.0.0",
+  "author": { "name": "Phoebe Fu" },
+  "homepage": "https://phoebefu6.github.io/phoebe-data-skills",
+  "repository": "https://github.com/phoebefu6/phoebe-data-skills",
+  "license": "MIT"
+}
