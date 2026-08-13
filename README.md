@@ -1,3 +1,13 @@
+<!-- phoebe header -->
+
+[![Open the live showcase](https://img.shields.io/badge/%E2%96%B6%20open%20the%20live%20showcase-1f6feb?style=for-the-badge)](https://phoebefu6.github.io/phoebe-data-skills/)
+[![Star this repo](https://img.shields.io/github/stars/phoebefu6/phoebe-data-skills?style=for-the-badge&label=star%20this%20repo&color=444444)](https://github.com/phoebefu6/phoebe-data-skills/stargazers)
+
+### ▶︎ [Open the live showcase →](https://phoebefu6.github.io/phoebe-data-skills/)
+
+Free and open. Every build links to its source.
+
+<!-- /phoebe header -->
 # Phoebe's Data Skills
 
 **Data skills you can install, not just read.**
